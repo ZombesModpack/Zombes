@@ -1,0 +1,10 @@
+
+// blocks
+oreG            ?  7
+oreI            ?  7
+oreC            ?  7
+oreL            ?  7
+oreD            ?  7
+oreR            ?  7
+oreRLit         ? 12
+oreY            ? 15  // already glowing

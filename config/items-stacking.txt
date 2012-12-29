@@ -1,0 +1,14 @@
+
+// items
+sign            64
+doorW           16
+cart            16
+saddle          16
+doorI           16
+snowball        64
+boat            16
+cake            16
+bed             16
+cookie          64
+recordY         16
+recordG         16

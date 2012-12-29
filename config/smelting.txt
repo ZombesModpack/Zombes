@@ -1,0 +1,21 @@
+[SMELTING]
+// ##############################################################################################################################
+// Here you can define your own smelting recipes (minecraft currently only has one input and one output).
+// syntax: ResultItem InputItem
+//   ResultItem  - item this recipe will produce.
+//   InputItem   - item the smelting process will consume.
+//                 NB! item damage value is ignored - for example: it does not differentiate
+//                     between different colors of wool etc.
+//
+// Commented-out (they already are in the game - no need to add them again) list of all vanilla (MC1.3_01) recipes as example:
+
+// iron     oreI
+// gold     oreG
+// glass    sand
+// smooth   cobble
+// beef     rawbeef
+// brick    clay
+// fish     rawfish
+// charcoal wood
+// dyeGreen cactus
+// diamond  oreD

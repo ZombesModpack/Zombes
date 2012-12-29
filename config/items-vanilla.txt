@@ -1,0 +1,272 @@
+// Listing of all vanilla blocks and items with their values.
+// Using the same order as in http://www.minecraftwiki.net/wiki/Data_values
+// DO NOT CHANGE THIS FILE - add your changes to items.txt instead
+
+// blocks
+smooth           64  0 255   1.5  30.0  0.6  0   0
+grass            64  0 255   0.6   3.0  0.6  0   0
+dirt             64  0 255   0.5   2.5  0.6  0   0
+cobble           64  0 255   2.0  30.0  0.6  0   0
+wood             64  0 255   2.0  15.0  0.6  5  20
+saplingNormal    64  0   0   0.0   0.0  0.6  0   0
+bedrock          64  0 255  -1.0 18000000.0  0.6  0   0
+water            64  0   3 100.0 500.0  0.6  0   0
+waterS           64  0   3 100.0 500.0  0.6  0   0
+lava             64 15 255   0.0   0.0  0.6  0   0
+lavaS            64 15 255 100.0 500.0  0.6  0   0
+sand             64  0 255   0.5   2.5  0.6  0   0
+gravel           64  0 255   0.6   3.0  0.6  0   0
+oreG             64  0 255   3.0  15.0  0.6  0   0
+oreI             64  0 255   3.0  15.0  0.6  0   0
+oreC             64  0 255   3.0  15.0  0.6  0   0
+oak              64  0 255   2.0  10.0  0.6  5   5
+leaves           64  0   1   0.2   1.0  0.6 30  60
+sponge           64  0 255   0.6   3.0  0.6  0   0
+glass            64  0   0   0.3   1.5  0.6  0   0
+oreL             64  0 255   3.0  15.0  0.6  0   0
+blockL           64  0 255   3.0  15.0  0.6  0   0
+dispenser        64  0 255   3.5  17.5  0.6  0   0
+sandstone        64  0 255   0.8   4.0  0.6  0   0
+note             64  0 255   0.8   4.0  0.6  0   0
+bedBlock         64  0   0   0.2   1.0  0.6  0   0
+railPowered      64  0   0   0.7   3.5  0.6  0   0
+railDetect       64  0   0   0.7   3.5  0.6  0   0
+pistonSticky     64  0   0   0.5   2.5  0.6  0   0
+web              64  0   1   4.0  20.0  0.6  0   0
+grassTall        64  0   0   0.0   0.0  0.6 60 100
+deadShrubs       64  0   0   0.0   0.0  0.6  0   0
+piston           64  0   0   0.5   2.5  0.6  0   0
+pistonHead       64  0   0   0.5   2.5  0.6  0   0
+woolWhite        64  0 255   0.8   4.0  0.6 30  60
+reserved         64  0   0  -1.0   0.0  0.6  0   0
+flowerY          64  0   0   0.0   0.0  0.6  0   0
+flowerR          64  0   0   0.0   0.0  0.6  0   0
+shroomB          64  1   0   0.0   0.0  0.6  0   0
+shroomR          64  0   0   0.0   0.0  0.6  0   0
+blockG           64  0 255   3.0  30.0  0.6  0   0
+blockI           64  0 255   5.0  30.0  0.6  0   0
+double           64  0 255   2.0  30.0  0.6  0   0
+halfStone        64  0 255   2.0  30.0  0.6  0   0
+blockB           64  0 255   2.0  30.0  0.6  0   0
+tnt              64  0 255   0.0   0.0  0.6 15 100
+shelves          64  0 255   1.5   7.5  0.6 30  20
+mossy            64  0 255   2.0  30.0  0.6  0   0
+obsidian         64  0 255  50.0 6000.0  0.6  0   0
+torch            64 14   0   0.0   0.0  0.6  0   0
+fire             64 15   0   0.0   0.0  0.6  0   0
+cage             64  0   0   5.0  25.0  0.6  0   0
+stairW           64  0 255   2.0  15.0  0.6  5  20
+storage          64  0   0   2.5  12.5  0.6  0   0
+redBlock         64  0   0   0.0   0.0  0.6  0   0
+oreD             64  0 255   3.0  15.0  0.6  0   0
+blockD           64  0 255   5.0  30.0  0.6  0   0
+workbench        64  0 255   2.5  12.5  0.6  0   0
+wheatBlock       64  0   0   0.0   0.0  0.6  0   0
+farmland         64  0 255   0.6   3.0  0.6  0   0
+furnace          64  0 255   3.5  17.5  0.6  0   0
+furnaceLit       64 13 255   3.5  17.5  0.6  0   0
+signBlockPost    64  0   0   1.0   5.0  0.6  0   0
+doorWBlock       64  0   0   3.0  15.0  0.6  0   0
+ladder           64  0   0   0.4   2.0  0.6  0   0
+tracks           64  0   0   0.7   3.5  0.6  0   0
+stairC           64  0 255   2.0  30.0  0.6  0   0
+signBlockWall    64  0   0   1.0   5.0  0.6  0   0
+switch           64  0   0   0.5   2.5  0.6  0   0
+plateS           64  0   0   0.5   2.5  0.6  0   0
+doorIBlock       64  0   0   5.0  25.0  0.6  0   0
+plateW           64  0   0   0.5   2.5  0.6  0   0
+oreR             64  0 255   3.0  15.0  0.6  0   0
+oreRLit          64  9 255   3.0  15.0  0.6  0   0
+torchROff        64  0   0   0.0   0.0  0.6  0   0
+torchR           64  7   0   0.0   0.0  0.6  0   0
+button           64  0   0   0.5   2.5  0.6  0   0
+snowcap          64  0   0   0.1   0.5  0.6  0   0
+ice              64  0   3   0.5   2.5  1.0  0   0
+snow             64  0 255   0.2   1.0  0.6  0   0
+cactus           64  0   0   0.4   2.0  0.6  0   0
+clay             64  0 255   0.6   3.0  0.6  0   0
+reedBlock        64  0   0   0.0   0.0  0.6  0   0
+jukebox          64  0 255   2.0  30.0  0.6  0   0
+fence            64  0   0   2.0  15.0  0.6  5  20
+pumpkin          64  0 255   1.0   5.0  0.6  0   0
+nether           64  0 255   0.4   2.0  0.6  0   0
+slow             64  0 255   0.5   2.5  0.6  0   0
+oreY             64 15 255   0.3   1.5  0.6  0   0
+portal           64 11   0  -1.0   0.0  0.6  0   0
+pumpkinC         64 15 255   1.0   5.0  0.6  0   0
+cakeblock        64  0   0   0.5   2.5  0.6  0   0
+repeaterBlock    64  0   0   0.0   0.0  0.6  0   0
+repeaterBlockLit   64  9   0   0.0   0.0  0.6  0   0
+boxLocked        64 15 255   0.0   0.0  0.6  0   0
+trapDoor         64  0   0   3.0  15.0  0.6  0   0
+smoothSF         64  0 255   0.8   3.8  0.6  0   0
+stoneBrick       64  0 255   1.5  30.0  0.6  0   0
+hugeShroomB      64  0 255   0.2   1.0  0.6  0   0
+hugeShroomR      64  0 255   0.2   1.0  0.6  0   0
+bars             64  0   0   5.0  30.0  0.6  0   0
+window           64  0   0   0.3   1.5  0.6  0   0
+melon            64  0 255   1.0   5.0  0.6  0   0
+stemPumpkin      64  0   0   0.0   0.0  0.6  0   0
+stemMelon        64  0   0   0.0   0.0  0.6  0   0
+vines            64  0   0   0.2   1.0  0.6 15 100
+gate             64  0   0   2.0  15.0  0.6  0   0
+stairB           64  0 255   2.0  30.0  0.6  0   0
+stairS           64  0 255   1.5  30.0  0.6  0   0
+mycelium         64  0 255   0.6   3.0  0.6  0   0
+lilyPad          64  0   0   0.0   0.0  0.6  0   0
+brickN           64  0 255   2.0  30.0  0.6  0   0
+fenceN           64  0   0   2.0  30.0  0.6  0   0
+stairN           64  0 255   2.0  30.0  0.6  0   0
+netherWartBlock   64  0   0   0.0   0.0  0.6  0   0
+enchantmentTable   64  0   0   5.0 6000.0  0.6  0   0
+brewingStandBlock   64  1   0   0.5   2.5  0.6  0   0
+cauldronBlock    64  0   0   2.0  10.0  0.6  0   0
+airPortalBlock   64 15   0  -1.0 18000000.0  0.6  0   0
+endFrame         64  1   0  -1.0 18000000.0  0.6  0   0
+whiteCobble      64  0 255   3.0  45.0  0.6  0   0
+dragonEggBlock   64  1   0   3.0  45.0  0.6  0   0
+lampROff         64  0 255   0.3   1.5  0.6  0   0
+lampR            64 15 255   0.3   1.5  0.6  0   0
+
+// items
+shovelI           1 250
+pickI             1 250
+axeI              1 250
+lighter           1 64
+apple            64
+bow               1 384
+arrow            64
+coal             64
+diamond          64
+iron             64
+gold             64
+swordI            1 250
+swordW            1 59
+shovelW           1 59
+pickW             1 59
+axeW              1 59
+swordS            1 131
+shovelS           1 131
+pickS             1 131
+axeS              1 131
+swordD            1 1561
+shovelD           1 1561
+pickD             1 1561
+axeD              1 1561
+stick            64
+bowl             64
+stew              1
+swordG            1 32
+shovelG           1 32
+pickG             1 32
+axeG              1 32
+string           64
+feather          64
+gunpowder        64
+hoeW              1 59
+hoeS              1 131
+hoeI              1 250
+hoeD              1 1561
+hoeG              1 32
+seeds            64
+wheat            64
+bread            64
+hatL              1 55
+vestL             1 80
+pantsL            1 75
+shoesL            1 65
+hatC              1 165
+vestC             1 240
+pantsC            1 225
+shoesC            1 195
+hatI              1 165
+vestI             1 240
+pantsI            1 225
+shoesI            1 195
+hatD              1 363
+vestD             1 528
+pantsD            1 495
+shoesD            1 429
+hatG              1 77
+vestG             1 112
+pantsG            1 105
+shoesG            1 91
+flint            64
+rawpork          64
+pork             64
+painting         64
+appleG           64
+sign              1
+doorW             1
+bucket            1
+bucketW           1
+bucketL           1
+cart              1
+saddle            1
+doorI             1
+red              64
+snowball         16
+boat              1
+leather          64
+bucketM           1
+brick            64
+clayball         64
+reed             64
+paper            64
+book             64
+slimeball        64
+boxcart           1
+powercart         1
+egg              16
+compass          64
+fishingrod        1 64
+watch            64
+yellow           64
+rawfish          64
+fish             64
+dyeBlack         64
+bone             64
+sugar            64
+cake              1
+bed               1
+repeater         64
+cookie           64
+map               1
+shears            1 238
+melonSlice       64
+seedsPumpkin     64
+seedsMelon       64
+rawbeef          64
+steak            64
+rawchicken       64
+chicken          64
+rotten           64
+pearl            16
+blazeRod         64
+ghastTear        64
+goldNugget       64
+netherWart       64
+potion            1
+bottle           64
+spiderEye        64
+fermentedEye     64
+blazePowder      64
+magmaCream       64
+brewingStand     64
+cauldron         64
+enderEye         64
+melonG           64
+mobEgg           64
+potionEnchant    64
+fireCharge       64
+record13          1
+recordCat         1
+recordBlocks      1
+recordChirp       1
+recordFar         1
+recordMall        1
+recordMellohi     1
+recordStal        1
+recordStrad       1
+recordWard        1
+record11          1

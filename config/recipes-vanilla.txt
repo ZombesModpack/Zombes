@@ -1,0 +1,240 @@
+// adds all vanilla recipes
+// DO NOT CHANGE THIS FILE - add your changes to recipes.txt instead
+
+// basic
+stick 4 1 2 # #
+torch 4 1 2 C /
+bench 1 2 2 W W W W
+furnace 1 3 3 S S S S 0 S S S S
+box 1 3 3 W W W W 0 W W W W
+
+// block
+blockG 1 3 3 G G G G G G G G G
+blockI 1 3 3 I I I I I I I I I
+blockD 1 3 3 D D D D D D D D D
+oreY 1 2 2 Y Y Y Y
+woolWhite 1 2 2 string string string string
+tnt 1 3 3 gun sand gun sand gun sand gun sand gun
+stairW 4 3 3 W 0 0 W W 0 W W W
+stairC 4 3 3 S 0 0 S S 0 S S S
+snow 1 2 2 * * * *
+clay 1 2 2 clayball clayball clayball clayball
+blockB 1 2 2 brick brick brick brick
+shelves 1 3 3 W W W book book book W W W
+pumpkinC 1 1 2 pumpkin torch
+jukebox 1 3 3 W W W W D W W W W
+
+// tool
+axeW 1 2 3 W W W / 0 /
+axeG 1 2 3 G G G / 0 /
+axeS 1 2 3 S S S / 0 /
+axeI 1 2 3 I I I / 0 /
+axeD 1 2 3 D D D / 0 /
+pickW 1 3 3 W W W 0 / 0 0 / 0
+pickG 1 3 3 G G G 0 / 0 0 / 0
+pickS 1 3 3 S S S 0 / 0 0 / 0
+pickI 1 3 3 I I I 0 / 0 0 / 0
+pickD 1 3 3 D D D 0 / 0 0 / 0
+shovelW 1 1 3 W / /
+shovelG 1 1 3 G / /
+shovelS 1 1 3 S / /
+shovelI 1 1 3 I / /
+shovelD 1 1 3 D / /
+hoeW 1 2 3 W W 0 / 0 /
+hoeG 1 2 3 G G 0 / 0 /
+hoeS 1 2 3 S S 0 / 0 /
+hoeI 1 2 3 I I 0 / 0 /
+hoeD 1 2 3 D D 0 / 0 /
+lighter 1 2 2 I 0 0 flint
+bucket 1 3 2 I 0 I 0 I 0
+compass 1 3 3 0 I 0 I R I 0 I 0
+watch 1 3 3 0 G 0 G R G 0 G 0
+rod 1 3 3 0 0 / 0 / string / 0 string
+
+// weapon
+swordW 1 1 3 W W /
+swordG 1 1 3 G G /
+swordS 1 1 3 S S /
+swordI 1 1 3 I I /
+swordD 1 1 3 D D /
+bow 1 3 3 string / 0 string 0 / string / 0
+arrow 4 1 3 flint / feather
+
+// armor
+hatL 1 3 2 L L L L 0 L
+hatG 1 3 2 G G G G 0 G
+hatC 1 3 2 X X X X 0 X
+hatI 1 3 2 I I I I 0 I
+hatD 1 3 2 D D D D 0 D
+vestL 1 3 3 L 0 L L L L L L L
+vestG 1 3 3 G 0 G G G G G G G
+vestC 1 3 3 X 0 X X X X X X X
+vestI 1 3 3 I 0 I I I I I I I
+vestD 1 3 3 D 0 D D D D D D D
+pantsL 1 3 3 L L L L 0 L L 0 L
+pantsG 1 3 3 G G G G 0 G G 0 G
+pantsC 1 3 3 X X X X 0 X X 0 X
+pantsI 1 3 3 I I I I 0 I I 0 I
+pantsD 1 3 3 D D D D 0 D D 0 D
+shoesL 1 3 2 L 0 L L 0 L
+shoesG 1 3 2 G 0 G G 0 G
+shoesC 1 3 2 X 0 X X 0 X
+shoesI 1 3 2 I 0 I I 0 I
+shoesD 1 3 2 D 0 D D 0 D
+
+// transport
+cart 1 3 2 I 0 I I I I
+powercart 1 1 2 furnace cart
+boxcart 1 1 2 box cart
+rails 16 3 3 I 0 I I / I I 0 I
+boat 1 3 2 W 0 W W W W
+
+// mechanism
+doorW 1 2 3 W W W W W W
+doorI 1 2 3 I I I I I I
+button 1 1 2 smooth smooth
+torchR 1 1 2 R /
+switch 1 1 2 / S
+
+// food
+bowl 4 3 2 W 0 W 0 W 0
+soup 1 1 3 shroomR shroomB bowl
+soup 1 1 3 shroomB shroomR bowl
+bread 1 3 1 wheat wheat wheat
+appleG 1 3 3 goldNugget goldNugget goldNugget goldNugget apple goldNugget goldNugget goldNugget goldNugget
+
+// misc
+iron 9 1 1 blockI
+gold 9 1 1 blockG
+diamond 9 1 1 blockD
+pic 1 3 3 / / / / cloth / / / /
+sign 1 3 3 W W W W W W 0 / 0
+ladder 2 3 3 / 0 / / / / / 0 /
+paper 3 3 1 reed reed reed
+book 1 1 3 paper paper paper
+fence 2 3 2 / / / / / /
+
+// added in beta 1.2
+note 1 3 3 W W W W R W W W W
+dispenser 1 3 3 S S S S bow S S R S
+sugar 1 1 1 reed
+cake 1 3 3 bucketM bucketM bucketM sugar egg sugar wheat wheat wheat
+torch 4 1 2 charcoal /
+blockL 1 3 3 dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue
+dyeBlue 9 1 1 blockL
+cake 1 3 3 bucketM bucketM bucketM sugar egg sugar wheat wheat wheat
+sugar 1 1 1 reed
+sandstone 1 2 2 sand sand sand sand
+
+dyeRed 2 1 0 flowerR
+dyeOrange 2 2 0 dyeRed dyeYellow
+dyeYellow 2 1 0 flowerY
+dyeLime 2 2 0 dyeGreen dyeWhite
+dyeLightBlue 2 2 0 dyeBlue dyeWhite
+dyeCyan 2 2 0 dyeBlue dyeGreen
+dyePink 2 2 0 dyeWhite dyeRed
+dyeMagenta 2 2 0 dyePink dyePurple
+dyePurple 2 2 0 dyeRed dyeBlue
+dyeLightGray 3 3 0 dyeWhite dyeWhite dyeBlack
+dyeGray 2 2 0 dyeWhite dyeBlack
+dyeMagenta 4 4 0 dyeBlue dyeRed dyeRed dyeWhite
+dyeMagenta 3 3 0 dyeBlue dyeRed dyePink
+dyeLightGray 2 2 0 dyeGray dyeWhite
+bonemeal 3 1 0 bone
+
+woolGray 1 2 0 wool dyeGray
+woolPurple 1 2 0 wool dyePurple
+woolMagenta 1 2 0 wool dyeMagenta
+woolPink 1 2 0 wool dyePink
+woolRed 1 2 0 wool dyeRed
+woolOrange 1 2 0 wool dyeOrange
+woolYellow 1 2 0 wool dyeYellow
+woolLightGray 1 2 0 wool dyeLightGray
+woolGreen 1 2 0 wool dyeGreen
+woolLime 1 2 0 wool dyeLime
+woolCyan 1 2 0 wool dyeCyan
+woolBlue 1 2 0 wool dyeBlue
+woolLightBlue 1 2 0 wool dyeLightBlue
+woolBlack 1 2 0 wool dyeBlack
+woolBrown 1 2 0 wool dyeBrown
+woolWhite 1 2 0 wool dyeWhite
+
+// added in beta 1.3
+half 3 3 1 smooth smooth smooth
+halfSand 3 3 1 sandstone sandstone sandstone
+halfWood 3 3 1 W W W
+halfCobble 3 3 1 S S S
+plateW 1 2 1 W W
+plateS 1 2 1 smooth smooth
+repeater 1 3 2 torchR R torchR smooth smooth smooth
+bed 1 3 2 wool wool wool W W W
+
+// added in beta 1.4
+cookie 8 3 1 wheat cocobean wheat
+
+// added in beta 1.5
+
+railPowered 6 3 3 G 0 G G / G G R G
+railDetect 6 3 3 I 0 I I plateS I I R I
+
+// added in beta 1.6
+
+doorTrap 2 3 2 W W W W W W
+map 1 3 3 paper paper paper paper compass paper paper paper paper
+
+// added in beta 1.7
+
+piston 1 3 3 W W W S I S S R S
+pistonSticky 1 1 2 slime piston
+shears 1 2 2 0 I I 0
+
+// added in beta 1.8
+
+melon 1 3 3 melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice
+stairB 4 3 3 blockB 0 0 blockB blockB 0 blockB blockB blockB
+stairS 4 3 3 stoneBrick 0 0 stoneBrick stoneBrick 0 stoneBrick stoneBrick stoneBrick
+bars 16 3 2 I I I I I I
+window 16 3 2 glass glass glass glass glass glass
+gate 1 3 2 / W / / W /
+stoneBrick 4 2 2 smooth smooth smooth smooth
+halfBrick 3 3 1 blockB blockB blockB
+halfBrickS 3 3 1 stoneBrick stoneBrick stoneBrick
+seedsMelon 1 1 1 melonSlice
+
+// added in beta 1.9-pre
+
+stairN 4 3 3 brickN 0 0 brickN brickN 0 brickN brickN brickN
+fenceN 6 3 2 brickN brickN brickN brickN brickN brickN
+
+// added in beta 1.9-pre2 & pre3
+
+gold 1 3 3 goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget
+cauldron 1 3 3 iron 0 iron iron 0 iron iron iron iron
+enchantmentTable 1 3 3 0 book 0 diamond obsidian diamond obsidian obsidian obsidian
+bottle 3 3 2 glass 0 glass 0 glass 0
+brewingStand 1 3 2 0 blazeRod 0 cobble cobble cobble
+seedsPumpkin 4 1 1 pumpkin
+fermentedEye 1 3 0 spiderEye shroomB sugar
+magmaCream 1 2 0 blazePowder slimeball
+enderEye 1 2 0 pearl blazePowder
+blazePowder 2 1 0 blazeRod
+
+// added in beta 1.9-pre4
+
+goldNugget 9 1 1 gold
+melonG 1 2 0 melonSlice goldNugget
+
+// added in 1.2
+
+lampROff 1 3 3 0 red 0 red oreY red 0 red 0
+fireCharge 3 3 0 gunpowder blazePowder coal
+fireCharge 3 3 0 gunpowder blazePowder charcoal
+
+// added in 1.2.4
+
+sandstoneBlock 4 2 2 sandstoneAny sandstoneAny sandstoneAny sandstoneAny
+sandstoneDouble 1 1 2 halfSand halfSand
+woodOak 4 1 1 oak
+woodPine 4 1 1 pine
+woodBirch 4 1 1 birch
+woodJungle 4 1 1 jungle

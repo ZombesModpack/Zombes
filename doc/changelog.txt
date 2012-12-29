@@ -1,0 +1,55 @@
+Zombe's modpack changelog starting from MC 1.4.4
+
+v6.8.0 for MC 1.4.6
+- compatibility: updated for Minecraft 1.4.6
+
+v6.7.6 for MC 1.4.5
+- fixed a bug disabling the vanilla fly when fall damages are disabled
+- death mod rewritten, suposedly 100% fixed
+- dig mod rewritten, 40% fixed (Reach working again, but not Speed and Harvest)
+
+v6.7.5 for MC 1.4.5
+- added a changelog in the modpack's archive
+- bugfixes for the new Projection cheat view
+- added missing config.txt entries for the options introduced in 6.6 and 6.7
+- fixed taking damages while flying over lava in singleplayer
+- fixed many cheat options not working in singleplayer
+- fixed a bug where 3D overlays could fade or flicker when Rain & Snow is Off
+
+v6.7.4 for MC 1.4.5
+- NoClip 99% fixed (the 1% : still affected by water and moving pistons)
+- fixed a possible crash with Ore marking with custom blocks
+- added a new "Projection" cheat view acting like a ghost or like a free-cam depending on its own fly and noclip state, and uses the same keybinds as the Fly mod
+
+v6.7.3 for MC 1.4.5
+- now in the Original Post ! (updates from Nilat are now official)
+- fixed a possible crash related to the Fly mod
+- added config options for the Safe mod
+- fixed 3D overlays (Safe, Path and Cheat's ore marks and mob bars) not showing up when using Cheat View
+- added a readme file in the modpack's archive with installation instructions
+
+Zombe-Nilat-1.4.5-2
+- removed a classfile from the package which was erroneously included (xv.class) dating from 1.4.4
+- fixed a possible crash when rendering clouds if the player data has not been sent to the client yet
+- fixed a corner-case which made the Creative-fly-even-in-Survival bug reappear if you leave and reenter a game while Fly is on
+
+Zombe-Nilat-1.4.5-1
+- fixed the Fly mod's speed jump not working
+- fixed the "Allow vanilla MC sprint/fly" options not working
+- fixed the Creative-fly-even-in-Survival bug
+
+Zombe-Nilat-1.4.5-0
+- compatibility: updated for Minecraft 1.4.5
+- fixed a bug causing error messages thrown by the Safe mod at altitudes below 16
+- Sun mod reintroduced
+
+Zombe-Nilat-1.4.4-1
+- fixed missing crosses from the Safe mod on some blocks (notably inverted stairs and slabs)
+- fixed Cheat's mobs bars and ore marks missing or obstructed
+- fixed conflict between see-through cheat and 3D overlays (Safe, Path and Cheat's ore marks and mob bars)
+- fixed stuck clouds and/or render distance
+
+Zombe-Nilat-1.4.4-0
+- compatibility: updated for Minecraft 1.4.4
+- removed optional class files related to mods Boom, Build, Craft, Dig, Furnace, Resize and Sun
+

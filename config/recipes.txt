@@ -1,0 +1,26 @@
+
+//[RECIPES=recipes-clean.txt] - removes all the vanilla game recipes - in case you want to start from nothing
+//[RECIPES=recipes-vanilla.txt] - all the vanilla game resipes are listed there for reference
+//[RECIPES=recipes-example.txt] - uncomment to activate example-recipeset (rarely updated - mostly useful as an example)
+//[RECIPES=recipes-spawner.txt] - uncomment to activate mob-spawner recipeset
+
+[RECIPES]
+// ##############################################################################################################################
+// Here you can define your own recipes.
+//
+// Syntax: ResultItem ResultCount RecipeWidth RecipeHeight Recipe
+//   ResultItem   - item this recipe will produce.
+//   ResultCount  - how many of will be produced.
+//   RecipeWidth  - width of recipe on crafting grid. Ex: torch recipe has a with of 1 on the crafting grid.
+//   RecipeHeight - height of recipe on crafting grid. Ex: torch recipe has a height of 2 on the crafting grid.
+//                  if height is 0 then the recipe will be shapeless (counts only WHAT is on the grid and not WHERE)
+//   Recipe       - items that are used, row-by-row top-to-bottom. Ex: torch has "coal stick" or "C /" for short.
+//
+//   PS. Empty slots on the crafting grid are marked with number 0. Ex: "lighter 1 2 2 iron 0 0 flint"
+//   PS. If ResultItem is 0 then the matching recipe will be removed. Ex: "0 0 1 2 C /" will remove the recipe
+//       for torch if it existed.
+//   PS. You can redefine recipe results without first removing the recipe. Ex: "torch 1 1 2 C /" will change
+//       the torch recipe result (still produces torches, but only 1 instead of 4)
+//   PS. Besides given item names (all names are defined in names.txt) you can also use their ids if you wish.
+//
+

@@ -1,0 +1,902 @@
+
+#
+# Lines beginning with # are comments.
+#
+# Full list of key names you will find here:
+#   http://www.lwjgl.org/javadoc/constant-values.html#org.lwjgl.input.Keyboard.KEY_0
+# NB! omit the "KEY_" in front - ie: "Q" instead of "KEY_Q" etc
+# NB! the key names that minecraft uses ignore your keyboard layout settings
+#     - in other words: they might not correspond to the actual key name.
+# NB! easiest way by far to get the correct key names is using minecrafts options menu ;)
+# NB! you can not directly bind mouse buttons - you need to bind mouse buttons to keyboard.
+#     Strongly recommended for "wield" mod.
+# NB! for colors you can use the names that are defined in names.txt or use the number
+#     formatted color directly.
+#     0xRRGGBB, where R/G/B are the color components in hexadecimal format.
+#
+
+# Easy way to temporarily disable all mods.
+disableAllMods        = no
+
+# Show options screen
+showOptions           = F7
+
+# Removes the error message on screen.
+# NB! It does not fix anything - just removes the message (up to 8 messages).
+clearDisplayedError   = F9
+
+# ==================== cloud mod - aka. Cloud Control ========================
+# Uncomment to enable mod:
+#modCloudEnabled       = yes
+
+# Turns clouds on and off.
+keyCloudToggle        = MULTIPLY
+
+# Toggles between vanilla-minecraft and mod cloud settings.
+keyCloudVanilla       = V
+
+# Moves clouds up by one minecraft block.
+keyCloudUp            =
+
+# Moves clouds down by one minecraft block.
+keyCloudDown          =
+
+# Are clouds enabled at startup.
+optCloudShow          = yes
+
+# Modifies cloud height. Original offset is 0. [-64.0 .. 140.0]
+optCloudOffset        = 4
+
+# Tag shown when mod is temporarily disabled and vanilla minecraft cloud settings are in effect.
+tagCloudVanilla       = no-cloud-mod
+
+
+# ==================== cart mod - aka. Cart Control ==========================
+# Uncomment to enable mod:
+#modCartEnabled        = yes
+
+# Stops the cart immediately.
+keyCartStop           = RETURN
+
+# Enable / disable perpetual motion mode.
+keyCartPerpetual      = UP
+
+# Max speed accumulation. [0.5 .. 5.0]
+optCartSpeedAccumCap  = 1.0
+
+# Speed change multiplier. [0.5 .. 10.0]
+optCartAcceleration   = 2.0
+
+# Powered minecarts have infinite fuel (after you add the first drop of fuel).
+optCartInfiniteFuel   = yes
+
+# Tag shown when perpetual mode is active.
+tagCartPerpetual      = perpetual
+
+
+# ==================== build mod - aka. Classic Building =====================
+# Uncomment to enable mod:
+#modBuildEnabled       = yes
+
+# Enable / disable build mode.
+keyBuildToggle        = B
+
+# Hold down and press number to select item sets from optBuildA1 to optBuildA9.
+keyBuildA             = LSHIFT
+
+# Hold down and press number to select item sets from optBuildB1 to optBuildB9.
+keyBuildB             = LCONTROL
+
+# Key used to mark a selection.
+# NB! optBuildExtension must be enabled ("= yes" instead of "= no").
+keyBuildMark          = X
+
+# Copy selection to buffer.
+keyBuildCopy          = C
+
+# Paste buffer to selection.
+# NB! keyBuildFill and keyBuildRemove changes key functionality.
+keyBuildPaste         = P
+
+# Fill selection with selected (ie. current item in inventory) item.
+# NB! optBuildExtension must be enabled ("= yes" instead of "= no").
+# NB! keyBuildFill and keyBuildRemove changes key functionality.
+keyBuildSet           = Z
+
+# Deselect / remove selection markers.
+keyBuildDeselect      =
+
+# Hold down to fill empty blocks in selection with specific block (keyBuildSet) or copy-paste buffer (keyBuildPaste).
+keyBuildFill          = LSHIFT
+
+# Hold down to remove matching (keyBuildSet or keyBuildPaste) blocks from selection.
+keyBuildRemove        = RSHIFT
+
+# Holding this down while setting marker (keyBuildMark) causes the marker to be set on your feet height instead of head.
+keyBuildDown          = LCONTROL
+
+# Enable in-game world editing.
+optBuildExtension     = no
+
+# Is build mode activated at startup.
+optBuild              = no
+
+# Lock item count in stacks.
+optBuildLockQuantity  = yes
+
+# Lock item count in stacks to a specific number. 0 = do not lock. [0 .. 32]
+optBuildLockQuantityToNr = 0
+
+# Digging speed in build mode. [0.1 .. 6.0]
+optBuildDigSpeed      = 1.0
+
+# Distance where one can dig / place blocks (vanilla game has it at 4.0). [2.0 .. 128.0]
+optBuildReach         = 16.0
+
+# Block harvesting rule: -1 = never harvest, 0 = vanilla game, 1 = always harvest.
+optBuildHarvestRule   = -1
+
+# Item sets (look up item names from names.txt).
+optBuildA1            = smooth, cobble, grass, dirt, sand, gravel, clay, obsidian, sandstone
+optBuildA2            = oak, pine, birch, wood, shelves, chest, workbench, jukebox, furnace
+optBuildA3            = woolYellow, woolOrange, woolRed, woolPink, woolMagenta, woolPurple, woolBlue, woolCyan, woolLightBlue
+optBuildA4            = woolWhite, woolLightGray, woolGray, woolBlack, woolBrown, woolGreen, woolLime, cage, sponge
+optBuildA5            = snowcap, ice, snow, water, lava, fire, glass, pumpkinC, melon
+optBuildA6            = sapling, leaves, flowerY, flowerR, shroomB, shroomR, cactus, pumpkin, reed
+optBuildA7            = blockG, blockI, blockD, blockB, blockL, mossy, nether, soul, web
+optBuildA8            = oreG, oreI, oreC, oreD, oreR, oreY, oreL, repeater, torchR
+optBuildA9            = doorW, doorI, switch, red, plateS, plateW, button, dispenser, note
+optBuildB1            = ladder, tracks, fence, stairC, stairW, sign, half, double, picture
+optBuildB2            = pickD, cart, boat, saddle, tnt, cake, bed, bonemeal, vines
+optBuildB3            = halfSand, halfWood, halfCobble, halfBrick, halfBrickS, saplingNormal, saplingPine, saplingBirch, bonemeal
+optBuildB4            = red, cart, tracks, railDetect, railPowered, bars, stoneBrick
+optBuildB5            = doorTrap, gate, piston, pistonSticky, window, stairB, stairS, seedsPumpkin, seedsMelon
+optBuildB6            = cageChicken, cageSilverfish, cagePig, cageSheep, cageCow, cageWolf, cageSquid, smoothSF
+optBuildB7            = cageZombie, cageSkelly, cageCreeper, cageSpider, cageCavespider, cageSlimes, cagePigzombie, cageEnderman, cageGhast
+optBuildB8            = arrow, compass, glass, appleG, swordD, bow, shovelD, pickD, torch
+optBuildB9            = bucketW, watch, glass, appleG, swordD, bow, shovelD, pickD, torch
+
+# Tag shown when build mode is activated.
+tagBuildEnabled       = builder
+
+
+# ==================== compass mod - aka. Compass ============================
+# Uncomment to enable mod:
+#modCompassEnabled     = yes
+
+# Creates an alternate spawn location and makes it current.
+keyCompassSet         = INSERT
+
+# Toggles between original and alternate spawn location.
+keyCompassToggle      = HOME
+
+# Show player world coordinates.
+optCompassShowPos     = yes
+
+# Tag shown when alternate spawn is current.
+tagCompassAlternate   = altSpawn
+
+
+# ==================== craft mod - aka. Craft All Key ========================
+# Uncomment to enable mod:
+#modCraftEnabled       = yes
+
+# Crafting will be done as many times as possible while holding this key down
+keyCraftAll           = LSHIFT
+
+
+# ==================== fly mod - aka. Flying =================================
+# Uncomment to enable mod:
+#modFlyEnabled         = yes
+
+# Turns fly mode on.
+keyFlyOn              =
+
+# Turns fly mode off.
+keyFlyOff             =
+
+# Toggles fly mode.
+keyFlyToggle          = F
+
+# Allow vanilla MC fly toggle
+optFlyVanillaFly      = yes
+
+# Fly up.
+keyFlyUp              = E
+
+# Fly down.
+keyFlyDown            = Q
+
+# Flying speed modifier key.
+keyFlySpeed           = LSHIFT
+
+# Flying speed modifier is a toggle.
+optFlySpeedIsToggle   = no
+
+# Running speed modifier key.
+keyFlyRun             = LSHIFT
+
+# Allow vanilla MC sprint toggle
+optFlyVanillaSprint   = yes
+
+# Running speed modifier is a toggle.
+optFlyRunSpeedIsToggle= no
+
+# Toggle NoClip mode.
+keyFlyNoClip          = F6
+
+# Whether NoClip mode is enabled by default.
+optFlyNoClip          = no
+
+# Running speed multiplier with speed modifier. [0.1 .. 10.0]]
+optFlyRunSpeedMul     = 1.5
+
+# Vertical speed multiplier with run speed modifier (ladders & water). [0.1 .. 10.0]
+optFlyRunSpeedVMul    = 1.5
+
+# Vertical movement speed. [0.1 .. 1.0]
+optFlySpeedVertical   = 0.2
+
+# Movement speed multiplier. [0.1 .. 10.0]
+optFlySpeedMulNormal  = 1.0
+
+# Movement speed multiplier with speed modifier. [0.1 .. 10.0]
+optFlySpeedMulModifier= 4.0
+
+# Jump speed multiplier.  [1.0 .. 10.0]
+optFlyJump            = 1.0
+
+# Jump speed multiplier while running.  [1.0 .. 100.0]
+# NB! Speed is not the same as height. For example: 1.25 is enough to get over a fence (height 1.5).
+optFlyJumpHigh        = 1.25
+
+# Tag shown when fly mode is active.
+tagFly                = flying
+
+# Tag shown when no clip mode is active.
+tagFlyNoClip          = noclip
+
+
+# ==================== path mod - aka. Path Tracker ==========================
+# Uncomment to enable mod:
+#modPathEnabled        = yes
+
+# Show / hide path (BACK is aka BACKSPACE).
+keyPathShow           = BACK
+
+# Delete path.
+keyPathDelete         = DELETE
+
+# Max count of pathpoints remembered. [256 .. 32768]
+optPathPoints         = 8192
+
+# Spacing of path - 0 means no spaces and therefore no animation. [0 .. 32]
+optPathSpacing        = 6
+
+# Minimum length of path node. [0.1 .. 4.0]
+optPathMin            = 0.25
+
+# Path animation speed. [0.0 .. 32.0]
+optPathAnimSpeed      = 8.0
+
+# Path color.
+optPathColor          = LightRed
+
+# Is path shown at startup.
+optPathShow           = no
+
+
+# ==================== sun mod - aka. Sun Control ============================
+# Uncomment to enable mod:
+#modSunEnabled         = yes
+
+# Adds time.
+keySunTimeAdd         = ADD
+
+# Subtracts time.
+keySunTimeSub         = SUBTRACT
+
+# Modifier to change real time (hold down and press keySunTimeAdd or keySunTimeSub).
+# NB! You need to be an OP in the SMP server for it to accept your changes.
+# NB! The command works in SP too - despite what the command name might suggest.
+keySunServer          = LSHIFT
+
+# Server command for adjusting time (command & whether to use '+' sign when adding positive time).
+optSunServerCmd       = /time add
+optSunServerCmdPlus   = no
+
+# Stops time.
+keySunStop            = END
+
+# Normalizes and resumes time.
+keySunTimeNormal      = EQUALS
+
+# Time in seconds to add/subtract per keypress. [1 .. 600]
+optSunTimeStep        = 30
+
+# Tag in front of time offset.
+tagSunTime            = time
+
+
+# ==================== wield mod - aka. Wield Key ============================
+# Uncomment to enable mod:
+#modWieldEnabled       = yes
+
+# Key to wield a weapon.
+keyWield              = R
+
+# Wield bow first instead of sword.
+optWieldBowFirst      = no
+
+# Show ammo (arrows) count.
+optWieldShowAmmo      = yes
+
+# Text shown for ammo count.
+tagWieldAmmo          = Arrows :
+
+
+# ==================== safe mod - aka. Critter Spawn Highlighter =============
+# Uncomment to enable mod:
+#modSafeEnabled        = yes
+
+# Show / hide non-spawn-safe spots.
+keySafeShow           = L
+
+# Toggle show marks through walls.
+keySafeGhost          = K
+
+# Show spot safety in midday.
+optSafeShowWithSun    = yes
+
+# Color for markers that indicate spots with spawn-danger.
+optSafeDangerColor    = LightRed
+
+# Color for markers that indicate spots with spawn-danger at night.
+optSafeDangerColorSun = 0xdddd00
+
+# Un-safe lookup radius.
+optSafeLookupRadius   = 16
+
+# Tag shown when showing non-spawn-safe spots.
+tagSafe               = safe
+
+
+# ==================== recipe mod - aka. Custom Crafting Recipies ============
+# Uncomment to enable mod:
+#modRecipeEnabled      = yes
+
+# NB! Recipes are defined in recipes.txt - there are also the instructions.
+
+# Show id of the item currently selected - useful for adding recipes to new items.
+optRecipeShowId       = yes
+
+# Show what recipes could be used with the items on crafting grid.
+optRecipeShowHelp     = yes
+
+# Option to preserve the vanilla recipeset for SMP.
+optRecipeVanillaMP    = no
+
+# Dumps all recipes to log file after loading recipes.txt - debug tool mostly.
+optRecipeDump         = no
+
+
+# ==================== boom mod - aka. Explosion Damage Control ==============
+# Uncomment to enable mod:
+#modBoomEnabled        = yes
+
+# Precentage chance of dropping the destroyed block if it is not an ore. [0 .. 100]
+optBoomDropChance     = 30
+
+# Precentage chance of dropping the destroyed block if it is an ore. [0 .. 100]
+optBoomDropOreChance  = 100
+
+# Explosion force scaling. [0.1 .. 10.0]
+optBoomScaleTNT       = 1.0
+
+# Explosion force scaling. [0.1 .. 10.0]
+optBoomScaleCreeper   = 1.0
+
+# Explosion force scaling. [0.1 .. 10.0]
+optBoomScaleFireball  =   0.99
+
+# Creeper explosion safety range. [-1 .. 32]
+# If there are non-natural blocks in the range then the explosion will not destroy any blocks.
+# -1 means infinite range => creeper explosions will not destroy any block anywhere.
+# 0 means that creeper explosions work as in vanilla game.
+optBoomSafeRange      = 16
+
+
+# ==================== spawn mod - aka. Critter Spawn Control ================
+# Uncomment to enable mod:
+#modSpawnEnabled       = yes
+
+# Support all other mods that add critters - aka apply the same spawning rules to all of them.
+optSpawnSupportMods   = yes
+
+# Limit where critters are allowed to spawn.
+# Note: optSpawnAllowInNonAir prevents critters from spawning in things like: reed, flowers, signs, buttons, etc
+#       - but not in water altough the option name might give the impression.
+optSpawnAllowInNonAir = no
+optSpawnAllowOnNonNatural = no
+optSpawnAllowOnGrass  = yes
+optSpawnAllowOnCobble = yes
+optSpawnAllowOnSand   = yes
+optSpawnAllowOnGravel = yes
+optSpawnAllowOnTree   = no
+optSpawnAllowOnSandstone= no
+
+# Reduces named spawned critters by precentage. [0 .. 100]
+# 100, essentially removes the critter from game.
+optSpawnPigReduction  = 75
+optSpawnChickenReduction = 25
+optSpawnCowReduction  = 0
+optSpawnSheepReduction = 0
+optSpawnSquidReduction = 0
+optSpawnWolfReduction  = 0
+optSpawnSpiderReduction = 0
+optSpawnSkeletonReduction = 0
+optSpawnCreeperReduction = 0
+optSpawnZombieReduction = 0
+optSpawnSlimeReduction = 0
+optSpawnGhastReduction = 0
+optSpawnPigZombieReduction = 0
+optSpawnCaveSpiderReduction = 0
+optSpawnEndermanReduction = 0
+optSpawnSilverfishReduction = 0
+
+
+# ==================== ore mod - aka. Ore Redistribution =====================
+# WARNING: This mod will alter your savegame! Make a backup before using this!
+# Uncomment to enable mod:
+#modOreEnabled         = yes
+
+# Use lava instead of smoothstone for flattening the bedrock.
+optOreLavaFloor       = yes
+
+# Ore redistribution rules. One to many rules separated by spaces. Every rule consists of:
+# chunkChance/maxHeight/minHeight/attempts/size/belowWhat
+#   chunkChance - precentage chance that the rule is used in a chunk (16x16 column of earth)
+#   maxHeight   - max height where rule applies
+#   minHeight   - min height where rule applies
+#   attempts    - how many times a start of ore vein is being attempted
+#   size        - max size of vein
+#   belowWhat   - below what block the vein must start (using block id: 1=smoothstone, 11=lava)
+optOreCoalRule        = 75/80/48/8/16/1  10/120/32/128/4/1 5/120/64/1/128/1
+optOreIronRule        = 100/80/16/8/16/1 100/96/8/16/8/1   5/120/64/128/1/1
+optOreGoldRule        = 50/32/4/4/16/1   5/96/8/8/64/1
+optOreBlueRule        = 100/32/8/2/8/1   5/56/48/64/2/1    5/96/48/1/32/1
+optOreRedRule         = 100/32/8/2/8/1   10/120/96/64/1/1
+optOreDiamondRule     = 75/16/4/2/8/1    100/32/2/128/2/11 10/120/16/2/8/1
+
+
+# ==================== teleport mod - aka. Teleportation =====================
+# Uncomment to enable mod:
+#modTeleportEnabled    = yes
+
+# For teleportation pad to work - there bust be a sign (on stick or on wall) above it (0-1 blocks).
+# On sign, use on a separate line for teleport target area: "!x,y,z" - use "compass" mod
+#   provided here or some other means to get the coordinates.
+# You can also limit the teleport to one specific item type by writing on a separate line: "?item-or-mob-name"
+# Item and mob names are defined in file names.txt.
+# NB! There currently is no teleportation target area checks - use sensibly.
+
+# Teleport pad block for item teleportation (NB! must be solid block).
+optTeleportItem       = blockI
+
+# Teleport pad block for player teleportation (NB! must be solid block).
+optTeleportPlayer     = blockG
+
+# Teleport pad block for critter teleportation (NB! must be solid block).
+optTeleportCritter    = blockD
+
+# The following teleportation methods do not utilize teleportation pads and can be used anywhere.
+# NB! Note that with default config it will consume redstone dust and you need to hold them in hand to teleport.
+# NB! All teleportations should be always safe (it tries to prevent teleporting above/in lava/fire, cactuses, too high above hround, into walls).
+# NB! There must be 3m of vertical space in the destination to teleport.
+# NB! Some of the safety checks are disabled if you teleport to cursor when fly mode is enabled.
+
+# Safe vertical teleport: up.     "PRIOR" is usually "Page Up" on keyboard.
+keyTeleportUp         = PRIOR
+
+# Safe vertical teleport: down.   "NEXT" is usually "Page Down" on keyboard.
+keyTeleportDown       = NEXT
+
+# Teleport to where the cursor points.
+keyTeleportCursor     = RIGHT
+
+# Resource that is used to teleport.
+# NB! Using "0" (zero) - means that no item is required to teleport.
+optTeleportUseItem    = R
+
+# Teleport only if the required item is selected (yes - to prevent it being TOO convenient to escape out of harms way).
+optTeleportIsSelected = yes
+
+
+# ==================== cheat mod - aka. Cheat ================================
+# Uncomment to enable mod:
+#modCheatEnabled       = yes
+
+# Toggles cheat mode on / off.
+keyCheat              = Y
+
+# Cheats activated by default
+optCheat              = no
+
+# Show / hide monsters.
+keyCheatShowMobs      = M
+
+# Show / hide ores.
+keyCheatShowOres      = O
+
+# Enderman is allowed to pick up blocks.
+optCheatNerfEnderman  = yes
+
+# Toggles highlighting mode on / off.
+keyCheatHighlight     = H
+
+# Removes all fires in ~16 block radius.
+keyCheatRemoveFire    = N
+
+# Change view to any player where you point at. Press again to switch back to yourself.
+keyCheatPossession    = NUMPAD5
+
+# Change view to an astral projection (invisible ghost view), which can fly and noclip. Press again to switch back to yourself.
+keyCheatProjection    = NUMPAD8
+
+# Resets the location of the astral projection on yourself or on the current player view.
+keyCheatRelocate      = NUMPAD2
+
+# See through everything nearby (ie walls and other obstructions).
+keyCheatSee           = I
+
+# Set the key for seeing trough things to function as a toggle.
+optCheatSeeIsToggle   = no
+
+# Distance in meters to see through. [1.0..32.0]
+optCheatSeeDist       = 4.0
+
+# Block hit delay. Lower is faster, but also buggier (rollbacks). [0 .. 5]
+optCheatBlockHitDelay = 5
+
+# Specify what is shown as ore and with what color.
+# Syntax: comma separated ore and color pairs, ie "ore/color, ore/color" etc
+optCheatShowOres      = oreI/0xff6600, clay/Cyan, oreG/0xffee00, oreD/LightCyan, mossy/LightGreen, oreL/LightBlue, oreR/LightRed, cage/LightMagenta, oreC/DarkWhite, smoothSF/DarkRed, 129/Green
+
+# Ore detection horizontal / vertical range. [4 .. 128]
+# NB! max markers shown is 4096
+optCheatShowOresRangeH= 16
+optCheatShowOresRangeV= 64
+
+# Specify what is shown as monter and with what color.
+optCheatShowMobs      = Other/0x888888, Player/0x0000ff, Spider/0xff6666, Cavespider/0xff8866, Skelly/0xffffff, Creeper/0x66ff66, Zombie/0xffff66, Slimes/0xff66ff, Silverfish/0x66ffff, Ghast/0xffffff, LavaSlime/0xff6666, Blaze/0xffff66, Pigzombie/0x882200, Wolf/0x880088, Enderman/0x008800, Squid/0x000088, Cow/0x554400, Sheep/0x888888, Pig/0x884400, Chicken/0x999966, MushroomCow/0x880000, Villager/0x008888, SnowMan/0x666688, Golem/0x668888, Ocelot/888866
+
+# Range at which to show mobs (0 = unlimited) [0 .. 256]
+optCheatShowMobsRange = 0
+
+# Show mob size by adjusting the height of the lines marking their location. Makes it harder to judge distance tho.
+optCheatShowMobsSize  = no
+
+# Allow fall damage.
+optCheatFallDamage    = yes
+
+# Toggle health cheat (optCheatRestoreHealth).
+keyCheatHealth        =
+
+# Regen health
+optCheatRestoreHealth = no
+
+# Toggle damages (optCheatDisableDamage).
+keyCheatDamage        =
+
+# Disable damage (=invulnerability)
+optCheatDisableDamage = no
+
+# Infinite arrows.
+optCheatInfArrows     = no
+
+# Armors have infinite durability.
+optCheatInfArmor      = no
+
+# Swords have infinite durability.
+optCheatInfSword      = no
+
+# Tools have infinite durability.
+optCheatInfTools      = no
+
+# Player is immune to fire.
+optCheatFireImmune    = no
+
+# Player does not need air.
+optCheatNoAir         = no
+
+# Show health bars for living creatures.
+optCheatShowHealth    = yes
+
+# Tag shown when cheat mode is active.
+tagCheater            = cheater
+
+
+# ==================== resize mod - aka. Critter size variety ================
+# Uncomment to enable mod:
+#modResizeEnabled = yes
+
+# Percentage chance for smaller than usual critter.  [0..100]
+optResizeCowSmall     = 30
+optResizeSpiderSmall  = 50
+optResizeSheepSmall   = 30
+optResizeSkellySmall  = 10
+optResizeZombieSmall  = 30
+optResizePigSmall     = 50
+
+# Percentage chance for bigger than usual critter.  [0..100]
+optResizeCowBig       = 10
+optResizeSpiderBig    = 10
+optResizeSheepBig     = 10
+optResizeSkellyBig    = 20
+optResizeZombieBig    = 20
+optResizePigBig       = 10
+
+
+# ==================== furnace mod - aka. Custom Smelting Recipes ============
+# Uncomment to enable mod:
+#modFurnaceEnabled = yes
+
+# How many units of time is wooden item worth if not told otherwise [1..32767]
+optFurnaceWoodFuel    = 300
+
+# If current item burning in furnace has a fuel value at least this high then the fuel will never run out. [1..32767]
+# For example: Set this to 20000 for lava buckets to provide infinite fuel.
+optFurnaceInfiniteFuel= 32767
+
+# Specifies how much time one smelting takes.  [1..1000]
+# NB! 20 units of time is equal to one second.
+optFurnaceSmeltingTime= 200
+
+# Allow fuel waste.
+optFurnaceFuelWaste   = yes
+
+# Return empty bucket when using lava bucket.
+optFurnaceReturnBucket = no
+
+
+# ==================== dig mod - aka. Digging Speed Adjustment ===============
+# Uncomment to enable mod:
+#modDigEnabled = yes
+
+# Cancel out of reach actions
+optDigCheckReach = yes
+
+# Digging speed multiplier.  [0.1..10.0]
+optDigSpeed           = 2.0
+
+# Distance where one can dig / place blocks (vanilla game has it at 4.0). [2.0 .. 128.0]
+optDigReach           = 6.0
+
+# Always harvest blocks without needing proper tools.
+# NB! "build" mod's harvesting setting takes precedence if enabled.
+optDigHarvestAlways   = false
+
+
+# ==================== weather mod - aka. Weather Control ====================
+# Uncomment to enable mod:
+#modWeatherEnabled = yes
+
+# Used to call rain / end of rain.
+keyWeatherRain        = J
+
+# Used to call thunderstorm / end of thunder.
+keyWeatherThunderstorm = K
+
+# Used to call a lightning strike to where you are pointing. (You might want to use CAPITAL, aka CapsLock, instead)
+keyWeatherLightning   = U
+
+# When used with conjunction of calling a thunderstorm - maximizes thunder frequency.
+keyWeatherMayhem      = LSHIFT
+
+# Prvents all natural changes to weather (ie. if it does not rain then it will never start on its own).
+optWeatherLocked      = no
+
+# Removes the rain effect from game - while leaving the rest intact (sound / light / water-particles on ground).
+optWeatherNoDraw      = no
+
+# NB! You get actual thunder only when it is raining at the same time.
+
+# 1 in x chance for thunder in thunderstorm. [1 .. 500000]
+# (chance for thunder per chunk is 20*1/x)
+optWeatherThunderChance = 100000
+
+# 1 in x chance for thunder in thunderstorm when mayhem mode is active [1 .. 10000]
+optWeatherThunderMayhemChance = 2000
+
+# Rain duration in seconds. [10 .. 3600]
+optWeatherRainTime    = 180 .. 600
+
+# Pause between rain in seconds. [10 .. 14400]
+optWeatherNoRainTime  = 600 .. 8400
+
+# Thunderstorm duration in seconds. [10 .. 3600]
+optWeatherThunderTime = 180 .. 600
+
+
+
+# Pause between thunderstorms in seconds. [10 .. 14400]
+optWeatherNoThunderTime = 600 .. 8400
+
+# Weather tags.
+tagWeatherRaining     = raining
+tagWeatherThundering  = thunder
+tagWeatherMayhem      = mayhem
+
+
+# ==================== growth mod - aka. Plant Growth ========================
+# Uncomment to enable mod:
+#modGrowthEnabled = yes
+
+# Chance to spread to adjacent dirt block (not grass!), 1 in x. [1..1000]
+# NB! a chance value of 1000 will disable spreading.
+optGrowthFlower       = 15
+optGrowthShroom       = 50
+optGrowthPumpkin      = 30
+optGrowthSappling     = 20
+optGrowthReed         = 10
+
+# Do the sappling root themselves.
+optGrowthRooting      = yes
+
+# Do the seeds plant themselves.
+optGrowthPlanting     = yes
+
+# Do not root if there is a sappling or trunk in radius. [1..5]
+optGrowthRootingSpace = 3
+
+# Time when sapplings root themselves (if on the ground at that time) in seconds. [5..300]
+# NB! in addition to this option - they will always try to root themselves just before despawning.
+optGrowthRootingTime  = 10
+
+
+# ==================== chest mod - aka. Autostore ============================
+# Uncomment to enable mod:
+#modChestEnabled = yes
+
+# Autostore items on top of chests.
+optChestStore         = yes
+
+# Items on this block will be autostored in best matching chest in radius.
+optChestStoreBlock    = bench
+
+# Radius to search for best matching chest. [0..8]
+# NB! radius of 0 disables search.
+optChestStoreRadius   = 2
+
+
+# ==================== icon mod - aka. Container Content Icons ===============
+# Uncomment to enable mod:
+#modIconEnabled = yes
+
+# Show on chest the item icon of the first item in it.
+optIconShowChest      = yes
+
+# Show on dispenser the item icon of the first item in it.
+optIconShowDispenser  = yes
+
+# Show on furnace the item icons of fuel, input and output.
+optIconShowFurnace    = yes
+
+# Send a message to server telling that we can handle custom packets.
+optIconMP             = no
+
+
+# ==================== info mod - aka. World Information =====================
+# Uncomment to enable mod:
+#modInfoEnabled = yes
+
+# Key to show / hide info.
+keyInfoToggle         = F12
+
+# Key to show / hide list of players nearby.
+keyInfoPlayersToggle  = F4
+
+# Shows your current coordinates on top of the screen.
+optInfoShowPos        = yes
+
+# Shows current time on top of the screen.
+optInfoShowTime       = yes
+
+# Shows the name of the biome you are in on top of the screen.
+optInfoShowBiome      = no
+
+# In-game time offset (in seconds) as the new world begins at 0:00 which is actually morning.
+optInfoTimeOffset     = 300
+
+# Show critter health at all times.
+optInfoShowHealth     = no
+
+# Disable the obnoxious achivement pop-ups.
+optInfoHideAchievement= no
+
+# Show info for item in hand
+optInfoShowItem       = yes
+
+# Show FPS counter on info bar
+optInfoShowFPS        = no
+
+# Max range for players to be show on keyInfoPlayersToggle list.  [10.0 .. 1000.0]
+optInfoRangeMax       = 1000.0
+
+# Players termed to be near in keyInfoPlayersToggle list.  [1.0 .. 1000.0]
+optInfoRangeNear      = 50.0
+
+# Color code prefix for players nearby.
+optInfoPrefixNear     = §b
+
+# Color code prefix for the rest.
+optInfoPrefixFar      = §9
+
+
+# ==================== death mod - aka. Death Behavior =======================
+# Uncomment to enable mod:
+#modDeathEnabled = yes
+
+# Drop player inventory on death.
+optDeathDropInv       = no
+
+# Lose experiene on death.
+optDeathLoseExp       = no
+
+# Health penalty on respawn. [0 .. 100]
+# NB! Max HP in vanilla game is 20 and it is quaranteed that you spawn with at least 1 HP.
+optDeathHPPenalty     = 0
+
+# ==================== item mod - aka. Item/Block Properties =================
+# Uncomment to enable mod:
+#modItemEnabled = yes
+
+# NB! Properties are defined in items.txt - there are also the instructions.
+
+# Enable special changes for fence block: allows placement on top of other fence blocks and in midair.
+optItemChangeFence    = yes
+
+# Enable special changes for glass block: block can be harvested.
+optItemChangeGlass    = yes
+
+# Enable special changes for bookshelves block: block can be harvested.
+optItemChangeShelf    = yes
+
+# Enable special changes for ice block: block can be harvested.
+optItemChangeIce      = yes
+
+# Enable special changes for farmland block: no decay from walking on it.
+optItemChangeFarmland = yes
+
+# Enable special changes for sponge block: eats all horizontally adjecent water source blocks - WARNING: infinite range!
+optItemChangeSponge   = no
+
+# Enable special changes for water block: spawn  source block when there are at least two source blocks at its sides - regardless of what is below it.
+optItemChangeWater    = no
+
+# Enable special changes for lava block: spawn source block when there are at least two source blocks at its sides - regardless of what is below it.
+optItemChangeLava     = no
+
+# Enable special changes for mod-spawner block: block can be harvested (does not produce anything when placed - look in "recipe" mods recipes.txt file for ways to make something useful out of it).
+optItemChangeSpawner  = yes
+
+# Enable special changes for leaves block (following options).
+optItemChangeLeaves   = yes
+
+# 1 in x chance for destroyed leaves block to drop something.  [1..100]
+optItemLeavesDrop     = 20
+
+# Precentage chance for oak tree leaves to drop the special item.  [0..100]
+optItemOakChance      = 3
+optItemOakSpecial     = apple
+
+# Precentage chance for birch tree leaves to drop the special item.  [0..100]
+optItemBirchChance    = 1
+optItemBirchSpecial   = egg
+
+# Precentage chance for pine tree leaves to drop the special item.  [0..100]
+optItemPineChance     = 5
+optItemPineSpecial    = cocobean
+
+# Dumps all items to log file before without changes from items.txt - debug tool mostly.
+optItemDump           = no

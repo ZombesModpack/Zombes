@@ -1,0 +1,231 @@
+// removes all vanilla recipes
+// DO NOT CHANGE THIS FILE
+
+// basic
+0 0 1 2 # #
+0 0 1 2 C /
+0 0 2 2 W W W W
+0 0 3 3 S S S S 0 S S S S
+0 0 3 3 W W W W 0 W W W W
+
+// block
+0 0 3 3 G G G G G G G G G
+0 0 3 3 I I I I I I I I I
+0 0 3 3 D D D D D D D D D
+0 0 2 2 Y Y Y Y
+0 0 2 2 string string string string
+0 0 3 3 gun sand gun sand gun sand gun sand gun
+0 0 3 3 W 0 0 W W 0 W W W
+0 0 3 3 S 0 0 S S 0 S S S
+0 0 2 2 * * * *
+0 0 2 2 clayball clayball clayball clayball
+0 0 2 2 brick brick brick brick
+0 0 3 3 W W W book book book W W W
+0 0 1 2 pumpkin torch
+0 0 3 3 W W W W D W W W W
+
+// tool
+0 0 2 3 W W W / 0 /
+0 0 2 3 G G G / 0 /
+0 0 2 3 S S S / 0 /
+0 0 2 3 I I I / 0 /
+0 0 2 3 D D D / 0 /
+0 0 3 3 W W W 0 / 0 0 / 0
+0 0 3 3 G G G 0 / 0 0 / 0
+0 0 3 3 S S S 0 / 0 0 / 0
+0 0 3 3 I I I 0 / 0 0 / 0
+0 0 3 3 D D D 0 / 0 0 / 0
+0 0 1 3 W / /
+0 0 1 3 G / /
+0 0 1 3 S / /
+0 0 1 3 I / /
+0 0 1 3 D / /
+0 0 2 3 W W 0 / 0 /
+0 0 2 3 G G 0 / 0 /
+0 0 2 3 S S 0 / 0 /
+0 0 2 3 I I 0 / 0 /
+0 0 2 3 D D 0 / 0 /
+0 0 2 2 I 0 0 flint
+0 0 3 2 I 0 I 0 I 0
+0 0 3 3 0 I 0 I R I 0 I 0
+0 0 3 3 0 G 0 G R G 0 G 0
+0 0 3 3 0 0 / 0 / string / 0 string
+
+// weapon
+0 0 1 3 W W /
+0 0 1 3 G G /
+0 0 1 3 S S /
+0 0 1 3 I I /
+0 0 1 3 D D /
+0 0 3 3 string / 0 string 0 / string / 0
+0 0 1 3 flint / feather
+
+// armor
+0 0 3 2 L L L L 0 L
+0 0 3 2 G G G G 0 G
+0 0 3 2 X X X X 0 X
+0 0 3 2 I I I I 0 I
+0 0 3 2 D D D D 0 D
+0 0 3 3 L 0 L L L L L L L
+0 0 3 3 G 0 G G G G G G G
+0 0 3 3 X 0 X X X X X X X
+0 0 3 3 I 0 I I I I I I I
+0 0 3 3 D 0 D D D D D D D
+0 0 3 3 L L L L 0 L L 0 L
+0 0 3 3 G G G G 0 G G 0 G
+0 0 3 3 X X X X 0 X X 0 X
+0 0 3 3 I I I I 0 I I 0 I
+0 0 3 3 D D D D 0 D D 0 D
+0 0 3 2 L 0 L L 0 L
+0 0 3 2 G 0 G G 0 G
+0 0 3 2 X 0 X X 0 X
+0 0 3 2 I 0 I I 0 I
+0 0 3 2 D 0 D D 0 D
+
+// transport
+0 0 3 2 I 0 I I I I
+0 0 1 2 furnace cart
+0 0 1 2 box cart
+0 0 3 3 I 0 I I / I I 0 I
+0 0 3 2 W 0 W W W W
+
+// mechanism
+0 0 2 3 W W W W W W
+0 0 2 3 I I I I I I
+0 0 1 2 smooth smooth
+0 0 1 2 R /
+0 0 1 2 / S
+
+// food
+0 0 3 2 W 0 W 0 W 0
+0 0 1 3 shroomR shroomB bowl
+0 0 1 3 shroomB shroomR bowl
+0 0 3 1 wheat wheat wheat
+0 0 3 3 goldNugget goldNugget goldNugget goldNugget apple goldNugget goldNugget goldNugget goldNugget // this is just absurd - but that is the original recipe
+
+// misc
+0 0 1 1 blockI
+0 0 1 1 blockG
+0 0 1 1 blockD
+0 0 3 3 / / / / cloth / / / /
+0 0 3 3 W W W W W W 0 / 0
+0 0 3 3 / 0 / / / / / 0 /
+0 0 3 1 reed reed reed
+0 0 1 3 paper paper paper
+0 0 3 2 / / / / / /
+
+// added in beta 1.2
+0 1 3 3 W W W W R W W W W
+0 1 3 3 S S S S bow S S R S
+0 1 1 1 reed
+0 1 3 3 bucketM bucketM bucketM sugar egg sugar wheat wheat wheat
+0 4 1 2 charcoal /
+0 1 3 3 dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue dyeBlue
+0 9 1 1 blockL
+0 1 3 3 bucketM bucketM bucketM sugar egg sugar wheat wheat wheat
+0 1 1 1 reed
+0 1 2 2 sand sand sand sand
+
+0 2 1 0 flowerR
+0 2 2 0 dyeRed dyeYellow
+0 2 1 0 flowerY
+0 2 2 0 dyeGreen dyeWhite
+0 2 2 0 dyeBlue dyeWhite
+0 2 2 0 dyeBlue dyeGreen
+0 2 2 0 dyeWhite dyeRed
+0 2 2 0 dyePink dyePurple
+0 2 2 0 dyeRed dyeBlue
+0 3 3 0 dyeWhite dyeWhite dyeBlack
+0 2 2 0 dyeWhite dyeBlack
+0 4 4 0 dyeBlue dyeRed dyeRed dyeWhite
+0 3 3 0 dyeBlue dyeRed dyePink
+0 2 2 0 dyeGray dyeWhite
+0 3 1 0 bone
+
+0 1 2 0 woolWhite dyeGray
+0 1 2 0 woolWhite dyePurple
+0 1 2 0 woolWhite dyeMagenta
+0 1 2 0 woolWhite dyePink
+0 1 2 0 woolWhite dyeRed
+0 1 2 0 woolWhite dyeOrange
+0 1 2 0 woolWhite dyeYellow
+0 1 2 0 woolWhite dyeLightGray
+0 1 2 0 woolWhite dyeGreen
+0 1 2 0 woolWhite dyeLime
+0 1 2 0 woolWhite dyeCyan
+0 1 2 0 woolWhite dyeBlue
+0 1 2 0 woolWhite dyeLightBlue
+0 1 2 0 woolWhite dyeBlack
+0 1 2 0 woolWhite dyeWhite
+0 1 2 0 woolWhite dyeBrown
+
+// added in beta 1.3
+0 3 3 1 smooth smooth smooth
+0 3 3 1 sandstone sandstone sandstone
+0 3 3 1 W W W
+0 3 3 1 S S S
+0 1 2 1 W W
+0 1 2 1 smooth smooth
+0 1 3 2 torchR R torchR smooth smooth smooth
+0 1 3 2 wool wool wool W W W
+
+// added in beta 1.4
+0 8 3 1 wheat cocobean wheat
+
+// added in beta 1.5
+0 6 3 3 G 0 G G / G G R G
+0 6 3 3 I 0 I I plateS I I R I
+
+// added in beta 1.6
+0 2 3 2 W W W W W W
+0 1 3 3 paper paper paper paper compass paper paper paper paper
+
+// added in beta 1.7
+0 1 3 3 W W W S I S S R S
+0 1 1 2 slime piston
+0 1 2 2 0 I I 0
+
+// added in beta 1.8
+0 1 3 3 melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice melonSlice
+0 4 3 3 blockB 0 0 blockB blockB 0 blockB blockB blockB
+0 4 3 3 stoneBrick 0 0 stoneBrick stoneBrick 0 stoneBrick stoneBrick stoneBrick
+0 16 3 2 I I I I I I
+0 16 3 2 glass glass glass glass glass glass
+0 1 3 2 / W / / W /
+0 4 2 2 smooth smooth smooth smooth
+0 3 3 1 blockB blockB blockB
+0 3 3 1 stoneBrick stoneBrick stoneBrick
+0 1 1 1 melonSlice
+
+// added in beta 1.9-pre
+0 4 3 3 brickN 0 0 brickN brickN 0 brickN brickN brickN
+0 6 3 2 brickN brickN brickN brickN brickN brickN
+
+// added in beta 1.9-pre2 & pre3
+0 1 3 3 goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget goldNugget
+0 1 3 3 iron 0 iron iron 0 iron iron iron iron
+0 1 3 3 0 book 0 diamond obsidian diamond obsidian obsidian obsidian
+0 3 3 2 glass 0 glass 0 glass 0
+0 1 3 2 0 blazeRod 0 cobble cobble cobble
+0 4 1 1 pumpkin
+0 1 3 0 spiderEye shroomB sugar
+0 1 2 0 blazePowder slimeball
+0 1 2 0 pearl blazePowder
+0 2 1 0 blazeRod
+
+// added in beta 1.9-pre4
+0 9 1 1 gold
+0 1 2 0 melonSlice goldNugget
+
+// added in 1.2
+0 1 3 3 0 red 0 red oreY red 0 red 0
+0 3 3 0 gunpowder blazePowder coal
+0 3 3 0 gunpowder blazePowder coal
+
+// added in 1.2.4
+0 4 2 2 sandstoneAny sandstoneAny sandstoneAny sandstoneAny
+0 1 1 2 halfSand halfSand
+0 4 1 1 oak
+0 4 1 1 pine
+0 4 1 1 birch
+0 4 1 1 jungle

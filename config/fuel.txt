@@ -1,0 +1,16 @@
+[FUEL]
+// ##############################################################################################################################
+// Here you can define your own fuels.
+// syntax: FuelItem BurnTime
+//   FuelItem  - item to burn.
+//   BurnTime  - time the item will burn.
+//
+// NB! burn time for generic wood item is defined in config.txt
+// NB! one smelting takes 200 units of time by default - this can be changed in config.
+//
+// Commented-out (they already are in the game - no need to add them again) list of all vanilla (MC1.3_01) fuels as example:
+
+coal       1600
+charcoal   1600
+stick       100
+bucketL   20000

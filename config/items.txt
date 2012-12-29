@@ -1,0 +1,31 @@
+//[ITEMS=items-vanilla.txt] - all the vanilla game settings are there for reference
+
+//[ITEMS=items-oreglow.txt] - uncomment to activate glowing ores
+//[ITEMS=items-stacking.txt] - uncomment to activate more stackables
+//[ITEMS=items-noburn.txt] - uncomment to activate no-burn
+//[ITEMS=items-nofire.txt] - uncomment to activate no-fire
+
+[ITEMS]
+// ##############################################################################################################################
+// Here you can change the properties of minecraft blocks and items.
+//
+// Syntax for blocks: BlockName MaxStack LightEmission LightReduction Strength Resistance Slipperiness
+//   BlockName      - name or id of the block (all names are defined in names.txt).
+//   MaxStack       - maximum stack size in inventory [1 .. 64] (all blocks default to 64).
+//   LightEmission  - light being emitted by the block [0 .. 15] (ex: torch is 14, lava is 15 and dirt is 0).
+//   LightReduction - reduction of light that goes though the block [0 .. 255] (ex: water is 3 and dirt is 255).
+//   Strength       - hardness of the block [-1.0 .. 100.0] (ex: obsidian is 10.0, torch is 0.0, bedrock is -1.0 aka indestructible).
+//   Resistance     - explosion resistance of the block [0.0 .. 18000000.0] (usually 5 times the strength value).
+//   Slipperiness   - slipperiness of the block [0.5 .. 1.0] (ex: ice is 0.98, dirt is 0.6).
+//   DrawFire       - chance for fire to spread near of the block [0..100] (ex: dirt is 0, cloth is 30, tall grass is 100).
+//   Burnability    - burn speed of the block [0..100] (ex: fence is 5, tall grass is 60).
+//
+// Syntax for items: ItemName MaxStack MaxDamage
+//   ItemName       - name or id of the item.
+//   MaxStack       - maximum stack size in inventory [1 .. 64] (ex: wheat is 64, bread is 1, signs is 1, snowballs is 16).
+//   MaxDamage      - NB! only for items that have durability. denotes maximum damage before item breaks.
+//
+//   PS. You can omit values at the end. ex: "leaves 64 10" - makes leaves glow, without changing any of the values
+//       that come after it (LightReduction, Strength etc).
+//   PS. You can use "?" to skip redefining a value. ex: "leaves ? 10" - skipping max stack size.
+//

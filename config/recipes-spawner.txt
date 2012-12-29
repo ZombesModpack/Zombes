@@ -1,0 +1,22 @@
+
+cageCow         1 3 3 D wheat D L cage L G rawbeef G
+cageSheep       1 3 3 D wheat D wool cage wool G rawpork G
+cagePig         1 3 3 D wheat D rawpork cage rawpork G rawpork G
+cageChicken     1 3 3 D wheat D feather cage feather G egg G
+cageSquid       1 3 3 D rawfish D ink cage ink G rawpork G
+cageWolf        1 3 3 D bone D L cage L G rawpork G
+
+cagePigzombie   1 3 3 D nether D pork cage pork G bone G
+cageGhast       1 3 3 D ghastTear D wool cage wool G bone G
+cageSpider      1 3 3 D spiderEye D web cage web G bone G
+cageSkelly      1 3 3 D bow D arrow cage arrow G bone G
+cageCreeper     1 3 3 D tnt D gun cage gun G bone G
+cageZombie      1 3 3 D rawbeef D rotten cage rotten G bone G
+cageSlimes      1 3 3 D mossy D slime cage slime G bone G
+
+cageCavespider  1 3 3 D string D web cage web G bone G
+cageEnderman    1 3 3 D pearl D R cage R G bone G
+cageSilverfish  1 3 3 D rawfish D book cage book G bone G
+
+cageLavaSlime   1 3 3 D nether D magmaCream cage magmaCream G bone G
+cageBlaze       1 3 3 D nether D blazeRod cage blazeRod G bone G
