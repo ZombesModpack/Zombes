@@ -460,6 +460,7 @@ public final class ZMod {
             List chat = getChat();
             if (!chatWelcomed) for (int line=0;line<chat.size(); ++line) {
                 String msg = getChatLine(chat, line);
+                if (msg == null) continue;
                 if (msg == chatLast) break;
                 if (msg.contains("joined the game")) { chatWelcomed = true; continue; }
                 if (msg.contains("\u00a7f \u00a7f \u00a71 \u00a70 \u00a72 \u00a74")) modFlyAllowed = false;
@@ -4543,7 +4544,10 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- GuiIngame
     private static Field fChat = getField(GuiNewChat.class, "gnc_ChatLines");
     // ---------------------------------------------------------------------------------------------------------------- ChatLine
-    private static String getChatLine(List var0, int var1) {return ((ChatLine)var0.get(var1)).getChatLineString();}
+    private static String getChatLine(List var0, int var1) {
+        ChatLine line = (ChatLine) var0.get(var1);
+        return (line != null) ? line.getChatLineString() : null;
+    }
     private static void chatClient(String var0) { player.addChatMessage(var0); }
     // ---------------------------------------------------------------------------------------------------------------- MovingObjectPosition
     private static MovingObjectPosition rayHit;
