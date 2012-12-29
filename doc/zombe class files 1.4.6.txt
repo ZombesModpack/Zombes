@@ -1,4 +1,5 @@
 1) Optional mods dependencies :
+Death   - EntityPlayerMP
 Dig     - PlayerControllerMP, NetServerHandler (reach)
 Sun     - WorldProvider
 Fly     - EntityPlayer, EntityPlayerSP, EnumGameType, MovementInputFromOptions, NetClienthandler, NetServerHandler (noclip)
@@ -18,9 +19,12 @@ ayh - NetClienthandler         - Fly
 ayo - PlayerControllerMP       - Build, Dig, Cheat (bhd)
 baf - MovementInputFromOptions - Fly
 bag - EntityPlayerSP           - Fly
+iq  - EntityPlayerMP           - Death
 iv  - NetServerHandler         - Fly (noclip), Dig (reach)
 qx  - EntityPlayer             - Fly core, Cheat
 yl  - EnumGameType             - Fly
+
+2 bis) Class files absent from the package for now
     - Explosion                - Boom
     - GuiContainer             - Craft
     - RenderLiving             - Resize
@@ -34,6 +38,7 @@ ayh - NetClienthandler         - Fly
 ayo - PlayerControllerMP       - Dig, Cheat (bhd)
 baf - MovementInputFromOptions - Fly
 bag - EntityPlayerSP           - Fly
+iq  - EntityPlayerMP           - Death
 iv  - NetServerHandler         - Fly (noclip), Dig (reach)
 qx  - EntityPlayer             - Fly core, Cheat
 yl  - EnumGameType             - Fly

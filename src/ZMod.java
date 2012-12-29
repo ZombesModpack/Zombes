@@ -375,7 +375,7 @@ public final class ZMod {
 
     // ===========================================================================================================================
     private static void onServersidePlayerDeath(EntityPlayer ent) {
-        deathOnDeath(ent);
+        deathOnServersidePlayerDeath(ent);
     }
     
     public static void onPlayerDeath(EntityPlayer ent) {
@@ -392,6 +392,7 @@ public final class ZMod {
 
     private static void onServersidePlayerUpdate(EntityPlayer ent) {
         cheatOnServersidePlayerUpdate(ent);
+        deathOnServersidePlayerUpdate(ent);
         flyOnServersidePlayerUpdate(ent);
     }
 
@@ -823,7 +824,7 @@ public final class ZMod {
         
     }
     
-    private static void deathOnDeath(EntityPlayer ent) {
+    private static void deathOnServersidePlayerDeath(EntityPlayer ent) {
         if (!modDeathEnabled || isMultiplayer) return;
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
@@ -847,7 +848,7 @@ public final class ZMod {
         }
     }
 
-    private static void deathOnUpdate(EntityPlayer ent) {
+    private static void deathOnServersidePlayerUpdate(EntityPlayer ent) {
         if (!modDeathEnabled || isMultiplayer) return;
         if (ent.isDead || getHealth(ent) <= 0) return;
         if (!optDeathDropInv && deathHaveInv) {
