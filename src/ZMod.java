@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.nio.*;
 
 public final class ZMod {
-    public static final String version = "6.8.0 for MC 1.4.6";
+    public static final String version = "6.8.1 for MC 1.4.6";
     
     private static final String MCPnames[] = {
         // GuiAchievement

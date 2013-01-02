@@ -1,5 +1,9 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v6.8.1 for MC 1.4.6
+- fixed the not working death mod (tested)
+- fixed a bug related to null chat lines
+
 v6.8.0 for MC 1.4.6
 - compatibility: updated for Minecraft 1.4.6
 
