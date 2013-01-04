@@ -1,8 +1,5 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
-v6.8.0 for MC 1.4.6
-- compatibility: updated for Minecraft 1.4.6
-
 v6.7.6 for MC 1.4.5
 - fixed a bug disabling the vanilla fly when fall damages are disabled
 - death mod rewritten, suposedly 100% fixed

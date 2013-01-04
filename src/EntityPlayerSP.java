@@ -235,7 +235,7 @@ public class EntityPlayerSP extends EntityPlayer
                     this.flyToggleTimer = 0;
                 }
             }
-
+            
             //-Zmod-Fly-------------------------------------------------------
             if (!ZMod.isFly())
             //----------------------------------------------------------------
@@ -258,7 +258,7 @@ public class EntityPlayerSP extends EntityPlayer
             if (ZMod.playerOnGround() && this.capabilities.isFlying && !ZMod.isFly())
             //----------------------------------------------------------------
             {
-                this.capabilities.isFlying = false;
+            	this.capabilities.isFlying = false;
                 this.sendPlayerAbilities();
             }
         }
@@ -633,8 +633,8 @@ public class EntityPlayerSP extends EntityPlayer
         return this.inventory.getCurrentItem();
     }
 
-    public void func_85030_a(String par1Str, float par2, float par3)
+    protected void func_85030_a(String par1Str, float par2, float par3)
     {
-        this.worldObj.playSound(this.posX, this.posY - (double)this.yOffset, this.posZ, par1Str, par2, par3, false);
+        this.worldObj.playSound(this.posX, this.posY - (double)this.yOffset, this.posZ, par1Str, par2, par3);
     }
 }

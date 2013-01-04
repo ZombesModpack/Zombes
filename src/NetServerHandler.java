@@ -300,7 +300,6 @@ public class NetServerHandler extends NetHandler
 
                 this.playerEntity.setPositionAndRotation(var5, var7, var9, var11, var12);
                 boolean var32 = var2.getCollidingBoundingBoxes(this.playerEntity, this.playerEntity.boundingBox.copy().contract((double)var27, (double)var27, (double)var27)).isEmpty();
-
                 //-ZMod-Fly-noclip--------------------------------------------
                 if (!this.playerEntity.noClip)
                 //------------------------------------------------------------
@@ -357,11 +356,7 @@ public class NetServerHandler extends NetHandler
 
         if (par1Packet14BlockDig.status == 4)
         {
-            this.playerEntity.dropOneItem(false);
-        }
-        else if (par1Packet14BlockDig.status == 3)
-        {
-            this.playerEntity.dropOneItem(true);
+            this.playerEntity.dropOneItem();
         }
         else if (par1Packet14BlockDig.status == 5)
         {
@@ -369,83 +364,89 @@ public class NetServerHandler extends NetHandler
         }
         else
         {
-            int var3 = this.mcServer.getSpawnProtectionSize();
-            boolean var4 = var2.provider.dimensionId != 0 || this.mcServer.getConfigurationManager().getOps().isEmpty() || this.mcServer.getConfigurationManager().areCommandsAllowed(this.playerEntity.username) || var3 <= 0 || this.mcServer.isSinglePlayer();
-            boolean var5 = false;
+            boolean var3 = var2.provider.dimensionId != 0 || this.mcServer.getConfigurationManager().getOps().isEmpty() || this.mcServer.getConfigurationManager().areCommandsAllowed(this.playerEntity.username) || this.mcServer.isSinglePlayer();
+            boolean var4 = false;
 
             if (par1Packet14BlockDig.status == 0)
             {
-                var5 = true;
-            }
-
-            if (par1Packet14BlockDig.status == 1)
-            {
-                var5 = true;
+                var4 = true;
             }
 
             if (par1Packet14BlockDig.status == 2)
             {
-                var5 = true;
+                var4 = true;
             }
 
-            int var6 = par1Packet14BlockDig.xPosition;
-            int var7 = par1Packet14BlockDig.yPosition;
-            int var8 = par1Packet14BlockDig.zPosition;
+            int var5 = par1Packet14BlockDig.xPosition;
+            int var6 = par1Packet14BlockDig.yPosition;
+            int var7 = par1Packet14BlockDig.zPosition;
 
-            if (var5)
+            if (var4)
             {
-                double var9 = this.playerEntity.posX - ((double)var6 + 0.5D);
-                double var11 = this.playerEntity.posY - ((double)var7 + 0.5D) + 1.5D;
-                double var13 = this.playerEntity.posZ - ((double)var8 + 0.5D);
-                double var15 = var9 * var9 + var11 * var11 + var13 * var13;
+                double var8 = this.playerEntity.posX - ((double)var5 + 0.5D);
+                double var10 = this.playerEntity.posY - ((double)var6 + 0.5D) + 1.5D;
+                double var12 = this.playerEntity.posZ - ((double)var7 + 0.5D);
+                double var14 = var8 * var8 + var10 * var10 + var12 * var12;
 
-                if (var15 > ZMod.actualReachDigSq()) //-ZMod-Dig-reach
+                if (var14 > ZMod.actualReachDigSq()) //-ZMod-Dig-reach
                 {
                     return;
                 }
 
-                if (var7 >= this.mcServer.getBuildLimit())
+                if (var6 >= this.mcServer.getBuildLimit())
                 {
                     return;
                 }
             }
 
-            ChunkCoordinates var17 = var2.getSpawnPoint();
-            int var10 = MathHelper.abs_int(var6 - var17.posX);
-            int var18 = MathHelper.abs_int(var8 - var17.posZ);
+            ChunkCoordinates var19 = var2.getSpawnPoint();
+            int var9 = MathHelper.abs_int(var5 - var19.posX);
+            int var20 = MathHelper.abs_int(var7 - var19.posZ);
 
-            if (var10 > var18)
+            if (var9 > var20)
             {
-                var18 = var10;
+                var20 = var9;
             }
 
             if (par1Packet14BlockDig.status == 0)
             {
-                if (var18 <= var3 && !var4)
+                if (var20 <= this.mcServer.getSpawnProtectionSize() && !var3)
                 {
-                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var6, var7, var8, var2));
+                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var5, var6, var7, var2));
                 }
                 else
                 {
-                    this.playerEntity.theItemInWorldManager.onBlockClicked(var6, var7, var8, par1Packet14BlockDig.face);
+                    this.playerEntity.theItemInWorldManager.onBlockClicked(var5, var6, var7, par1Packet14BlockDig.face);
                 }
             }
             else if (par1Packet14BlockDig.status == 2)
             {
-                this.playerEntity.theItemInWorldManager.uncheckedTryHarvestBlock(var6, var7, var8);
+                this.playerEntity.theItemInWorldManager.uncheckedTryHarvestBlock(var5, var6, var7);
 
-                if (var2.getBlockId(var6, var7, var8) != 0)
+                if (var2.getBlockId(var5, var6, var7) != 0)
                 {
-                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var6, var7, var8, var2));
+                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var5, var6, var7, var2));
                 }
             }
             else if (par1Packet14BlockDig.status == 1)
             {
-                this.playerEntity.theItemInWorldManager.cancelDestroyingBlock(var6, var7, var8);
+                this.playerEntity.theItemInWorldManager.destroyBlockInWorldPartially(var5, var6, var7);
 
-                if (var2.getBlockId(var6, var7, var8) != 0)
+                if (var2.getBlockId(var5, var6, var7) != 0)
                 {
-                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var6, var7, var8, var2));
+                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var5, var6, var7, var2));
+                }
+            }
+            else if (par1Packet14BlockDig.status == 3)
+            {
+                double var11 = this.playerEntity.posX - ((double)var5 + 0.5D);
+                double var13 = this.playerEntity.posY - ((double)var6 + 0.5D);
+                double var15 = this.playerEntity.posZ - ((double)var7 + 0.5D);
+                double var17 = var11 * var11 + var13 * var13 + var15 * var15;
+
+                if (var17 < 256.0D)
+                {
+                    this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var5, var6, var7, var2));
                 }
             }
         }
@@ -460,8 +461,7 @@ public class NetServerHandler extends NetHandler
         int var6 = par1Packet15Place.getYPosition();
         int var7 = par1Packet15Place.getZPosition();
         int var8 = par1Packet15Place.getDirection();
-        int var9 = this.mcServer.getSpawnProtectionSize();
-        boolean var10 = var2.provider.dimensionId != 0 || this.mcServer.getConfigurationManager().getOps().isEmpty() || this.mcServer.getConfigurationManager().areCommandsAllowed(this.playerEntity.username) || var9 <= 0 || this.mcServer.isSinglePlayer();
+        boolean var9 = var2.provider.dimensionId != 0 || this.mcServer.getConfigurationManager().getOps().isEmpty() || this.mcServer.getConfigurationManager().areCommandsAllowed(this.playerEntity.username) || this.mcServer.isSinglePlayer();
 
         if (par1Packet15Place.getDirection() == 255)
         {
@@ -479,16 +479,16 @@ public class NetServerHandler extends NetHandler
         }
         else
         {
-            ChunkCoordinates var11 = var2.getSpawnPoint();
-            int var12 = MathHelper.abs_int(var5 - var11.posX);
-            int var13 = MathHelper.abs_int(var7 - var11.posZ);
+            ChunkCoordinates var10 = var2.getSpawnPoint();
+            int var11 = MathHelper.abs_int(var5 - var10.posX);
+            int var12 = MathHelper.abs_int(var7 - var10.posZ);
 
-            if (var12 > var13)
+            if (var11 > var12)
             {
-                var13 = var12;
+                var12 = var11;
             }
 
-            if (this.hasMoved && this.playerEntity.getDistanceSq((double)var5 + 0.5D, (double)var6 + 0.5D, (double)var7 + 0.5D) < ZMod.actualReachUseSq() && (var13 > var9 || var10)) //-ZMod-Dig-reach
+            if (this.hasMoved && this.playerEntity.getDistanceSq((double)var5 + 0.5D, (double)var6 + 0.5D, (double)var7 + 0.5D) < ZMod.actualReachUseSq() && (var12 > this.mcServer.getSpawnProtectionSize() || var9)) //-ZMod-Dig-reach
             {
                 this.playerEntity.theItemInWorldManager.activateBlockOrUseItem(this.playerEntity, var2, var3, var5, var6, var7, var8, par1Packet15Place.getXOffset(), par1Packet15Place.getYOffset(), par1Packet15Place.getZOffset());
             }
@@ -545,13 +545,13 @@ public class NetServerHandler extends NetHandler
         {
             this.playerEntity.playerInventoryBeingManipulated = true;
             this.playerEntity.inventory.mainInventory[this.playerEntity.inventory.currentItem] = ItemStack.copyItemStack(this.playerEntity.inventory.mainInventory[this.playerEntity.inventory.currentItem]);
-            Slot var14 = this.playerEntity.openContainer.getSlotFromInventory(this.playerEntity.inventory, this.playerEntity.inventory.currentItem);
+            Slot var13 = this.playerEntity.openContainer.getSlotFromInventory(this.playerEntity.inventory, this.playerEntity.inventory.currentItem);
             this.playerEntity.openContainer.updateCraftingResults();
             this.playerEntity.playerInventoryBeingManipulated = false;
 
             if (!ItemStack.areItemStacksEqual(this.playerEntity.inventory.getCurrentItem(), par1Packet15Place.getItemStack()))
             {
-                this.sendPacketToPlayer(new Packet103SetSlot(this.playerEntity.openContainer.windowId, var14.slotNumber, this.playerEntity.inventory.getCurrentItem()));
+                this.sendPacketToPlayer(new Packet103SetSlot(this.playerEntity.openContainer.windowId, var13.slotNumber, this.playerEntity.inventory.getCurrentItem()));
             }
         }
     }
@@ -818,6 +818,7 @@ public class NetServerHandler extends NetHandler
             if (ItemStack.areItemStacksEqual(par1Packet102WindowClick.itemStack, var2))
             {
                 this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet106Transaction(par1Packet102WindowClick.window_Id, par1Packet102WindowClick.action, true));
+
                 this.playerEntity.playerInventoryBeingManipulated = true;
                 this.playerEntity.openContainer.updateCraftingResults();
                 this.playerEntity.updateHeldItem();

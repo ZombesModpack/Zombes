@@ -256,6 +256,7 @@ public class PlayerControllerMP
             ZMod.onBlockDigged(par1,par2,par3,par4);
             //----------------------------------------------------------------
         }
+
         else
         {
             if (this.func_85182_a(par1, par2, par3))
@@ -376,23 +377,18 @@ public class PlayerControllerMP
         float var10 = (float)par8Vec3.yCoord - (float)par5;
         float var11 = (float)par8Vec3.zCoord - (float)par6;
         boolean var12 = false;
-        int var13;
+        int var13 = par2World.getBlockId(par4, par5, par6);
 
-        if (!par1EntityPlayer.isSneaking() || par1EntityPlayer.getHeldItem() == null)
+        if (var13 > 0 && Block.blocksList[var13].onBlockActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11))
         {
-            var13 = par2World.getBlockId(par4, par5, par6);
-
-            if (var13 > 0 && Block.blocksList[var13].onBlockActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11))
-            {
-                var12 = true;
-            }
+            var12 = true;
         }
 
         if (!var12 && par3ItemStack != null && par3ItemStack.getItem() instanceof ItemBlock)
         {
-            ItemBlock var16 = (ItemBlock)par3ItemStack.getItem();
+            ItemBlock var14 = (ItemBlock)par3ItemStack.getItem();
 
-            if (!var16.canPlaceItemBlockOnSide(par2World, par4, par5, par6, par7, par1EntityPlayer, par3ItemStack))
+            if (!var14.canPlaceItemBlockOnSide(par2World, par4, par5, par6, par7, par1EntityPlayer, par3ItemStack))
             {
                 return false;
             }
@@ -419,15 +415,15 @@ public class PlayerControllerMP
         }
         else if (this.currentGameType.isCreative())
         {
-            var13 = par3ItemStack.getItemDamage();
-            int var14 = par3ItemStack.stackSize;
-            boolean var15 = par3ItemStack.tryPlaceItemIntoWorld(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
-            par3ItemStack.setItemDamage(var13);
-            par3ItemStack.stackSize = var14;
+            int var17 = par3ItemStack.getItemDamage();
+            int var15 = par3ItemStack.stackSize;
+            boolean var16 = par3ItemStack.tryPlaceItemIntoWorld(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
+            par3ItemStack.setItemDamage(var17);
+            par3ItemStack.stackSize = var15;
             //-ZMod-Cheat-projection------------------------------------------
             ZMod.afterBlockPlace();
             //----------------------------------------------------------------
-            return var15;
+            return var16;
         }
         else
         {

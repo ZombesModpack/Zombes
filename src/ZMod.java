@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.nio.*;
 
 public final class ZMod {
-    public static final String version = "6.8.0 for MC 1.4.6";
+    public static final String version = "6.7.6 for MC 1.4.5";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -3678,8 +3678,7 @@ public final class ZMod {
 
     private static void optionsModDig() {
         optDigCheckReach = getSetBool(optDigCheckReach, "optDigCheckReach", false, "Cancel out of reach actions");
-        optDigSyncDigged = false; // broken as of 1.4.6, they removed the BlockDig Request-status (3)
-        //optDigSyncDigged = getSetBool(optDigSyncDigged, "optDigSyncDigged", false, "Synchronize newly digged blocks");
+        optDigSyncDigged = getSetBool(optDigSyncDigged, "optDigSyncDigged", false, "Synchronize newly digged blocks");
         optDigHarvestAlways = getSetBool(optDigHarvestAlways, "optDigHarvestAlways", false, "Always harvest, regardless of tool");
         optDigReach = getSetFloat(optDigReach, "optDigReach", 4.5f, 2f, 128f, "Arm length");
         optDigSpeed = getSetFloat(optDigSpeed, "optDigSpeed", 2.0f, 0.1f, 10.0f, "Digging speed multiplier");
@@ -3760,17 +3759,12 @@ public final class ZMod {
         return dist < actualReachUseSq();
     }
 
-    /*
     private static Packet makeBlockRequestPacket(int x, int y, int z) {
         return new Packet14BlockDig(3, x,y,z, -1);
     }
 
     private static void askBlockInfo(int x, int y, int z) {
         queuePacket(makeBlockRequestPacket(x,y,z));
-    }
-    */
-    private static void askBlockInfo(int x, int y, int z) {
-        // DNAA. broken feature as of 1.4.6
     }
 
     private static void digOnBlockDigged(int x, int y, int z, int side) {
@@ -4427,7 +4421,7 @@ public final class ZMod {
     private static int getCartFuel(EntityMinecart ent) { return (Integer)getValue(fCartFuel, ent); }
     private static void setCartFuel(EntityMinecart ent, int val) { setValue(fCartFuel, ent, val); }
     // ---------------------------------------------------------------------------------------------------------------- EntityItem
-    private static ItemStack getEntityItemStack(EntityItem ent) { return ent.func_92059_d(); }
+    private static ItemStack getEntityItemStack(EntityItem ent) { return ent.item; }
     // ---------------------------------------------------------------------------------------------------------------- TileEntity
     private static void setChanged(TileEntity tent) { tent.onInventoryChanged(); }
     private static NBTTagCompound mapGetTileCopy(int x,int y,int z) {
