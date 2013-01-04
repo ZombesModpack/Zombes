@@ -4,24 +4,7 @@ import java.lang.reflect.Method;
 
 public abstract class WorldProvider
 {
-	protected static final boolean zmodmarker = true;
-	
-	private final Method getMethod(String name, Class[] par) { try { return WorldType.class.getDeclaredMethod(name, par); } catch(Exception whatever) { return null; } }
-    private final Object getValue(Method method, Object[] par) { try { return method.invoke(terrainType, par); } catch(Exception whatever) { return null; } }
-    
-    private final Method mGetChunkManager = getMethod("getChunkManager", new Class[]{World.class});
-    private final Method mGetChunkGenerator = getMethod("getChunkGenerator", new Class[]{World.class});
-    private final Method mGetSeaLevel = getMethod("getSeaLevel", new Class[]{World.class});
-    private final Method mHasVoidParticles = getMethod("hasVoidParticles", new Class[]{Boolean.TYPE});
-    private final Method mVoidFadeMagnitude = getMethod("voidFadeMagnitude", new Class[]{});
-
-    private final WorldChunkManager ML_getChunkManager() { return (WorldChunkManager)getValue(mGetChunkManager, new Object[]{worldObj}); }
-    private final IChunkProvider ML_getChunkGenerator() { return (IChunkProvider)getValue(mGetChunkGenerator, new Object[]{worldObj}); }
-    private final int ML_getSeaLevel() { return (Integer)getValue(mGetSeaLevel, new Object[]{worldObj}); }
-    private final boolean ML_hasVoidParticles() { return (Boolean)getValue(mHasVoidParticles, new Object[]{hasNoSky}); }
-    private final double ML_voidFadeMagnitude() { return (Double)getValue(mVoidFadeMagnitude, new Object[]{}); }
-
-	/** world object being used */
+    /** world object being used */
     public World worldObj;
     public WorldType terrainType;
     public String field_82913_c;
@@ -79,34 +62,23 @@ public abstract class WorldProvider
      */
     protected void registerWorldChunkManager()
     {
-        // -----------------------------------------------------------------------------------------------------------------------
-        if(mGetChunkManager != null) { worldChunkMgr = ML_getChunkManager(); return; }
-        // -----------------------------------------------------------------------------------------------------------------------
-        if (worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
+        if (this.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
         {
-            worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
+            FlatGeneratorInfo var1 = FlatGeneratorInfo.func_82651_a(this.worldObj.getWorldInfo().func_82571_y());
+            this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.biomeList[var1.func_82648_a()], 0.5F, 0.5F);
         }
         else
         {
-            worldChunkMgr = new WorldChunkManager(worldObj);
+            this.worldChunkMgr = new WorldChunkManager(this.worldObj);
         }
     }
+
     /**
      * Returns the chunk provider back for the world provider
      */
     public IChunkProvider getChunkProvider()
     {
-        // -----------------------------------------------------------------------------------------------------------------------
-        if(mGetChunkGenerator != null) return ML_getChunkGenerator();
-        // -----------------------------------------------------------------------------------------------------------------------
-        if (terrainType == WorldType.FLAT)
-        {
-            return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), field_82913_c);
-        }
-        else
-        {
-            return new ChunkProviderGenerate(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
-        }
+        return (IChunkProvider)(this.terrainType == WorldType.FLAT ? new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c) : new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
     }
 
     /**
@@ -210,7 +182,7 @@ public abstract class WorldProvider
         var4 *= var3 * 0.94F + 0.06F;
         var5 *= var3 * 0.94F + 0.06F;
         var6 *= var3 * 0.91F + 0.09F;
-        return this.worldObj.getWorldVec3Pool().getVecFromPool((double)var4, (double)var5, (double)var6);
+        return this.worldObj.func_82732_R().getVecFromPool((double)var4, (double)var5, (double)var6);
     }
 
     /**
@@ -249,10 +221,7 @@ public abstract class WorldProvider
 
     public int getAverageGroundLevel()
     {
-        // -----------------------------------------------------------------------------------------------------------------------
-        if(mGetSeaLevel != null) return ML_getSeaLevel();
-        // -----------------------------------------------------------------------------------------------------------------------
-        return terrainType != WorldType.FLAT ? 64 : 4;
+        return this.terrainType == WorldType.FLAT ? 4 : 64;
     }
 
     /**
@@ -261,10 +230,7 @@ public abstract class WorldProvider
      */
     public boolean getWorldHasVoidParticles()
     {
-        // -----------------------------------------------------------------------------------------------------------------------
-        if(mHasVoidParticles != null) return ML_hasVoidParticles();
-        // -----------------------------------------------------------------------------------------------------------------------
-    	return this.terrainType != WorldType.FLAT && !this.hasNoSky;
+        return this.terrainType != WorldType.FLAT && !this.hasNoSky;
     }
 
     /**
@@ -274,10 +240,7 @@ public abstract class WorldProvider
      */
     public double getVoidFogYFactor()
     {
-    	// -----------------------------------------------------------------------------------------------------------------------
-        if(mVoidFadeMagnitude != null) return ML_voidFadeMagnitude();
-        // -----------------------------------------------------------------------------------------------------------------------
-    	return this.terrainType == WorldType.FLAT ? 1.0D : 0.03125D;
+        return this.terrainType == WorldType.FLAT ? 1.0D : 0.03125D;
     }
 
     /**

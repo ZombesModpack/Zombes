@@ -1,8 +1,8 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
-v6.6.3 for MC 1.4.4 (backport from 6.8.1)
+v6.5.1 for MC 1.4.2 (backport from 6.8.1)
 - added config options for Dig
-- added missing recipes from 1.3.1 to 1.4.4
+- added missing recipes from 1.3.1 to 1.4.2
 - fixed the not working death mod (tested)
 - fixed a bug related to null chat lines
 - fixed a bug related to Cheat:ShowOres caused by block id over 255 (untested)
@@ -29,14 +29,9 @@ v6.6.3 for MC 1.4.4 (backport from 6.8.1)
 - fixed the Creative-fly-even-in-Survival bug
 - fixed a bug causing error messages thrown by the Safe mod at altitudes below 16
 - Sun mod reintroduced
-
-Zombe-Nilat-1.4.4-1
 - fixed missing crosses from the Safe mod on some blocks (notably inverted stairs and slabs)
 - fixed Cheat's mobs bars and ore marks missing or obstructed
 - fixed conflict between see-through cheat and 3D overlays (Safe, Path and Cheat's ore marks and mob bars)
 - fixed stuck clouds and/or render distance
-
-Zombe-Nilat-1.4.4-0
-- compatibility: updated for Minecraft 1.4.4
 - removed optional class files related to mods Boom, Build, Craft, Dig, Furnace, Resize and Sun
 

@@ -20,7 +20,6 @@ public class PlayerControllerMP
 
     /** PosZ of the current block being destroyed */
     private int currentblockZ = -1;
-    private ItemStack field_85183_f = null;
 
     /** Current block damage (MP) */
     private float curBlockDamageMP = 0.0F;
@@ -106,7 +105,7 @@ public class PlayerControllerMP
      */
     public boolean onPlayerDestroyBlock(int par1, int par2, int par3, int par4)
     {
-        if (this.currentGameType.isAdventure() && !this.mc.thePlayer.canCurrentToolHarvestBlock(par1, par2, par3))
+        if (this.currentGameType.func_82752_c() && !this.mc.thePlayer.func_82246_f(par1, par2, par3))
         {
             return false;
         }
@@ -129,8 +128,6 @@ public class PlayerControllerMP
                 {
                     var6.onBlockDestroyedByPlayer(var5, par1, par2, par3, var7);
                 }
-
-                this.currentBlockY = -1;
 
                 if (!this.currentGameType.isCreative())
                 {
@@ -160,7 +157,7 @@ public class PlayerControllerMP
         //-ZMod-Dig-check-----------------------------------------------------
         if (!ZMod.digCheckReachDig(par1,par2,par3)) return;
         //--------------------------------------------------------------------
-        if (!this.currentGameType.isAdventure() || this.mc.thePlayer.canCurrentToolHarvestBlock(par1, par2, par3))
+        if (!this.currentGameType.func_82752_c() || this.mc.thePlayer.func_82246_f(par1, par2, par3))
         {
             if (this.currentGameType.isCreative())
             {
@@ -171,14 +168,14 @@ public class PlayerControllerMP
                 ZMod.onBlockDigged(par1,par2,par3,par4);
                 //------------------------------------------------------------
             }
-            else if (!this.isHittingBlock || !this.func_85182_a(par1, par2, par3))
+            else if (!this.isHittingBlock || par1 != this.currentBlockX || par2 != this.currentBlockY || par3 != this.currentblockZ)
             {
                 //-ZMod-Cheat-------------------------------------------------
                 ZMod.beforeBlockDig();
                 //------------------------------------------------------------
                 if (this.isHittingBlock)
                 {
-                    this.netClientHandler.addToSendQueue(new Packet14BlockDig(1, this.currentBlockX, this.currentBlockY, this.currentblockZ, par4));
+                    this.netClientHandler.addToSendQueue(new Packet14BlockDig(2, par1, par2, par3, par4));
                 }
 
                 this.netClientHandler.addToSendQueue(new Packet14BlockDig(0, par1, par2, par3, par4));
@@ -199,7 +196,6 @@ public class PlayerControllerMP
                     this.currentBlockX = par1;
                     this.currentBlockY = par2;
                     this.currentblockZ = par3;
-                    this.field_85183_f = this.mc.thePlayer.getHeldItem();
                     this.curBlockDamageMP = 0.0F;
                     this.prevBlockDamageMP = 0.0F;
                     this.stepSoundTickCounter = 0.0F;
@@ -259,7 +255,7 @@ public class PlayerControllerMP
 
         else
         {
-            if (this.func_85182_a(par1, par2, par3))
+            if (par1 == this.currentBlockX && par2 == this.currentBlockY && par3 == this.currentblockZ)
             {
                 int var5 = this.mc.theWorld.getBlockId(par1, par2, par3);
 
@@ -321,11 +317,6 @@ public class PlayerControllerMP
         this.syncCurrentPlayItem();
         this.prevBlockDamageMP = this.curBlockDamageMP;
         this.mc.sndManager.playRandomMusicIfReady();
-    }
-
-    private boolean func_85182_a(int par1, int par2, int par3)
-    {
-        return par1 == this.currentBlockX && par2 == this.currentBlockY && par3 == this.currentblockZ && this.field_85183_f == this.mc.thePlayer.getHeldItem();
     }
 
     /**

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.nio.*;
 
 public final class ZMod {
-    public static final String version = "6.6.3 for MC 1.4.4";
+    public static final String version = "6.5.1 for MC 1.4.2";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -3549,7 +3549,7 @@ public final class ZMod {
         }
         
 
-        public ChunkCoordinates getPlayerCoordinates() {
+        public ChunkCoordinates func_82114_b() {
             return new ChunkCoordinates(MathHelper.floor_double(this.posX + 0.5D), 
                                         MathHelper.floor_double(this.posY + 0.5D), 
                                         MathHelper.floor_double(this.posZ + 0.5D));

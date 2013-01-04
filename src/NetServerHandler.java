@@ -28,7 +28,7 @@ public class NetServerHandler extends NetHandler
     private MinecraftServer mcServer;
 
     /** Reference to the EntityPlayerMP object. */
-    public EntityPlayerMP playerEntity;
+    private EntityPlayerMP playerEntity;
 
     /** incremented each tick */
     private int currentTicks;
@@ -97,6 +97,17 @@ public class NetServerHandler extends NetHandler
         }
 
         this.mcServer.theProfiler.endStartSection("playerTick");
+
+        if (!this.field_72584_h && !this.playerEntity.playerConqueredTheEnd)
+        {
+            this.playerEntity.onUpdateEntity();
+
+            if (this.playerEntity.ridingEntity == null)
+            {
+                this.playerEntity.setLocationAndAngles(this.lastPosX, this.lastPosY, this.lastPosZ, this.playerEntity.rotationYaw, this.playerEntity.rotationPitch);
+            }
+        }
+
         this.mcServer.theProfiler.endSection();
     }
 
@@ -410,7 +421,7 @@ public class NetServerHandler extends NetHandler
 
             if (par1Packet14BlockDig.status == 0)
             {
-                if (var20 <= this.mcServer.getSpawnProtectionSize() && !var3)
+                if (var20 <= this.mcServer.func_82357_ak() && !var3)
                 {
                     this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet53BlockChange(var5, var6, var7, var2));
                 }
@@ -488,7 +499,7 @@ public class NetServerHandler extends NetHandler
                 var12 = var11;
             }
 
-            if (this.hasMoved && this.playerEntity.getDistanceSq((double)var5 + 0.5D, (double)var6 + 0.5D, (double)var7 + 0.5D) < ZMod.actualReachUseSq() && (var12 > this.mcServer.getSpawnProtectionSize() || var9)) //-ZMod-Dig-reach
+            if (this.hasMoved && this.playerEntity.getDistanceSq((double)var5 + 0.5D, (double)var6 + 0.5D, (double)var7 + 0.5D) < ZMod.actualReachUseSq() && (var12 > this.mcServer.func_82357_ak() || var9)) //-ZMod-Dig-reach
             {
                 this.playerEntity.theItemInWorldManager.activateBlockOrUseItem(this.playerEntity, var2, var3, var5, var6, var7, var8, par1Packet15Place.getXOffset(), par1Packet15Place.getYOffset(), par1Packet15Place.getZOffset());
             }
@@ -1035,7 +1046,7 @@ public class NetServerHandler extends NetHandler
 
                 if (var3 != null && var3.itemID == Item.writableBook.shiftedIndex && var3.itemID == var4.itemID)
                 {
-                    var4.func_77983_a("pages", var3.getTagCompound().getTagList("pages"));
+                    var4.setTagCompound(var3.getTagCompound());
                 }
             }
             catch (Exception var12)
@@ -1059,9 +1070,7 @@ public class NetServerHandler extends NetHandler
 
                 if (var3 != null && var3.itemID == Item.writtenBook.shiftedIndex && var4.itemID == Item.writableBook.shiftedIndex)
                 {
-                    var4.func_77983_a("author", new NBTTagString("author", this.playerEntity.username));
-                    var4.func_77983_a("title", new NBTTagString("title", var3.getTagCompound().getString("title")));
-                    var4.func_77983_a("pages", var3.getTagCompound().getTagList("pages"));
+                    var4.setTagCompound(var3.getTagCompound());
                     var4.itemID = Item.writtenBook.shiftedIndex;
                 }
             }
@@ -1098,7 +1107,7 @@ public class NetServerHandler extends NetHandler
 
                 if ("MC|AdvCdm".equals(par1Packet250CustomPayload.channel))
                 {
-                    if (!this.mcServer.isCommandBlockEnabled())
+                    if (!this.mcServer.func_82356_Z())
                     {
                         this.playerEntity.sendChatToPlayer(this.playerEntity.translateString("advMode.notEnabled", new Object[0]));
                     }

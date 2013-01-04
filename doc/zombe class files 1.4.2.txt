@@ -14,15 +14,15 @@ Resize  - RenderLiving
 
 2) Optional mods classes
 File/ Class Name               / Used by
-aaj - WorldProvider            - Sun
-axz - NetClienthandler         - Fly
-ayg - PlayerControllerMP       - Build, Dig, Cheat (bhd)
-azu - MovementInputFromOptions - Fly
-azv - EntityPlayerSP           - Fly
-iq  - EntityPlayerMP           - Death
-iv  - NetServerHandler         - Fly (noclip), Dig (reach)
-qx  - EntityPlayer             - Fly core, Cheat
-ye  - EnumGameType             - Fly
+awr - NetClienthandler         - Fly
+awy - PlayerControllerMP       - Build, Dig, Cheat (bhd)
+ayl - MovementInputFromOptions - Fly
+aym - EntityPlayerSP           - Fly
+ih  - EntityPlayerMP           - Death
+im  - NetServerHandler         - Fly (noclip), Dig (reach)
+qg  - EntityPlayer             - Fly core, Cheat
+xn  - EnumGameType             - Fly
+zr  - WorldProvider            - Sun
 
 2 bis) Class files absent from the package for now
     - Explosion                - Boom
@@ -32,16 +32,16 @@ ye  - EnumGameType             - Fly
 
 3) All included files
 File/ Class Name               / Used by
-aaj - WorldProvider            - Sun
-asi - MinecraftAppletImpl      - core
-axz - NetClienthandler         - Fly
-ayg - PlayerControllerMP       - Dig, Cheat (bhd)
-azu - MovementInputFromOptions - Fly
-azv - EntityPlayerSP           - Fly
-iq  - EntityPlayerMP           - Death
-iv  - NetServerHandler         - Fly (noclip), Dig (reach)
-qx  - EntityPlayer             - Fly core, Cheat
-ye  - EnumGameType             - Fly
+ara - MinecraftAppletImpl      - core
+awr - NetClienthandler         - Fly
+awy - PlayerControllerMP       - Dig, Cheat (bhd)
+ayl - MovementInputFromOptions - Fly
+aym - EntityPlayerSP           - Fly
+ih  - EntityPlayerMP           - Death
+im  - NetServerHandler         - Fly (noclip), Dig (reach)
+qg  - EntityPlayer             - Fly core, Cheat
+xn  - EnumGameType             - Fly
+zr  - WorldProvider            - Sun
 Z** - Zombe's Modpack files    - core
 
 *.java -   source code files   - devs.

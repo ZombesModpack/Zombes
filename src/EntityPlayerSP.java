@@ -35,9 +35,9 @@ public class EntityPlayerSP extends EntityPlayer
         if (ZMod.onSetAngles(par1,par2)) super.setAngles(par1,par2);
     }
     //-ZMod-Dig-check-secondary-detail----------------------------------------
-    public boolean canCurrentToolHarvestBlock(int x, int y, int z) {
+    public boolean func_82246_f(int x, int y, int z) {
         if (!ZMod.digCheckReachDig(x,y,z)) return false;
-        return super.canCurrentToolHarvestBlock(x,y,z);
+        return super.func_82246_f(x,y,z);
     }
     //------------------------------------------------------------------------
 
@@ -301,10 +301,28 @@ public class EntityPlayerSP extends EntityPlayer
         return var1;
     }
 
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.writeEntityToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setInteger("Score", this.score);
+    }
+
     public void updateCloak()
     {
         this.playerCloakUrl = "http://skins.minecraft.net/MinecraftCloaks/" + StringUtils.stripControlCodes(this.username) + ".png";
         this.cloakUrl = this.playerCloakUrl;
+    }
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.readEntityFromNBT(par1NBTTagCompound);
+        this.score = par1NBTTagCompound.getInteger("Score");
     }
 
     /**
@@ -369,10 +387,7 @@ public class EntityPlayerSP extends EntityPlayer
         this.mc.displayGuiScreen(new GuiEnchantment(this.inventory, this.worldObj, par1, par2, par3));
     }
 
-    /**
-     * Displays the GUI for interacting with an anvil.
-     */
-    public void displayGUIAnvil(int par1, int par2, int par3)
+    public void func_82244_d(int par1, int par2, int par3)
     {
         this.mc.displayGuiScreen(new GuiRepair(this.inventory, this.worldObj, par1, par2, par3));
     }
@@ -393,10 +408,7 @@ public class EntityPlayerSP extends EntityPlayer
         this.mc.displayGuiScreen(new GuiBrewingStand(this.inventory, par1TileEntityBrewingStand));
     }
 
-    /**
-     * Displays the GUI for interacting with a beacon.
-     */
-    public void displayGUIBeacon(TileEntityBeacon par1TileEntityBeacon)
+    public void func_82240_a(TileEntityBeacon par1TileEntityBeacon)
     {
         this.mc.displayGuiScreen(new GuiBeacon(this.inventory, par1TileEntityBeacon));
     }
@@ -617,10 +629,7 @@ public class EntityPlayerSP extends EntityPlayer
         return par1 <= 0;
     }
 
-    /**
-     * Return the coordinates for this player as ChunkCoordinates.
-     */
-    public ChunkCoordinates getPlayerCoordinates()
+    public ChunkCoordinates func_82114_b()
     {
         return new ChunkCoordinates(MathHelper.floor_double(this.posX + 0.5D), MathHelper.floor_double(this.posY + 0.5D), MathHelper.floor_double(this.posZ + 0.5D));
     }
@@ -631,10 +640,5 @@ public class EntityPlayerSP extends EntityPlayer
     public ItemStack getHeldItem()
     {
         return this.inventory.getCurrentItem();
-    }
-
-    protected void func_85030_a(String par1Str, float par2, float par3)
-    {
-        this.worldObj.playSound(this.posX, this.posY - (double)this.yOffset, this.posZ, par1Str, par2, par3);
     }
 }

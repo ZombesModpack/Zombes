@@ -55,13 +55,10 @@ public enum EnumGameType
             par1PlayerCapabilities.isFlying = true;
         }
 
-        par1PlayerCapabilities.allowEdit = !this.isAdventure();
+        par1PlayerCapabilities.allowEdit = !this.func_82752_c();
     }
 
-    /**
-     * Returns true if this is the ADVENTURE game type
-     */
-    public boolean isAdventure()
+    public boolean func_82752_c()
     {
         return this == ADVENTURE;
     }
