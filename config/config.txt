@@ -664,13 +664,28 @@ optFurnaceReturnBucket = no
 #modDigEnabled = yes
 
 # Cancel out of reach actions
-optDigCheckReach = yes
+optDigCheckReach      = yes
 
 # Digging speed multiplier.  [0.1..10.0]
 optDigSpeed           = 2.0
 
-# Distance where one can dig / place blocks (vanilla game has it at 4.0). [2.0 .. 128.0]
+# Enable custom arm reach for digging / placing blocks
+optDigReachSet        = no
+
+# Distance where one can dig / place blocks. [2.0 .. 64.0]
 optDigReach           = 6.0
+
+# Enable custom arm reach for digging blocks only
+optDigReachSetDig     = no
+
+# Distance where one can dig blocks. (vanilla has it at 6) [2.0 .. 64.0]
+optDigReachDig        = 6.0
+
+# Enable custom arm reach for placing and using blocks only
+optDigReachSetUse     = no
+
+# Distance where one can use and place blocks. (vanilla has it at 8) [2.0 .. 64.0]
+optDigReachUse        = 8.0
 
 # Always harvest blocks without needing proper tools.
 # NB! "build" mod's harvesting setting takes precedence if enabled.

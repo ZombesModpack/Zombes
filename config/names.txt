@@ -285,7 +285,7 @@ stairN 114                          // nether brick stairs
 netherWartBlock 115                 // nether wart
 blazeRod 369                        // blaze rod
 ghastTear 370                       // ghast tear
-goldNugget 371                      // gold nugget
+goldNugget 371     Gn 371           // gold nugget
 netherWart 372                      // nether wart
 
 // added in beta 1.9-pre2
@@ -339,6 +339,50 @@ woodOak 5/0                         // wood from oak tree
 woodPine 5/1                        // wood from pine tree
 woodBirch 5/2                       // wood from birch tree
 woodJungle 5/3                      // wood from jungle tree
+
+// added in 1.3.1
+oreE 129                            // emerald ore
+blockE 133                          // emerald block
+emerald 388     E 388               // emerald
+boxE 130        chestE 130          // ender chest
+wirehook 131                        // tripwire hook
+halfWoodOak    126/0                // half block of oakwood
+halfWoodPine   126/1                // half block of pinewood
+halfWoodBirch  126/2                // half block of birchwood
+halfWoodJungle 126/3                // half block of junglewood
+stepSS 128      stairSS 128         // sandstone steps
+stepWO 53       stairWO 53          // oakwood steps (= wooden steps)
+stepWP 134      stairWP 134         // pinewood steps
+stepWB 135      stairWB 135         // birchwood steps
+stepWJ 136      stairWJ 136         // junglewood steps
+bookandquill 386                    // book and quill
+
+// added in 1.4.2
+
+command 137  control 137            // command block
+beacon 138                          // beacon
+wallAny 139/-1                      // walls
+wallCobble 139/0                    // cobble wall
+wallMossy 139/1                     // mossy cobble wall
+buttonW 143                         // wooden button
+headBlock 144                       // mob head as block
+anvil 145                           // anvil
+itemFrame 389  frame 389            // item frame
+flowerPot 390  pot 390              // flower pot
+carrot 391                          // vegetable: carrot
+potato 392                          // vegetable: potato
+carrotGolden 396                    // golden carrot
+mobHead 397  head 397  skull 397    // mob head
+stickCarrot 398                     // carrot on a stick
+netherStar 399  star 399            // nether star
+pumpkinPie 400  pie 400             // pumpkin pie
+
+// added in 1.4.6
+
+fireworkRocket 401  rocket 401      // firework rocket
+fireworkStar 402  firework 402      // firework star
+
+
 
 // Names for critters - teleport mod uses thous. Can not be used in recipes, obviously.
 
