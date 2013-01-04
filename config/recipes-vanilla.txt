@@ -15,7 +15,7 @@ blockD 1 3 3 D D D D D D D D D
 oreY 1 2 2 Y Y Y Y
 woolWhite 1 2 2 string string string string
 tnt 1 3 3 gun sand gun sand gun sand gun sand gun
-stairW 4 3 3 W 0 0 W W 0 W W W
+//stairW 4 3 3 W 0 0 W W 0 W W W
 stairC 4 3 3 S 0 0 S S 0 S S S
 snow 1 2 2 * * * *
 clay 1 2 2 clayball clayball clayball clayball
@@ -111,7 +111,8 @@ pic 1 3 3 / / / / cloth / / / /
 sign 1 3 3 W W W W W W 0 / 0
 ladder 2 3 3 / 0 / / / / / 0 /
 paper 3 3 1 reed reed reed
-book 1 1 3 paper paper paper
+// book 1 1 3 paper paper paper
+book 1 2 2 paper paper leather paper
 fence 2 3 2 / / / / / /
 
 // added in beta 1.2
@@ -162,7 +163,7 @@ woolWhite 1 2 0 wool dyeWhite
 // added in beta 1.3
 half 3 3 1 smooth smooth smooth
 halfSand 3 3 1 sandstone sandstone sandstone
-halfWood 3 3 1 W W W
+//halfWood 3 3 1 W W W
 halfCobble 3 3 1 S S S
 plateW 1 2 1 W W
 plateS 1 2 1 smooth smooth
@@ -238,3 +239,36 @@ woodOak 4 1 1 oak
 woodPine 4 1 1 pine
 woodBirch 4 1 1 birch
 woodJungle 4 1 1 jungle
+
+// added in 1.3.1
+
+emerald 9 1 1 blockE
+blockE 1 3 3 E E E E E E E E E
+chestE 1 3 3 obs obs obs obs enderEye obs obs obs obs
+wirehook 2 1 3 iron stick wood
+halfWoodOak 3 3 1 woodOak woodOak woodOak
+halfWoodPine 3 3 1 woodPine woodPine woodPine
+halfWoodBirch 3 3 1 woodBirch woodBirch woodBirch
+halfWoodJungle 3 3 1 woodJungle woodJungle woodJungle
+stairSS 4 3 3 sandstoneAny 0 0 sandstoneAny sandstoneAny 0 sandstoneAny sandstoneAny sandstoneAny
+stairWO 4 3 3 woodOak 0 0 woodOak woodOak 0 woodOak woodOak woodOak
+stairWP 4 3 3 woodPine 0 0 woodPine woodPine 0 woodPine woodPine woodPine
+stairWB 4 3 3 woodBirch 0 0 woodBirch woodBirch 0 woodBirch woodBirch woodBirch
+stairWJ 4 3 3 woodJungle 0 0 woodJungle woodJungle 0 woodJungle woodJungle woodJungle
+bookandquill 1 3 1 book ink feather
+
+// added in 1.4.2
+
+beacon 1 3 3 glass glass glass glass star glass obs obs obs
+wallCobble 6 3 2 cobble cobble cobble cobble cobble cobble
+wallMossy 6 3 2 mossy mossy mossy mossy mossy mossy
+buttonW 1 1 1 wood
+anvil 1 3 3 blockI blockI blockI 0 iron 0 iron iron iron
+frame 1 3 3 stick stick stick stick leather stick stick stick stick
+pot 1 3 3 0 0 0 brick 0 brick 0 brick 0
+carrotGolden 1 3 3 Gn Gn Gn Gn carrot Gn Gn Gn Gn
+pie 1 2 2 pumpkin sugar 0 egg
+stickCarrot 1 2 2 stick 0 0 carrot
+
+
+

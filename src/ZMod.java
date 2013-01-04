@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.nio.*;
 
 public final class ZMod {
-    public static final String version = "6.7.6 for MC 1.4.5";
+    public static final String version = "6.7.7 for MC 1.4.5";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -79,7 +79,7 @@ public final class ZMod {
 
     private static final int IGNORE = 0, NAMEMAP = 1, RECIPES = 2, FUEL = 3, SMELTING = 4, ITEMS = 5;
     private static final int MTAG1 = 0, MTAG2 = 1, MINFO = 2, MERR = 3, MDEBUG = 4, MTAGR = 5, MAXMSG = 6;
-    private static int block[] = new int[256];
+    private static int block[] = new int[4096];
     private static void initBlockLookupArray() {
         block[  0] = KNOWN | SPACE | BASIC | EMPTY; // air
         block[  1] = KNOWN | SOLID | BASIC;         // stone
@@ -375,7 +375,7 @@ public final class ZMod {
 
     // ===========================================================================================================================
     private static void onServersidePlayerDeath(EntityPlayer ent) {
-        deathOnDeath(ent);
+        deathOnServersidePlayerDeath(ent);
     }
     
     public static void onPlayerDeath(EntityPlayer ent) {
@@ -392,6 +392,7 @@ public final class ZMod {
 
     private static void onServersidePlayerUpdate(EntityPlayer ent) {
         cheatOnServersidePlayerUpdate(ent);
+        deathOnServersidePlayerUpdate(ent);
         flyOnServersidePlayerUpdate(ent);
     }
 
@@ -460,6 +461,7 @@ public final class ZMod {
             List chat = getChat();
             if (!chatWelcomed) for (int line=0;line<chat.size(); ++line) {
                 String msg = getChatLine(chat, line);
+                if (msg == null) continue;
                 if (msg == chatLast) break;
                 if (msg.contains("joined the game")) { chatWelcomed = true; continue; }
                 if (msg.contains("\u00a7f \u00a7f \u00a71 \u00a70 \u00a72 \u00a74")) modFlyAllowed = false;
@@ -822,7 +824,7 @@ public final class ZMod {
         
     }
     
-    private static void deathOnDeath(EntityPlayer ent) {
+    private static void deathOnServersidePlayerDeath(EntityPlayer ent) {
         if (!modDeathEnabled || isMultiplayer) return;
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
@@ -846,7 +848,7 @@ public final class ZMod {
         }
     }
 
-    private static void deathOnUpdate(EntityPlayer ent) {
+    private static void deathOnServersidePlayerUpdate(EntityPlayer ent) {
         if (!modDeathEnabled || isMultiplayer) return;
         if (ent.isDead || getHealth(ent) <= 0) return;
         if (!optDeathDropInv && deathHaveInv) {
@@ -2888,7 +2890,7 @@ public final class ZMod {
     private static int optCheatBlockHitDelay = 5;
 
     private static boolean initModCheat() {
-        cheatMobs = new Mark[MAXTYPE]; cheatOres = new Mark[256]; cheatMark = new Mark[cheatMax]; cheatDamage = new boolean[cheatItems];
+        cheatMobs = new Mark[MAXTYPE]; cheatOres = new Mark[4096]; cheatMark = new Mark[cheatMax]; cheatDamage = new boolean[cheatItems];
         cheatAmbItems = makeBuffer(new float[] {4f, 4f, 4f, 1f});
         cheatAmbGeom  = makeBuffer(new float[] {0f, 0f, 0f, 1f});
         log("info: loading config for \"cheat\"");
@@ -2902,9 +2904,12 @@ public final class ZMod {
             if (got.length == 2) {
                 Mark color = new Mark();
                 int id = names.containsKey(got[0]) ? (Integer)(names.get(got[0])) : parseUnsigned(got[0]);
-                if (id>0 && id<256 && color.loadColor(got[1])) { cheatOres[id] = color; continue; }
+                if (id>0 && id<cheatOres.length && color.loadColor(got[1])) {
+                    cheatOres[id] = color;
+                }
+            } else {
+                err("error: config.txt @ optCheatOres - invalid ore/color pair \""+val[i]+"\"");
             }
-            err("error: config.txt @ optCheatOres - invalid ore/color pair \""+val[i]+"\"");
         }
         val = getString("optCheatShowMobs", "1/0x000088, 3/0x880000, 5/0x888888, 6/0x008800, 7/0x888800, 8/0x880088, 12/0x008888, 11/0x000044, 2/0x444400, 4/0x444444, 9/0x440000, 10/0x004444, 14/0x004400, 15/0xffffff").split("[\\t ]*,[\\t ]*");
         for (int i=0;i<val.length;i++) {
@@ -3666,22 +3671,30 @@ public final class ZMod {
     //=ZMod=Dig===============================================================
     private static boolean modDigEnabled;
     private static boolean optDigHarvestAlways, optDigCheckReach, optDigSyncDigged;
-    private static float optDigSpeed, optDigReach;
+    private static boolean optDigReachSet, optDigReachSetDig, optDigReachSetUse;
+    private static float optDigSpeed, optDigReach, optDigReachDig, optDigReachUse;
     private static boolean featureCustomReachAvailable;
 
     private static boolean initModDig() {
         log("info: loading config for \"dig\"");
         optionsModDig();
-        featureCustomReachAvailable = checkClass(NetServerHandler.class, "dig", "custom reach not available");
+        featureCustomReachAvailable = checkClass(NetServerHandler.class) && checkClass(PlayerControllerMP.class);
         return checkClass(PlayerControllerMP.class, "dig");
     }
 
     private static void optionsModDig() {
         optDigCheckReach = getSetBool(optDigCheckReach, "optDigCheckReach", false, "Cancel out of reach actions");
         optDigSyncDigged = getSetBool(optDigSyncDigged, "optDigSyncDigged", false, "Synchronize newly digged blocks");
-        optDigHarvestAlways = getSetBool(optDigHarvestAlways, "optDigHarvestAlways", false, "Always harvest, regardless of tool");
-        optDigReach = getSetFloat(optDigReach, "optDigReach", 4.5f, 2f, 128f, "Arm length");
-        optDigSpeed = getSetFloat(optDigSpeed, "optDigSpeed", 2.0f, 0.1f, 10.0f, "Digging speed multiplier");
+        optDigHarvestAlways = false;
+        //optDigHarvestAlways = getSetBool(optDigHarvestAlways, "optDigHarvestAlways", false, "Always harvest, regardless of tool");
+        optDigReachSet = getSetBool(optDigReachSet, "optDigReachSet", false, "Set arm reach globally");
+        optDigReach = getSetFloat(optDigReach, "optDigReach", 6f, 2f, 64f, "Global arm reach value");
+        optDigReachSetDig = getSetBool(optDigReachSetDig, "optDigReachSetDig", false, "Set arm reach for digging blocks");
+        optDigReachDig = getSetFloat(optDigReachDig, "optDigReachDig", 6f, 2f, 64f, "Dig arm reach value (default 6)");
+        optDigReachSetUse = getSetBool(optDigReachSetUse, "optDigReachSetUse", false, "Set arm reach for using or placing blocks");
+        optDigReachUse = getSetFloat(optDigReachUse, "optDigReachUse", 8f, 2f, 64f, "Use arm reach value (default 8)");
+        optDigSpeed = 1f;
+        //optDigSpeed = getSetFloat(optDigSpeed, "optDigSpeed", 2.0f, 0.1f, 10.0f, "Digging speed multiplier");
     }
 
     public static float digReachHandle() {
@@ -3711,7 +3724,10 @@ public final class ZMod {
     public static float actualReachDig() {
         float reach = 6;
         if (modDigEnabled) {
-            if (!isMultiplayer && featureCustomReachAvailable) reach = optDigReach;
+            if (!isMultiplayer && featureCustomReachAvailable) {
+                if (optDigReachSet) reach = optDigReach;
+                if (optDigReachSetDig) reach = optDigReachDig;
+            }
         }
         return reach;
     }
@@ -3723,7 +3739,10 @@ public final class ZMod {
     public static float actualReachUse() {
         float reach = 8;
         if (modDigEnabled) {
-            if (!isMultiplayer && featureCustomReachAvailable) reach = optDigReach;
+            if (!isMultiplayer && featureCustomReachAvailable) {
+                if (optDigReachSet) reach = optDigReach;
+                if (optDigReachSetUse) reach = optDigReachUse;
+            }
         }
         return reach;
     }
@@ -3733,11 +3752,11 @@ public final class ZMod {
     }
 
     public static float actualPlayerReach() {
-        float reach = (player != null && player.capabilities.isCreativeMode) ? 5.0f : 4.5f;
+        float reach = 4.5f;
         if (modDigEnabled) {
-            if (!isMultiplayer && featureCustomReachAvailable) reach = optDigReach;
-            else reach = java.lang.Math.min(optDigReach, actualReachUse());
+            reach = java.lang.Math.min(actualReachDig()-1.5f, actualReachUse());
         }
+        if (player != null && player.capabilities.isCreativeMode) reach += 0.5;
         return reach;
     }
 
@@ -4537,7 +4556,10 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- GuiIngame
     private static Field fChat = getField(GuiNewChat.class, "gnc_ChatLines");
     // ---------------------------------------------------------------------------------------------------------------- ChatLine
-    private static String getChatLine(List var0, int var1) {return ((ChatLine)var0.get(var1)).getChatLineString();}
+    private static String getChatLine(List var0, int var1) {
+        ChatLine line = (ChatLine) var0.get(var1);
+        return (line != null) ? line.getChatLineString() : null;
+    }
     private static void chatClient(String var0) { player.addChatMessage(var0); }
     // ---------------------------------------------------------------------------------------------------------------- MovingObjectPosition
     private static MovingObjectPosition rayHit;
@@ -4804,9 +4826,16 @@ public final class ZMod {
     private static Object getResult(Method m, Object obj, Object p1, Object p2) { return getResult(m, obj, new Object[]{p1,p2}); }
     private static Object getResult(Method m, Object obj, Object p1, Object p2, Object p3) { return getResult(m, obj, new Object[]{p1,p2,p3}); }
     private static Object getResult(Method m, Object obj, Object p1, Object p2, Object p3, Object p4) { return getResult(m, obj, new Object[]{p1,p2,p3,p4}); }
+    private static boolean checkClass(Class c) {
+        try {
+            Field field = c.getDeclaredField("zmodmarker");
+            if (field != null) return true;
+        } catch(Exception whatever) { }
+        return false;
+    }
     private static boolean checkClass(Class c, String mod) { return checkClass(c, mod, null); }
     private static boolean checkClass(Class c, String mod, String warning) {
-        try { Field field = c.getDeclaredField("zmodmarker"); if (field != null) return true; } catch(Exception whatever) { }
+        if (checkClass(c)) return true;
         if (warning == null) err("error: "+c.getName()+".class has not been installed - "+mod+" mod disabled");
         else log("warning: "+c.getName()+".class has not been installed - "+mod+" mod: "+warning);
         return false;

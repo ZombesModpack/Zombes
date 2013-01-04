@@ -571,10 +571,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
      */
     public void onDeath(DamageSource par1DamageSource)
     {
-        //-ZMod-Death---------------------------------------------------------
-        ZMod.onPlayerDeath(this);
-        //--------------------------------------------------------------------
-
         super.onDeath(par1DamageSource);
         this.setSize(0.2F, 0.2F);
         this.setPosition(this.posX, this.posY, this.posZ);

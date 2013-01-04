@@ -1,5 +1,12 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v6.7.7 for MC 1.4.5 (backport from 6.8.1)
+- added config options for Dig
+- added missing recipes from 1.3.1 to 1.4.5
+- fixed the not working death mod (tested)
+- fixed a bug related to null chat lines
+- fixed a bug related to Cheat:ShowOres caused by block id over 255 (untested)
+
 v6.7.6 for MC 1.4.5
 - fixed a bug disabling the vanilla fly when fall damages are disabled
 - death mod rewritten, suposedly 100% fixed
