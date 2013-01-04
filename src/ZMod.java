@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.nio.*;
 
 public final class ZMod {
-    public static final String version = "6.7.7 for MC 1.4.5";
+    public static final String version = "6.6.3 for MC 1.4.4";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -811,7 +811,7 @@ public final class ZMod {
     private static boolean initModDeath() {
         log("info: loading config for \"death\"");
         optionsModDeath();
-        return checkClass(EntityPlayer.class, "death");
+        return checkClass(EntityPlayerMP.class, "death");
     }
     
     private static void optionsModDeath() {
@@ -4430,7 +4430,7 @@ public final class ZMod {
     private static void flyCallSuper(EntityPlayer ent, double mx, double my, double mz) { ent.callSuper(mx,my,mz); }
     private static boolean getIsSleeping(EntityPlayer ent) { return player.isPlayerSleeping(); }
     private static String getPlayerName(EntityPlayer ent) { return ent.username; }
-    private static ChunkCoordinates getSpawn(EntityPlayer ent) { return ent.getBedLocation(); }
+    private static ChunkCoordinates getSpawn(EntityPlayer ent) { return ent.getSpawnChunk(); }
     private static ChunkCoordinates getBed(EntityPlayer ent) { return ent.playerLocation; }
     private static void sendChat(String var0) { ((EntityClientPlayerMP)player).sendChatMessage(var0); }
 
@@ -4545,8 +4545,8 @@ public final class ZMod {
     private static void mapXSetIdMeta(int x, int y, int z, int id, int meta) { map.setBlockAndMetadataWithNotify(x,y,z,id,meta); }
     private static void mapXSetId(int x, int y, int z, int id) { map.setBlockWithNotify(x,y,z,id); }
     private static boolean mapXGetChunkExists(int cx, int cy) { return map.getChunkProvider().chunkExists(cx, cy); }
-    private static void chunkNeedsUpdate(int cx, int cz) { cx <<= 4; cz <<= 4; map.markBlockRangeForRenderUpdate(cx, 0, cz, cx+15, 127, cz+15); }
-    private static void mapXNeedsUpdate(int sx, int sy, int sz, int ex, int ey, int ez) { map.markBlockRangeForRenderUpdate(sx, sy, sz, ex, ey, ez); }
+    private static void chunkNeedsUpdate(int cx, int cz) { cx <<= 4; cz <<= 4; map.markBlocksDirty(cx, 0, cz, cx+15, 127, cz+15); }
+    private static void mapXNeedsUpdate(int sx, int sy, int sz, int ex, int ey, int ez) { map.markBlocksDirty(sx, sy, sz, ex, ey, ez); }
     private static List getEntities() { return (List)((ArrayList)map.loadedEntityList).clone(); }
     private static void noiseTP(Entity ent) { map.playSoundAtEntity(ent, "mob.slimeattack", 0.4f,( (rnd.nextFloat() - rnd.nextFloat())*0.2f + 1.0f )*0.8f); }
     private static void overloadMapRandom() { if (map.rand != null && !(map.rand instanceof ZRND)) map.rand = new ZRND(map.rand); }
@@ -4603,7 +4603,7 @@ public final class ZMod {
     private static boolean getIsCover(Material mat) { return mat.getCanBlockGrass(); }
     private static boolean getIsSolid(Material mat) { return mat.isSolid(); }
     private static boolean getIsBurnable(Material mat) { return mat.getCanBurn(); }
-    private static boolean getIsReplaceable(Material mat) { return mat.isReplaceable(); }
+    private static boolean getIsReplaceable(Material mat) { return mat.isGroundCover(); }
     // ---------------------------------------------------------------------------------------------------------------- Items
     private static Item getItem(int id) { return Item.itemsList[id]; }
     private static int getItemMax(Item item) { return item == null ? 0 : item.getItemStackLimit(); }

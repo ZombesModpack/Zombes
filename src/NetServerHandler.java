@@ -545,13 +545,13 @@ public class NetServerHandler extends NetHandler
         {
             this.playerEntity.playerInventoryBeingManipulated = true;
             this.playerEntity.inventory.mainInventory[this.playerEntity.inventory.currentItem] = ItemStack.copyItemStack(this.playerEntity.inventory.mainInventory[this.playerEntity.inventory.currentItem]);
-            Slot var13 = this.playerEntity.openContainer.getSlotFromInventory(this.playerEntity.inventory, this.playerEntity.inventory.currentItem);
-            this.playerEntity.openContainer.updateCraftingResults();
+            Slot var13 = this.playerEntity.craftingInventory.getSlotFromInventory(this.playerEntity.inventory, this.playerEntity.inventory.currentItem);
+            this.playerEntity.craftingInventory.updateCraftingResults();
             this.playerEntity.playerInventoryBeingManipulated = false;
 
             if (!ItemStack.areItemStacksEqual(this.playerEntity.inventory.getCurrentItem(), par1Packet15Place.getItemStack()))
             {
-                this.sendPacketToPlayer(new Packet103SetSlot(this.playerEntity.openContainer.windowId, var13.slotNumber, this.playerEntity.inventory.getCurrentItem()));
+                this.sendPacketToPlayer(new Packet103SetSlot(this.playerEntity.craftingInventory.windowId, var13.slotNumber, this.playerEntity.inventory.getCurrentItem()));
             }
         }
     }
@@ -811,42 +811,42 @@ public class NetServerHandler extends NetHandler
 
     public void handleWindowClick(Packet102WindowClick par1Packet102WindowClick)
     {
-        if (this.playerEntity.openContainer.windowId == par1Packet102WindowClick.window_Id && this.playerEntity.openContainer.isPlayerNotUsingContainer(this.playerEntity))
+        if (this.playerEntity.craftingInventory.windowId == par1Packet102WindowClick.window_Id && this.playerEntity.craftingInventory.isPlayerNotUsingContainer(this.playerEntity))
         {
-            ItemStack var2 = this.playerEntity.openContainer.slotClick(par1Packet102WindowClick.inventorySlot, par1Packet102WindowClick.mouseClick, par1Packet102WindowClick.holdingShift, this.playerEntity);
+            ItemStack var2 = this.playerEntity.craftingInventory.slotClick(par1Packet102WindowClick.inventorySlot, par1Packet102WindowClick.mouseClick, par1Packet102WindowClick.holdingShift, this.playerEntity);
 
             if (ItemStack.areItemStacksEqual(par1Packet102WindowClick.itemStack, var2))
             {
                 this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet106Transaction(par1Packet102WindowClick.window_Id, par1Packet102WindowClick.action, true));
 
                 this.playerEntity.playerInventoryBeingManipulated = true;
-                this.playerEntity.openContainer.updateCraftingResults();
-                this.playerEntity.updateHeldItem();
+                this.playerEntity.craftingInventory.updateCraftingResults();
+                this.playerEntity.sendInventoryToPlayer();
                 this.playerEntity.playerInventoryBeingManipulated = false;
             }
             else
             {
-                this.field_72586_s.addKey(this.playerEntity.openContainer.windowId, Short.valueOf(par1Packet102WindowClick.action));
+                this.field_72586_s.addKey(this.playerEntity.craftingInventory.windowId, Short.valueOf(par1Packet102WindowClick.action));
                 this.playerEntity.playerNetServerHandler.sendPacketToPlayer(new Packet106Transaction(par1Packet102WindowClick.window_Id, par1Packet102WindowClick.action, false));
-                this.playerEntity.openContainer.setPlayerIsPresent(this.playerEntity, false);
+                this.playerEntity.craftingInventory.setPlayerIsPresent(this.playerEntity, false);
                 ArrayList var3 = new ArrayList();
 
-                for (int var4 = 0; var4 < this.playerEntity.openContainer.inventorySlots.size(); ++var4)
+                for (int var4 = 0; var4 < this.playerEntity.craftingInventory.inventorySlots.size(); ++var4)
                 {
-                    var3.add(((Slot)this.playerEntity.openContainer.inventorySlots.get(var4)).getStack());
+                    var3.add(((Slot)this.playerEntity.craftingInventory.inventorySlots.get(var4)).getStack());
                 }
 
-                this.playerEntity.sendContainerAndContentsToPlayer(this.playerEntity.openContainer, var3);
+                this.playerEntity.sendContainerAndContentsToPlayer(this.playerEntity.craftingInventory, var3);
             }
         }
     }
 
     public void handleEnchantItem(Packet108EnchantItem par1Packet108EnchantItem)
     {
-        if (this.playerEntity.openContainer.windowId == par1Packet108EnchantItem.windowId && this.playerEntity.openContainer.isPlayerNotUsingContainer(this.playerEntity))
+        if (this.playerEntity.craftingInventory.windowId == par1Packet108EnchantItem.windowId && this.playerEntity.craftingInventory.isPlayerNotUsingContainer(this.playerEntity))
         {
-            this.playerEntity.openContainer.enchantItem(this.playerEntity, par1Packet108EnchantItem.enchantment);
-            this.playerEntity.openContainer.updateCraftingResults();
+            this.playerEntity.craftingInventory.enchantItem(this.playerEntity, par1Packet108EnchantItem.enchantment);
+            this.playerEntity.craftingInventory.updateCraftingResults();
         }
     }
 
@@ -867,14 +867,14 @@ public class NetServerHandler extends NetHandler
             {
                 if (var3 == null)
                 {
-                    this.playerEntity.inventoryContainer.putStackInSlot(par1Packet107CreativeSetSlot.slot, (ItemStack)null);
+                    this.playerEntity.inventorySlots.putStackInSlot(par1Packet107CreativeSetSlot.slot, (ItemStack)null);
                 }
                 else
                 {
-                    this.playerEntity.inventoryContainer.putStackInSlot(par1Packet107CreativeSetSlot.slot, var3);
+                    this.playerEntity.inventorySlots.putStackInSlot(par1Packet107CreativeSetSlot.slot, var3);
                 }
 
-                this.playerEntity.inventoryContainer.setPlayerIsPresent(this.playerEntity, true);
+                this.playerEntity.inventorySlots.setPlayerIsPresent(this.playerEntity, true);
             }
             else if (var2 && var5 && var6 && this.creativeItemCreationSpamThresholdTally < 200)
             {
@@ -891,11 +891,11 @@ public class NetServerHandler extends NetHandler
 
     public void handleTransaction(Packet106Transaction par1Packet106Transaction)
     {
-        Short var2 = (Short)this.field_72586_s.lookup(this.playerEntity.openContainer.windowId);
+        Short var2 = (Short)this.field_72586_s.lookup(this.playerEntity.craftingInventory.windowId);
 
-        if (var2 != null && par1Packet106Transaction.shortWindowId == var2.shortValue() && this.playerEntity.openContainer.windowId == par1Packet106Transaction.windowId && !this.playerEntity.openContainer.isPlayerNotUsingContainer(this.playerEntity))
+        if (var2 != null && par1Packet106Transaction.shortWindowId == var2.shortValue() && this.playerEntity.craftingInventory.windowId == par1Packet106Transaction.windowId && !this.playerEntity.craftingInventory.isPlayerNotUsingContainer(this.playerEntity))
         {
-            this.playerEntity.openContainer.setPlayerIsPresent(this.playerEntity, true);
+            this.playerEntity.craftingInventory.setPlayerIsPresent(this.playerEntity, true);
         }
     }
 
@@ -957,7 +957,7 @@ public class NetServerHandler extends NetHandler
                 TileEntitySign var7 = (TileEntitySign)var3;
                 System.arraycopy(par1Packet130UpdateSign.signLines, 0, var7.signText, 0, 4);
                 var7.onInventoryChanged();
-                var2.markBlockForUpdate(var8, var9, var6);
+                var2.markBlockNeedsUpdate(var8, var9, var6);
             }
         }
     }
@@ -1035,7 +1035,7 @@ public class NetServerHandler extends NetHandler
 
                 if (var3 != null && var3.itemID == Item.writableBook.shiftedIndex && var3.itemID == var4.itemID)
                 {
-                    var4.setTagInfo("pages", var3.getTagCompound().getTagList("pages"));
+                    var4.func_77983_a("pages", var3.getTagCompound().getTagList("pages"));
                 }
             }
             catch (Exception var12)
@@ -1059,9 +1059,9 @@ public class NetServerHandler extends NetHandler
 
                 if (var3 != null && var3.itemID == Item.writtenBook.shiftedIndex && var4.itemID == Item.writableBook.shiftedIndex)
                 {
-                    var4.setTagInfo("author", new NBTTagString("author", this.playerEntity.username));
-                    var4.setTagInfo("title", new NBTTagString("title", var3.getTagCompound().getString("title")));
-                    var4.setTagInfo("pages", var3.getTagCompound().getTagList("pages"));
+                    var4.func_77983_a("author", new NBTTagString("author", this.playerEntity.username));
+                    var4.func_77983_a("title", new NBTTagString("title", var3.getTagCompound().getString("title")));
+                    var4.func_77983_a("pages", var3.getTagCompound().getTagList("pages"));
                     var4.itemID = Item.writtenBook.shiftedIndex;
                 }
             }
@@ -1080,7 +1080,7 @@ public class NetServerHandler extends NetHandler
                 {
                     var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.data));
                     var14 = var2.readInt();
-                    Container var16 = this.playerEntity.openContainer;
+                    Container var16 = this.playerEntity.craftingInventory;
 
                     if (var16 instanceof ContainerMerchant)
                     {
@@ -1115,8 +1115,8 @@ public class NetServerHandler extends NetHandler
 
                             if (var7 != null && var7 instanceof TileEntityCommandBlock)
                             {
-                                ((TileEntityCommandBlock)var7).setCommand(var6);
-                                this.playerEntity.worldObj.markBlockForUpdate(var14, var18, var5);
+                                ((TileEntityCommandBlock)var7).func_82352_b(var6);
+                                this.playerEntity.worldObj.markBlockNeedsUpdate(var14, var18, var5);
                                 this.playerEntity.sendChatToPlayer("Command set: " + var6);
                             }
                         }
@@ -1132,14 +1132,14 @@ public class NetServerHandler extends NetHandler
                 }
                 else if ("MC|Beacon".equals(par1Packet250CustomPayload.channel))
                 {
-                    if (this.playerEntity.openContainer instanceof ContainerBeacon)
+                    if (this.playerEntity.craftingInventory instanceof ContainerBeacon)
                     {
                         try
                         {
                             var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.data));
                             var14 = var2.readInt();
                             var18 = var2.readInt();
-                            ContainerBeacon var17 = (ContainerBeacon)this.playerEntity.openContainer;
+                            ContainerBeacon var17 = (ContainerBeacon)this.playerEntity.craftingInventory;
                             Slot var19 = var17.getSlot(0);
 
                             if (var19.getHasStack())
@@ -1157,9 +1157,9 @@ public class NetServerHandler extends NetHandler
                         }
                     }
                 }
-                else if ("MC|ItemName".equals(par1Packet250CustomPayload.channel) && this.playerEntity.openContainer instanceof ContainerRepair)
+                else if ("MC|ItemName".equals(par1Packet250CustomPayload.channel) && this.playerEntity.craftingInventory instanceof ContainerRepair)
                 {
-                    ContainerRepair var13 = (ContainerRepair)this.playerEntity.openContainer;
+                    ContainerRepair var13 = (ContainerRepair)this.playerEntity.craftingInventory;
 
                     if (par1Packet250CustomPayload.data != null && par1Packet250CustomPayload.data.length >= 1)
                     {

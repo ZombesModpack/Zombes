@@ -9,7 +9,7 @@ public final class ZBF extends BlockFence {
     
     public boolean canPlaceBlockAt(World world, int i, int j, int k) {
         int l = world.getBlockId(i, j, k);
-        return l == 0 || blocksList[l].blockMaterial.isReplaceable();
+        return l == 0 || blocksList[l].blockMaterial.isGroundCover();
     }
 
 }

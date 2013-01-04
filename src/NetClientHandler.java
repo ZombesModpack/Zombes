@@ -154,7 +154,7 @@ public class NetClientHandler extends NetHandler
     {
         this.mc.playerController = new PlayerControllerMP(this.mc, this);
         this.mc.statFileWriter.readStat(StatList.joinMultiplayerStat, 1);
-        this.worldClient = new WorldClient(this, new WorldSettings(0L, par1Packet1Login.gameType, false, par1Packet1Login.hardcoreMode, par1Packet1Login.terrainType), par1Packet1Login.dimension, par1Packet1Login.difficultySetting, this.mc.mcProfiler);
+        this.worldClient = new WorldClient(this, new WorldSettings(0L, par1Packet1Login.gameType, false, par1Packet1Login.field_73560_c, par1Packet1Login.terrainType), par1Packet1Login.dimension, par1Packet1Login.difficultySetting, this.mc.mcProfiler);
         this.worldClient.isRemote = true;
         this.mc.loadWorld(this.worldClient);
         this.mc.thePlayer.dimension = par1Packet1Login.dimension;
@@ -588,7 +588,7 @@ public class NetClientHandler extends NetHandler
         if (var2 != null)
         {
             var2.fillChunk(par1Packet51MapChunk.func_73593_d(), par1Packet51MapChunk.yChMin, par1Packet51MapChunk.yChMax, par1Packet51MapChunk.includeInitialize);
-            this.worldClient.markBlockRangeForRenderUpdate(par1Packet51MapChunk.xCh << 4, 0, par1Packet51MapChunk.zCh << 4, (par1Packet51MapChunk.xCh << 4) + 15, 256, (par1Packet51MapChunk.zCh << 4) + 15);
+            this.worldClient.markBlocksDirty(par1Packet51MapChunk.xCh << 4, 0, par1Packet51MapChunk.zCh << 4, (par1Packet51MapChunk.xCh << 4) + 15, 256, (par1Packet51MapChunk.zCh << 4) + 15);
 
             if (!par1Packet51MapChunk.includeInitialize || !(this.worldClient.provider instanceof WorldProviderSurface))
             {
@@ -885,47 +885,47 @@ public class NetClientHandler extends NetHandler
         {
             case 0:
                 var2.displayGUIChest(new InventoryBasic(par1Packet100OpenWindow.windowTitle, par1Packet100OpenWindow.slotsCount));
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 1:
                 var2.displayGUIWorkbench(MathHelper.floor_double(var2.posX), MathHelper.floor_double(var2.posY), MathHelper.floor_double(var2.posZ));
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 2:
                 var2.displayGUIFurnace(new TileEntityFurnace());
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 3:
                 var2.displayGUIDispenser(new TileEntityDispenser());
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 4:
                 var2.displayGUIEnchantment(MathHelper.floor_double(var2.posX), MathHelper.floor_double(var2.posY), MathHelper.floor_double(var2.posZ));
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 5:
                 var2.displayGUIBrewingStand(new TileEntityBrewingStand());
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 6:
                 var2.displayGUIMerchant(new NpcMerchant(var2));
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 7:
                 var2.displayGUIBeacon(new TileEntityBeacon());
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
             case 8:
                 var2.displayGUIAnvil(MathHelper.floor_double(var2.posX), MathHelper.floor_double(var2.posY), MathHelper.floor_double(var2.posZ));
-                var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
+                var2.craftingInventory.windowId = par1Packet100OpenWindow.windowId;
         }
     }
 
@@ -949,18 +949,18 @@ public class NetClientHandler extends NetHandler
 
             if (par1Packet103SetSlot.windowId == 0 && par1Packet103SetSlot.itemSlot >= 36 && par1Packet103SetSlot.itemSlot < 45)
             {
-                ItemStack var5 = var2.inventoryContainer.getSlot(par1Packet103SetSlot.itemSlot).getStack();
+                ItemStack var5 = var2.inventorySlots.getSlot(par1Packet103SetSlot.itemSlot).getStack();
 
                 if (par1Packet103SetSlot.myItemStack != null && (var5 == null || var5.stackSize < par1Packet103SetSlot.myItemStack.stackSize))
                 {
                     par1Packet103SetSlot.myItemStack.animationsToGo = 5;
                 }
 
-                var2.inventoryContainer.putStackInSlot(par1Packet103SetSlot.itemSlot, par1Packet103SetSlot.myItemStack);
+                var2.inventorySlots.putStackInSlot(par1Packet103SetSlot.itemSlot, par1Packet103SetSlot.myItemStack);
             }
-            else if (par1Packet103SetSlot.windowId == var2.openContainer.windowId && (par1Packet103SetSlot.windowId != 0 || !var3))
+            else if (par1Packet103SetSlot.windowId == var2.craftingInventory.windowId && (par1Packet103SetSlot.windowId != 0 || !var3))
             {
-                var2.openContainer.putStackInSlot(par1Packet103SetSlot.itemSlot, par1Packet103SetSlot.myItemStack);
+                var2.craftingInventory.putStackInSlot(par1Packet103SetSlot.itemSlot, par1Packet103SetSlot.myItemStack);
             }
         }
     }
@@ -972,11 +972,11 @@ public class NetClientHandler extends NetHandler
 
         if (par1Packet106Transaction.windowId == 0)
         {
-            var2 = var3.inventoryContainer;
+            var2 = var3.inventorySlots;
         }
-        else if (par1Packet106Transaction.windowId == var3.openContainer.windowId)
+        else if (par1Packet106Transaction.windowId == var3.craftingInventory.windowId)
         {
-            var2 = var3.openContainer;
+            var2 = var3.craftingInventory;
         }
 
         if (var2 != null && !par1Packet106Transaction.accepted)
@@ -991,11 +991,11 @@ public class NetClientHandler extends NetHandler
 
         if (par1Packet104WindowItems.windowId == 0)
         {
-            var2.inventoryContainer.putStacksInSlots(par1Packet104WindowItems.itemStack);
+            var2.inventorySlots.putStacksInSlots(par1Packet104WindowItems.itemStack);
         }
-        else if (par1Packet104WindowItems.windowId == var2.openContainer.windowId)
+        else if (par1Packet104WindowItems.windowId == var2.craftingInventory.windowId)
         {
-            var2.openContainer.putStacksInSlots(par1Packet104WindowItems.itemStack);
+            var2.craftingInventory.putStacksInSlots(par1Packet104WindowItems.itemStack);
         }
     }
 
@@ -1067,9 +1067,9 @@ public class NetClientHandler extends NetHandler
         EntityClientPlayerMP var2 = this.mc.thePlayer;
         this.unexpectedPacket(par1Packet105UpdateProgressbar);
 
-        if (var2.openContainer != null && var2.openContainer.windowId == par1Packet105UpdateProgressbar.windowId)
+        if (var2.craftingInventory != null && var2.craftingInventory.windowId == par1Packet105UpdateProgressbar.windowId)
         {
-            var2.openContainer.updateProgressBar(par1Packet105UpdateProgressbar.progressBar, par1Packet105UpdateProgressbar.progressBarValue);
+            var2.craftingInventory.updateProgressBar(par1Packet105UpdateProgressbar.progressBar, par1Packet105UpdateProgressbar.progressBarValue);
         }
     }
 
@@ -1117,7 +1117,7 @@ public class NetClientHandler extends NetHandler
             if (var5 != null)
             {
                 var5.fillChunk(par1Packet56MapChunks.func_73583_c(var2), par1Packet56MapChunks.field_73590_a[var2], par1Packet56MapChunks.field_73588_b[var2], true);
-                this.worldClient.markBlockRangeForRenderUpdate(var3 << 4, 0, var4 << 4, (var3 << 4) + 15, 256, (var4 << 4) + 15);
+                this.worldClient.markBlocksDirty(var3 << 4, 0, var4 << 4, (var3 << 4) + 15, 256, (var4 << 4) + 15);
 
                 if (!(this.worldClient.provider instanceof WorldProviderSurface))
                 {
@@ -1348,7 +1348,7 @@ public class NetClientHandler extends NetHandler
                 int var9 = var8.readInt();
                 GuiScreen var4 = this.mc.currentScreen;
 
-                if (var4 != null && var4 instanceof GuiMerchant && var9 == this.mc.thePlayer.openContainer.windowId)
+                if (var4 != null && var4 instanceof GuiMerchant && var9 == this.mc.thePlayer.craftingInventory.windowId)
                 {
                     IMerchant var5 = ((GuiMerchant)var4).getIMerchant();
                     MerchantRecipeList var6 = MerchantRecipeList.readRecipiesFromStream(var8);

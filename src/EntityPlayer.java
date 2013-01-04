@@ -21,13 +21,11 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
     public InventoryPlayer inventory = new InventoryPlayer(this);
     private InventoryEnderChest theInventoryEnderChest = new InventoryEnderChest();
 
-    /**
-     * The Container for the player's inventory (which opens when they press E)
-     */
-    public Container inventoryContainer;
+    /** the crafting inventory in you get when opening your inventory */
+    public Container inventorySlots;
 
-    /** The Container the player has open. */
-    public Container openContainer;
+    /** the crafting inventory you are currently using */
+    public Container craftingInventory;
 
     /** The player's food stats. (See class FoodStats) */
     protected FoodStats foodStats = new FoodStats();
@@ -118,8 +116,8 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
     public EntityPlayer(World par1World)
     {
         super(par1World);
-        this.inventoryContainer = new ContainerPlayer(this.inventory, !par1World.isRemote, this);
-        this.openContainer = this.inventoryContainer;
+        this.inventorySlots = new ContainerPlayer(this.inventory, !par1World.isRemote, this);
+        this.craftingInventory = this.inventorySlots;
         this.yOffset = 1.62F;
         ChunkCoordinates var2 = par1World.getSpawnPoint();
         this.setLocationAndAngles((double)var2.posX + 0.5D, (double)(var2.posY + 1), (double)var2.posZ + 0.5D, 0.0F, 0.0F);
@@ -269,10 +267,10 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 
         super.onUpdate();
 
-        if (!this.worldObj.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(this))
+        if (!this.worldObj.isRemote && this.craftingInventory != null && !this.craftingInventory.canInteractWith(this))
         {
             this.closeScreen();
-            this.openContainer = this.inventoryContainer;
+            this.craftingInventory = this.inventorySlots;
         }
 
         if (this.isBurning() && this.capabilities.disableDamage)
@@ -433,7 +431,7 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
      */
     protected void closeScreen()
     {
-        this.openContainer = this.inventoryContainer;
+        this.craftingInventory = this.inventorySlots;
     }
 
     /**
@@ -1250,11 +1248,11 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
     public void setDead()
     {
         super.setDead();
-        this.inventoryContainer.onCraftGuiClosed(this);
+        this.inventorySlots.onCraftGuiClosed(this);
 
-        if (this.openContainer != null)
+        if (this.craftingInventory != null)
         {
-            this.openContainer.onCraftGuiClosed(this);
+            this.craftingInventory.onCraftGuiClosed(this);
         }
     }
 
@@ -1514,12 +1512,12 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
         return this.sleepTimer;
     }
 
-    protected boolean getHideCape(int par1)
+    protected boolean func_82241_s(int par1)
     {
         return (this.dataWatcher.getWatchableObjectByte(16) & 1 << par1) != 0;
     }
 
-    protected void setHideCape(int par1, boolean par2)
+    protected void func_82239_b(int par1, boolean par2)
     {
         byte var3 = this.dataWatcher.getWatchableObjectByte(16);
 
@@ -1539,14 +1537,14 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
     public void addChatMessage(String par1Str) {}
 
     /**
-     * Returns the location of the bed the player will respawn at, or null if the player has not slept in a bed.
+     * Returns the coordinates to respawn the player based on last bed that the player sleep.
      */
-    public ChunkCoordinates getBedLocation()
+    public ChunkCoordinates getSpawnChunk()
     {
         return this.spawnChunk;
     }
 
-    public boolean isSpawnForced()
+    public boolean func_82245_bX()
     {
         return this.spawnForced;
     }
@@ -1959,7 +1957,7 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
         }
     }
 
-    public boolean canPlayerEdit(int par1, int par2, int par3, int par4, ItemStack par5ItemStack)
+    public boolean func_82247_a(int par1, int par2, int par3, int par4, ItemStack par5ItemStack)
     {
         return this.capabilities.allowEdit ? true : (par5ItemStack != null ? par5ItemStack.func_82835_x() : false);
     }
@@ -2099,8 +2097,8 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
         return this.inventory.armorInventory;
     }
 
-    public boolean getHideCape()
+    public boolean func_82238_cc()
     {
-        return this.getHideCape(1);
+        return this.func_82241_s(1);
     }
 }

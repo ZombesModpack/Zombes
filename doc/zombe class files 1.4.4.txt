@@ -16,6 +16,7 @@ Resize  - RenderLiving
 File/ Class Name               / Used by
 aaj - WorldProvider            - Sun
 axz - NetClienthandler         - Fly
+ayg - PlayerControllerMP       - Build, Dig, Cheat (bhd)
 azu - MovementInputFromOptions - Fly
 azv - EntityPlayerSP           - Fly
 iq  - EntityPlayerMP           - Death
@@ -26,7 +27,6 @@ ye  - EnumGameType             - Fly
 2 bis) Class files absent from the package for now
     - Explosion                - Boom
     - GuiContainer             - Craft
-ayg - PlayerControllerMP       - Build, Dig, Cheat (bhd)
     - RenderLiving             - Resize
     - TileEntityFurnace        - Furnace
 
@@ -34,8 +34,8 @@ ayg - PlayerControllerMP       - Build, Dig, Cheat (bhd)
 File/ Class Name               / Used by
 aaj - WorldProvider            - Sun
 asi - MinecraftAppletImpl      - core
-ayg - PlayerControllerMP       - Dig, Cheat (bhd)
 axz - NetClienthandler         - Fly
+ayg - PlayerControllerMP       - Dig, Cheat (bhd)
 azu - MovementInputFromOptions - Fly
 azv - EntityPlayerSP           - Fly
 iq  - EntityPlayerMP           - Death
