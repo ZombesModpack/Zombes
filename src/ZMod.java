@@ -254,36 +254,36 @@ public final class ZMod {
         initBlockLookupArray();
         // load mods
         int mods = 0;
-        if ((modItemEnabled      = getBool("modItemEnabled"      , false) && initModItem())      == true) mods++;
-        if ((modDeathEnabled     = getBool("modDeathEnabled"     , false) && initModDeath())     == true) mods++;
-        if ((modInfoEnabled      = getBool("modInfoEnabled"      , false) && initModInfo())      == true) mods++;
-        if ((modIconEnabled      = getBool("modIconEnabled"      , false) && initModIcon())      == true) mods++; ZP250.init(); // hande them even without the mod.
-        if ((modChestEnabled     = getBool("modChestEnabled"     , false) && initModChest())     == true) mods++;
-        if ((modCloudEnabled     = getBool("modCloudEnabled"     , false) && initModCloud())     == true) mods++;
-        if ((modCartEnabled      = getBool("modCartEnabled"      , false) && initModCart())      == true) mods++;
-        if ((modWieldEnabled     = getBool("modWieldEnabled"     , false) && initModWield())     == true) mods++;
-        if ((modBuildEnabled     = getBool("modBuildEnabled"     , false) && initModBuild())     == true) mods++;
-        if ((modCompassEnabled   = getBool("modCompassEnabled"   , false) && initModCompass())   == true) mods++;
-        if ((modSunEnabled       = getBool("modSunEnabled"       , false) && initModSun())       == true) mods++;
-        if ((modCraftEnabled     = getBool("modCraftEnabled"     , false) && initModCraft())     == true) mods++;
-        if ((modFlyEnabled       = getBool("modFlyEnabled"       , false) && initModFly())       == true) mods++;
-        if ((modPathEnabled      = getBool("modPathEnabled"      , false) && initModPath())      == true) mods++;
-        if ((modRecipeEnabled    = getBool("modRecipeEnabled"    , false) && initModRecipe())    == true) mods++;
-        if ((modSafeEnabled      = getBool("modSafeEnabled"      , false) && initModSafe())      == true) mods++;
-        if ((modBoomEnabled      = getBool("modBoomEnabled"      , false) && initModBoom())      == true) mods++;
-        if ((modSpawnEnabled     = getBool("modSpawnEnabled"     , false) && initModSpawn())     == true) mods++;
-        if ((modOreEnabled       = getBool("modOreEnabled"       , false) && initModOre())       == true) mods++;
-        if ((modTeleportEnabled  = getBool("modTeleportEnabled"  , false) && initModTeleport())  == true) mods++;
-        if ((modCheatEnabled     = getBool("modCheatEnabled"     , false) && initModCheat())     == true) mods++;
-        if ((modResizeEnabled    = getBool("modResizeEnabled"    , false) && initModResize())    == true) mods++;
-        if ((modFurnaceEnabled   = getBool("modFurnaceEnabled"   , false) && initModFurnace())   == true) mods++;
-        if ((modDigEnabled       = getBool("modDigEnabled"       , false) && initModDig())       == true) mods++;
-        if ((modWeatherEnabled   = getBool("modWeatherEnabled"   , false) && initModWeather())   == true) mods++;
-        if ((modGrowthEnabled    = getBool("modGrowthEnabled"    , false) && initModGrowth())    == true) mods++;
+        optionsModBoom();     if (modBoomActive)     ++mods;
+        optionsModBuild();    if (modBuildActive)    ++mods;
+        optionsModCart();     if (modCartActive)     ++mods;
+        optionsModCheat();    if (modCheatActive)    ++mods;
+        optionsModChest();    if (modChestActive)    ++mods;
+        optionsModCloud();    if (modCloudActive)    ++mods;
+        optionsModCompass();  if (modCompassActive)  ++mods;
+        optionsModCraft();    if (modCraftActive)    ++mods;
+        optionsModDeath();    if (modDeathActive)    ++mods;
+        optionsModDig();      if (modDigActive)      ++mods;
+        optionsModFly();      if (modFlyActive)      ++mods;
+        optionsModFurnace();  if (modFurnaceActive)  ++mods;
+        optionsModGrowth();   if (modGrowthActive)   ++mods;
+        optionsModIcon();     if (modIconActive)     ++mods; ZP250.init(); // hande them even without the mod.
+        optionsModInfo();     if (modInfoActive)     ++mods;
+        optionsModItem();     if (modItemActive)     ++mods;
+        optionsModOre();      if (modOreActive)      ++mods;
+        optionsModPath();     if (modPathActive)     ++mods;
+        optionsModRecipe();   if (modRecipeActive)   ++mods;
+        optionsModResize();   if (modResizeActive)   ++mods;
+        optionsModSafe();     if (modSafeActive)     ++mods;
+        optionsModSpawn();    if (modSpawnActive)    ++mods;
+        optionsModSun();      if (modSunActive)      ++mods;
+        optionsModTeleport(); if (modTeleportActive) ++mods;
+        optionsModWield();    if (modWieldActive)    ++mods;
+        optionsModWeather();  if (modWeatherActive)  ++mods;
         // shared init
         if (optItemChangeSpawner || modRecipeEnabled || modBuildEnabled) initModItemShared();
         // done
-        if (mods==0) err("warning: no mods are enabled! Read the readme.html!");
+        if (mods==0) err("warning: no mods are enabled! Press F7 to configure them!");
         log("info: configuration loaded");
         } catch(Exception error) { err("error: initialization failed", error); }
         initialized = true;
@@ -308,7 +308,7 @@ public final class ZMod {
     private static int optionsSelMod = -1, optionSel = -1, optionNr, optionModNr, optionOfs = 0, optionsPage = 20;
     private static boolean optionsModEnabled;
     private static void optionsMods(Options options) {
-        if (modInfoEnabled && optInfoHideAchievement) killAchievement(); // kill achievement in options screen
+        if (modInfoActive && optInfoHideAchievement) killAchievement(); // kill achievement in options screen
 
         opt = options;
         optionNr = optionModNr = 0;
@@ -321,32 +321,32 @@ public final class ZMod {
         }
 
         if (optionsMod("\u00a7emodpack", true             )) optionsModModpack();
-        if (optionsMod("Boom"    , modBoomEnabled    )) optionsModBoom();
-        if (optionsMod("Build"   , modBuildEnabled   )) optionsModBuild();
-        if (optionsMod("Cart"    , modCartEnabled    )) optionsModCart();
-        if (optionsMod("Cheat"   , modCheatEnabled   )) optionsModCheat();
-        if (optionsMod("Chest"   , modChestEnabled   )) optionsModChest();
-        if (optionsMod("Cloud"   , modCloudEnabled   )) optionsModCloud();
-        if (optionsMod("Compass" , modCompassEnabled )) optionsModCompass();
-        if (optionsMod("Craft"   , modCraftEnabled   )) optionsModCraft();
-        if (optionsMod("Death"   , modDeathEnabled   )) optionsModDeath();
-        if (optionsMod("Dig"     , modDigEnabled     )) optionsModDig();
-        if (optionsMod("Fly"     , modFlyEnabled     )) optionsModFly();
-        if (optionsMod("Furnace" , modFurnaceEnabled )) optionsModFurnace();
-        if (optionsMod("Growth"  , modGrowthEnabled  )) optionsModGrowth();
-        if (optionsMod("Icon"    , modIconEnabled    )) optionsModIcon();
-        if (optionsMod("Info"    , modInfoEnabled    )) optionsModInfo();
-        if (optionsMod("Ite\u00a7fm"  , modItemEnabled    )) optionsModItem();
-        if (optionsMod("Ore"     , modOreEnabled     )) optionsModOre();
-        if (optionsMod("Path"    , modPathEnabled    )) optionsModPath();
-        if (optionsMod("Recipe"  , modRecipeEnabled  )) optionsModRecipe();
-        if (optionsMod("Resize"  , modResizeEnabled  )) optionsModResize();
-        if (optionsMod("Safe"    , modSafeEnabled    )) optionsModSafe();
-        if (optionsMod("Spawn"   , modSpawnEnabled   )) optionsModSpawn();
-        if (optionsMod("Sun"     , modSunEnabled     )) optionsModSun();
-        if (optionsMod("Teleport", modTeleportEnabled)) optionsModTeleport();
-        if (optionsMod("Weather" , modWeatherEnabled )) optionsModWeather();
-        if (optionsMod("Wield"   , modWieldEnabled   )) optionsModWield();
+        if (optionsMod("Boom"    , modBoomActive    )) optionsModBoom();
+        if (optionsMod("Build"   , modBuildActive   )) optionsModBuild();
+        if (optionsMod("Cart"    , modCartActive    )) optionsModCart();
+        if (optionsMod("Cheat"   , modCheatActive   )) optionsModCheat();
+        if (optionsMod("Chest"   , modChestActive   )) optionsModChest();
+        if (optionsMod("Cloud"   , modCloudActive   )) optionsModCloud();
+        if (optionsMod("Compass" , modCompassActive )) optionsModCompass();
+        if (optionsMod("Craft"   , modCraftActive   )) optionsModCraft();
+        if (optionsMod("Death"   , modDeathActive   )) optionsModDeath();
+        if (optionsMod("Dig"     , modDigActive     )) optionsModDig();
+        if (optionsMod("Fly"     , modFlyActive     )) optionsModFly();
+        if (optionsMod("Furnace" , modFurnaceActive )) optionsModFurnace();
+        if (optionsMod("Growth"  , modGrowthActive  )) optionsModGrowth();
+        if (optionsMod("Icon"    , modIconActive    )) optionsModIcon();
+        if (optionsMod("Info"    , modInfoActive    )) optionsModInfo();
+        if (optionsMod("Ite\u00a7fm"  , modItemActive    )) optionsModItem();
+        if (optionsMod("Ore"     , modOreActive     )) optionsModOre();
+        if (optionsMod("Path"    , modPathActive    )) optionsModPath();
+        if (optionsMod("Recipe"  , modRecipeActive  )) optionsModRecipe();
+        if (optionsMod("Resize"  , modResizeActive  )) optionsModResize();
+        if (optionsMod("Safe"    , modSafeActive    )) optionsModSafe();
+        if (optionsMod("Spawn"   , modSpawnActive   )) optionsModSpawn();
+        if (optionsMod("Sun"     , modSunActive     )) optionsModSun();
+        if (optionsMod("Teleport", modTeleportActive)) optionsModTeleport();
+        if (optionsMod("Weather" , modWeatherActive )) optionsModWeather();
+        if (optionsMod("Wield"   , modWieldActive   )) optionsModWield();
 
         if (optionOfs + optionsPage < optionNr) {
             optionNr = optionOfs + optionsPage + 1;
@@ -359,8 +359,8 @@ public final class ZMod {
 
     // ===========================================================================================================================
     public static void pingRespawnHandle(boolean first) { try {
-        if (!isMultiplayer && modDeathEnabled && !first) respawnDeathMod();
-        if (modInfoEnabled && !first) respawnInfoMod();
+        if (!isMultiplayer && modDeathActive && !first) respawnDeathMod();
+        if (modInfoActive && !first) respawnInfoMod();
         } catch(Exception error) { err("error: respawn failed", error); }
     }
     
@@ -449,9 +449,9 @@ public final class ZMod {
             PC = getPlayerController();
             if (isMenu) updateMousePos();
             if (isWorldChange = PC != prevPC) {
-                modFlyAllowed = modFlyEnabled;
-                modCheatAllowed = modCheatEnabled;
-                modNoClipAllowed = modFlyEnabled && !isMultiplayer;
+                modFlyAllowed = true;
+                modCheatAllowed = true;
+                modNoClipAllowed = !isMultiplayer;
                 chatWelcomed = false;
                 iconMPSupport = false;
                 infoDeathY = 1024;
@@ -506,7 +506,7 @@ public final class ZMod {
     // ===========================================================================================================================
     private static void startCheatRender() {
         try {
-            if (modCheatAllowed && cheating && cheatSee)
+            if (modCheatAllowed && modCheatActive && cheating && cheatSee)
                 obliqueNearPlaneClip(0.0f, 0.0f, -1.0f, -optCheatSeeDist);
         } catch(Exception error) { err("error: see-through setup failed", error); }
     }
@@ -653,7 +653,7 @@ public final class ZMod {
     //#ZMod#Mods##############################################################
 
     //=ZMod=Item==============================================================
-    private static boolean modItemEnabled;
+    private static boolean modItemEnabled, modItemActive;
     private static boolean optItemChangeFence, optItemChangeGlass, optItemChangeIce, optItemChangeLeaves, optItemChangeTorch, optItemChangeFarmland;
     private static boolean optItemChangeSponge, optItemChangeWater, optItemChangeSpawner, optItemChangeShelf, optItemChangeStairs, optItemDump;
     private static boolean optItemChangeLava;
@@ -664,6 +664,7 @@ public final class ZMod {
     private static Mark itemOrig[], itemMine[];
 
     private static boolean initModItem() {
+        if (!modItemEnabled) return false;
         log("info: loading config for \"item\" - deferred");
         optItemDump = getBool("optItemDump", false);
         if (optItemChangeFence = getBool("optItemChangeFence", true)) { itemFenceO = getBlock(85); setBlock(85, null); itemFenceM = new ZBF(); setBlock(85, itemFenceO); }
@@ -690,14 +691,28 @@ public final class ZMod {
             optItemPineChance = getInt("optItemPineChance", 5, 0, 100);
             optItemPineSpecial = getItemId("optItemPineSpecial", 344);
         }
-        return true;
+        return modItemActive = true;
+    }
+    
+    private static void quitModItem() {
+        if (!modItemActive) return;
+        modItemActive = false;
+        itemOrig = null;
+        itemMine = null;
     }
     
     private static void optionsModItem() {
+        boolean wasEnabled = modItemEnabled;
+        modItemEnabled = getSetBool(modItemEnabled, "modItemEnabled", false,     "Enable Item mod");
+        if (wasEnabled != modItemEnabled) {
+            if (modItemEnabled && !modItemActive) initModItem(); 
+            if (!modItemEnabled && modItemActive) quitModItem();
+        }
+        
     }
 
     private static void deferredModItem() {
-        if (!modItemEnabled) return;
+        if (!modItemActive) return;
         if (itemOrig == null) {
             log("info: continuing to load \"item\"");
             itemOrig = new Mark[Item.itemsList.length]; itemMine = new Mark[Item.itemsList.length];
@@ -731,7 +746,7 @@ public final class ZMod {
     }
     
     private static void updateModItem() {
-        if (!modItemEnabled) return;
+        if (!modItemActive) return;
         if (isMultiplayer && itemModified) {
             itemModified = false;
             for (int itemId=0;itemId<itemOrig.length;itemId++) if (itemOrig[itemId]!=null) itemOrig[itemId].activate(itemId);
@@ -799,7 +814,7 @@ public final class ZMod {
     }
 
     //=ZMod=Death=============================================================
-    private static boolean modDeathEnabled;
+    private static boolean modDeathEnabled, modDeathActive;
     private static boolean optDeathDropInv, optDeathLoseExp;
     private static int optDeathHPPenalty;
     private static boolean deathHaveInv, deathHaveExp;
@@ -810,11 +825,22 @@ public final class ZMod {
 
     private static boolean initModDeath() {
         log("info: loading config for \"death\"");
-        optionsModDeath();
-        return checkClass(EntityPlayer.class, "death");
+        if (!checkClass(EntityPlayer.class, "death")) return false;
+        return modDeathActive = true;
+    }
+    
+    private static void quitModDeath() {
+        if (!modDeathActive) return;
+        modDeathActive = false;
     }
     
     private static void optionsModDeath() {
+        boolean wasEnabled = modDeathEnabled;
+        modDeathEnabled = getSetBool(modDeathEnabled, "modDeathEnabled", false,     "Enable Death mod");
+        if (wasEnabled != modDeathEnabled) {
+            if (modDeathEnabled && !modDeathActive) initModDeath(); 
+            if (!modDeathEnabled && modDeathActive) quitModDeath();
+        }
         optDeathDropInv   = getSetBool(optDeathDropInv,  "optDeathDropInv",   false,     "Drop inventory on death");
         optDeathLoseExp   = getSetBool(optDeathLoseExp,  "optDeathLoseExp",   false,     "Lose experience on death");
         optDeathHPPenalty = getSetInt(optDeathHPPenalty, "optDeathHPPenalty", 0, 0, 100, "Respawn HP penalty");
@@ -825,7 +851,7 @@ public final class ZMod {
     }
     
     private static void deathOnServersidePlayerDeath(EntityPlayer ent) {
-        if (!modDeathEnabled || isMultiplayer) return;
+        if (!modDeathActive || isMultiplayer) return;
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
             InventoryPlayer inv = ent.inventory;
@@ -849,7 +875,7 @@ public final class ZMod {
     }
 
     private static void deathOnServersidePlayerUpdate(EntityPlayer ent) {
-        if (!modDeathEnabled || isMultiplayer) return;
+        if (!modDeathActive || isMultiplayer) return;
         if (ent.isDead || getHealth(ent) <= 0) return;
         if (!optDeathDropInv && deathHaveInv) {
             deathHaveInv = false;
@@ -877,7 +903,7 @@ public final class ZMod {
     }
 
     //=ZMod=Info==============================================================
-    private static boolean modInfoEnabled;
+    private static boolean modInfoEnabled, modInfoActive;
     private static int keyInfoToggle, keyInfoPlayersToggle;
     private static String optInfoPrefixNear, optInfoPrefixFar;
     private static boolean optInfoShowPos, optInfoShowTime, optInfoShowBiome, optInfoShowHealth, optInfoHideAchievement, optInfoShowItem, optInfoShowFPS;
@@ -894,11 +920,21 @@ public final class ZMod {
         optInfoPrefixNear = getString("optInfoPrefixNear", "\u00a7b");
         optInfoPrefixFar = getString("optInfoPrefixFar", "\u00a79");
         infoDeathY = 1024; // just a magic number denoting that there are no coord.
-        optionsModInfo();
-        return true;
+        return modInfoActive = true;
+    }
+    
+    private static void quitModInfo() {
+        if (!modInfoActive) return;
+        modInfoActive = false;
     }
 
     private static void optionsModInfo() {
+        boolean wasEnabled = modInfoEnabled;
+        modInfoEnabled = getSetBool(modInfoEnabled, "modInfoEnabled", false,     "Enable Info mod");
+        if (wasEnabled != modInfoEnabled) {
+            if (modInfoEnabled && !modInfoActive) initModInfo(); 
+            if (!modInfoEnabled && modInfoActive) quitModInfo();
+        }
         keyInfoToggle = getSetBind(keyInfoToggle, "keyInfoToggle", Keyboard.KEY_F12, "Toggle info screen");
         optInfoShowPos = getSetBool(optInfoShowPos, "optInfoShowPos", true, "Show your coordinates");
         optInfoShowTime = getSetBool(optInfoShowTime, "optInfoShowTime", true, "Show time");
@@ -913,7 +949,7 @@ public final class ZMod {
     }
 
     private static void updateModInfo(List list) {
-        if (!modInfoEnabled) return;
+        if (!modInfoActive) return;
         if (!isMenu && keyPress(keyInfoToggle)) infoShow = !infoShow;
         if (!isMenu && keyPress(keyInfoPlayersToggle)) infoPlayerShow = !infoPlayerShow;
         delMsg(MINFO);
@@ -946,7 +982,7 @@ public final class ZMod {
             long time = getTime(), timeRT = time;
             float val;
             ChunkCoordinates at;
-            if (modSunEnabled && sunTimeOffset != 0) time += sunTimeOffset;
+            if (modSunActive && sunTimeOffset != 0) time += sunTimeOffset;
             // your location
             info += "Your position:   \u00a79" + x + "\u00a7f , \u00a79" + y + "\u00a7f , \u00a79" + z + "\u00a7f    Fog: \u00a79" + getViewDistance() + "\u00a7f    Exp-orbs: \u00a79" + player.experienceTotal;
             if (y >= 0) info += "\n  Light level:   \u00a79" + getLightLevel(x,y,z) + "\u00a7f   (   min: \u00a78"+getLightLevel(x,y,z,16)+"\u00a7f   max: \u00a7e"+getLightLevel(x,y,z,0)+"\u00a7f   )"; // current light level, min, max
@@ -963,7 +999,7 @@ public final class ZMod {
             // the world
             info += "\nCompasspoint:   \u00a79" + (mx = world.getSpawnX()) + "\u00a7f , \u00a79" + (my = world.getSpawnY()) + "\u00a7f , \u00a79" + (mz = world.getSpawnZ());
             mx -= x; mz -= z; info += "\u00a7f (\u00a79" + (int)Math.sqrt(mx*mx + mz*mz) + "\u00a7fm)";
-            if (modCompassEnabled && compassHaveMine) {
+            if (modCompassActive && compassHaveMine) {
                 if (compassShowOrig) info += "\n  Alt: \u00a79" + (mx = compassMX) + "\u00a7f , \u00a79" + (my = compassMY) + "\u00a7f , \u00a79" + (mz = compassMZ);
                 else info += "\n  Orig: \u00a79" + (mx = compassOX) + "\u00a7f , \u00a79" + (my = compassOY) + "\u00a7f , \u00a79" + (mz = compassOZ);
                 mx -= x; mz -= z; info += "\u00a7f (\u00a79" + (int)Math.sqrt(mx*mx + mz*mz) + "\u00a7fm)";
@@ -991,9 +1027,9 @@ public final class ZMod {
             if (time != timeRT) info += "\u00a7f   (actual time: \u00a79" + getTime(timeRT)+"\u00a7f )";
             if (!isMultiplayer) {
                 info += "\nRain:   \u00a79" + (getRain() ? "raining" : "not raining");
-                if ((!modWeatherEnabled || !optWeatherLocked) && !isHell) info += "\u00a7f the next \u00a79" + (getRainTime() / 20) + "\u00a7f seconds"; // rain
+                if ((!modWeatherActive || !optWeatherLocked) && !isHell) info += "\u00a7f the next \u00a79" + (getRainTime() / 20) + "\u00a7f seconds"; // rain
                 info += "\nThunder:   \u00a79" + (getThunder() ? "thundering" : "not thundering");
-                if ((!modWeatherEnabled || !optWeatherLocked) && !isHell) info += "\u00a7f the next \u00a79" + (getThunderTime() / 20) + "\u00a7f seconds"; // thunder
+                if ((!modWeatherActive || !optWeatherLocked) && !isHell) info += "\u00a7f the next \u00a79" + (getThunderTime() / 20) + "\u00a7f seconds"; // thunder
             }
             // item in hand
             ItemStack items = invItemsArr[getInvCur()];
@@ -1054,7 +1090,7 @@ public final class ZMod {
     }
 
     private static void drawGuiModInfo() {
-        if (modInfoEnabled && optInfoHideAchievement) killAchievement();
+        if (modInfoActive && optInfoHideAchievement) killAchievement();
     }
     
     private static String textModInfo(String txt) {
@@ -1068,18 +1104,18 @@ public final class ZMod {
             }
             txt += infoFps;
         }
-        if (!modInfoEnabled || !optInfoShowTime) return txt;
+        if (!modInfoActive || !optInfoShowTime) return txt;
         return txt + "[" + getTime(getTime() + sunTimeOffset) + "] ";
     }
 
     private static String textModInfoBiome(String txt) {
-        if (!modInfoEnabled || !optInfoShowBiome) return txt;
+        if (!modInfoActive || !optInfoShowBiome) return txt;
         return txt + getBiomeName(fix(posX),fix(posZ)) + " ";
     }
 
 
     //=ZMod=Icon==============================================================
-    private static boolean modIconEnabled;
+    private static boolean modIconEnabled, modIconActive;
     private static boolean optIconShowChest, optIconShowDispenser, optIconShowFurnace, optIconMP;
     private static boolean iconMPSupport;
 
@@ -1087,18 +1123,28 @@ public final class ZMod {
         log("info: loading config for \"icon\"");
         optIconMP = getBool("optIconMP", false);
         iconMPSupport = false;
-        optionsModIcon();
-        return true;
+        return modIconActive = true;
+    }
+    
+    private static void quitModIcon() {
+        if (!modIconActive) return;
+        modIconActive = false;
     }
     
     private static void optionsModIcon() {
+        boolean wasEnabled = modIconEnabled;
+        modIconEnabled = getSetBool(modIconEnabled, "modIconEnabled", false,     "Enable Icon mod");
+        if (wasEnabled != modIconEnabled) {
+            if (modIconEnabled && !modIconActive) initModIcon(); 
+            if (!modIconEnabled && modIconActive) quitModIcon();
+        }
         optIconShowChest = getSetBool(optIconShowChest, "optIconShowChest", true, "Show chest contents (first item)");
         optIconShowDispenser = getSetBool(optIconShowDispenser, "optIconShowDispenser", true, "Show dispenser contents (first item)");
         optIconShowFurnace = getSetBool(optIconShowFurnace, "optIconShowFurnace", true, "Show furnace contents");
     }
 
     public static void drawModIcon(float x, float y, float z) {
-        if ((isMultiplayer && !iconMPSupport) || !modIconEnabled) return;
+        if ((isMultiplayer && !iconMPSupport) || !modIconActive) return;
         int ix = fix(posX), iy = fix(posY), iz = fix(posZ), range = 16, blockId;
         textureBlock = getTexture("/terrain.png"); textureItems = getTexture("/gui/items.png"); texture = -1;
         GL11.glBegin(GL11.GL_QUADS);
@@ -1199,24 +1245,34 @@ public final class ZMod {
     
     
     //=ZMod=Chest=============================================================
-    private static boolean modChestEnabled;
+    private static boolean modChestEnabled, modChestActive;
     private static boolean optChestStore;
     private static int optChestStoreRadius, optChestStoreBlock;
 
     private static boolean initModChest() {
         log("info: loading config for \"chest\"");
         optChestStoreBlock = getBlockId("optChestStoreBlock", 58); // workbench
-        optionsModChest();
-        return true;
+        return modChestActive = true;
+    }
+    
+    private static void quitModChest() {
+        if (!modChestActive) return;
+        modChestActive = false;
     }
     
     private static void optionsModChest() {
+        boolean wasEnabled = modChestEnabled;
+        modChestEnabled = getSetBool(modChestEnabled, "modChestEnabled", false,     "Enable Chest mod");
+        if (wasEnabled != modChestEnabled) {
+            if (modChestEnabled && !modChestActive) initModChest(); 
+            if (!modChestEnabled && modChestActive) quitModChest();
+        }
         optChestStore = getSetBool(optChestStore, "optChestStore", true, "Autostore items on top of chests");
         optChestStoreRadius = getSetInt(optChestStoreRadius, "optChestStoreRadius", 2, 0, 8, "Search radius for 'store' block"); // 0 = off
     }
 
     private static void updateModChest(List list) {
-        if (!modChestEnabled || isMultiplayer || (!optChestStore && optChestStoreRadius<=0)) return;
+        if (!modChestActive || isMultiplayer || (!optChestStore && optChestStoreRadius<=0)) return;
         Iterator iter = list.iterator();
         while (iter.hasNext()) {
             Object obj = iter.next();
@@ -1273,7 +1329,7 @@ public final class ZMod {
 
 
     //=ZMod=Cloud=============================================================
-    private static boolean modCloudEnabled;
+    private static boolean modCloudEnabled, modCloudActive;
     private static String tagCloudVanilla;
     private static int keyCloudToggle, keyCloudUp, keyCloudDown, keyCloudVanilla;
     private static boolean optCloudShow, optCloudVanilla;
@@ -1283,11 +1339,21 @@ public final class ZMod {
     private static boolean initModCloud() {
         log("info: loading config for \"cloud\"");
         tagCloudVanilla       = getString("tagCloudVanilla", "no-cloud-mod");
-        optionsModCloud();
-        return true;
+        return modCloudActive = true;
+    }
+    
+    private static void quitModCloud() {
+        if (!modCloudActive) return;
+        modCloudActive = false;
     }
     
     private static void optionsModCloud() {
+        boolean wasEnabled = modCloudEnabled;
+        modCloudEnabled = getSetBool(modCloudEnabled, "modCloudEnabled", false,     "Enable Cloud mod");
+        if (wasEnabled != modCloudEnabled) {
+            if (modCloudEnabled && !modCloudActive) initModCloud(); 
+            if (!modCloudEnabled && modCloudActive) quitModCloud();
+        }
         keyCloudToggle        = getSetBind(keyCloudToggle, "keyCloudToggle",     Keyboard.KEY_MULTIPLY, "Toggle clouds");
         optCloudShow          = getSetBool(optCloudShow, "optCloudShow", true, "Show clouds by default");
         keyCloudVanilla       = getSetBind(keyCloudVanilla, "keyCloudVanilla",    Keyboard.KEY_V, "Toggle vanilla clouds");
@@ -1297,7 +1363,7 @@ public final class ZMod {
     }
 
     private static void updateModCloud() {
-        if (!modCloudEnabled || isMenu) return;
+        if (!modCloudActive || isMenu) return;
         if (keyPress(keyCloudVanilla)) optCloudVanilla = !optCloudVanilla;
         if (keyPress(keyCloudToggle)) { if (optCloudVanilla) optCloudVanilla = false; else optCloudShow = !optCloudShow; }
         if (keyPress(keyCloudUp))     { if (optCloudVanilla) optCloudVanilla = false; else optCloudOffset += 1f; }
@@ -1309,7 +1375,7 @@ public final class ZMod {
     }
     
     public static void onRenderClouds(float delta) {
-        if (modCloudEnabled && !optCloudVanilla) {
+        if (modCloudActive && !optCloudVanilla) {
             if (optCloudShow && player != null) {
                 double mov = getEntityPrevPosY(player);
                 setEntityPrevPosY(player, mov + (getEntityPosY(player) - mov) * delta - optCloudOffset);
@@ -1322,13 +1388,13 @@ public final class ZMod {
     }
     
     private static String textModCloud(String txt) {
-        if (!modCloudEnabled || !optCloudVanilla || tagCloudVanilla.length()==0) return txt;
+        if (!modCloudActive || !optCloudVanilla || tagCloudVanilla.length()==0) return txt;
         return txt + tagCloudVanilla + " ";
     }
     
     
     //=ZMod=Cart==============================================================
-    private static boolean modCartEnabled;
+    private static boolean modCartEnabled, modCartActive;
     private static String tagCartPerpetual;
     private static int keyCartStop, keyCartPerpetual;
     private static boolean optCartPerpetual, optCartInfiniteFuel;
@@ -1338,11 +1404,21 @@ public final class ZMod {
     private static boolean initModCart() {
         log("info: loading config for \"cart\"");
         tagCartPerpetual      = getString("tagCartPerpetual", "perpetual");
-        optionsModCart();
-        return true;
+        return modCartActive = true;
+    }
+    
+    private static void quitModCart() {
+        if (!modCartActive) return;
+        modCartActive = false;
     }
     
     private static void optionsModCart() {
+        boolean wasEnabled = modCartEnabled;
+        modCartEnabled = getSetBool(modCartEnabled, "modCartEnabled", false,     "Enable Cart mod");
+        if (wasEnabled != modCartEnabled) {
+            if (modCartEnabled && !modCartActive) initModCart(); 
+            if (!modCartEnabled && modCartActive) quitModCart();
+        }
         keyCartStop           = getSetBind(keyCartStop, "keyCartStop",        Keyboard.KEY_RETURN, "Stop the minecart instantly");
         keyCartPerpetual      = getSetBind(keyCartPerpetual, "keyCartPerpetual",   Keyboard.KEY_UP, "Toggle perpetual motion mode");
         optCartSpeedAccumCap  = getSetFloat(optCartSpeedAccumCap, "optCartSpeedAccumCap", 1f, 0.5f, 5f, "Speed accumulation cap");
@@ -1351,7 +1427,7 @@ public final class ZMod {
     }
 
     private static void updateModCart(List list) {
-        if (isMultiplayer || !modCartEnabled || !(inWhat instanceof EntityMinecart)) return;
+        if (isMultiplayer || !modCartActive || !(inWhat instanceof EntityMinecart)) return;
         double mx = getEntityMotionX(inWhat) + motionX * optCartAcceleration, mz = getEntityMotionZ(inWhat) + motionZ * optCartAcceleration;
         double speed = Math.sqrt(mx*mx+mz*mz), rate;
         if (!isMenu && keyPress(keyCartPerpetual)) {
@@ -1379,13 +1455,13 @@ public final class ZMod {
     }
     
     private static String textModCart(String txt) {
-        if (isMultiplayer || !modCartEnabled || !optCartPerpetual || tagCartPerpetual.length()==0) return txt;
+        if (isMultiplayer || !modCartActive || !optCartPerpetual || tagCartPerpetual.length()==0) return txt;
         return txt + tagCartPerpetual + " ";
     }
     
     
     //=ZMod=Wield=============================================================
-    public static boolean modWieldEnabled;
+    public static boolean modWieldEnabled, modWieldActive;
     public static String tagWieldAmmo;
     public static int keyWield;
     public static boolean optWieldBowFirst, optWieldShowAmmo;
@@ -1393,18 +1469,28 @@ public final class ZMod {
     private static boolean initModWield() {
         log("info: loading config for \"wield\"");
         tagWieldAmmo          = getString("tagWieldAmmo", "Arrows :") + " ";
-        optionsModWield();
-        return true;
+        return modWieldActive = true;
+    }
+    
+    private static void quitModWield() {
+        if (!modWieldActive) return;
+        modWieldActive = false;
     }
     
     private static void optionsModWield() {
+        boolean wasEnabled = modWieldEnabled;
+        modWieldEnabled = getSetBool(modWieldEnabled, "modWieldEnabled", false,     "Enable Wield mod");
+        if (wasEnabled != modWieldEnabled) {
+            if (modWieldEnabled && !modWieldActive) initModWield(); 
+            if (!modWieldEnabled && modWieldActive) quitModWield();
+        }
         keyWield              = getSetBind(keyWield, "keyWield",           Keyboard.KEY_R, "Wield key");
         optWieldBowFirst      = getSetBool(optWieldBowFirst, "optWieldBowFirst", true, "Wield bow first");
         optWieldShowAmmo      = getSetBool(optWieldShowAmmo, "optWieldShowAmmo", true, "Show arrow count");
     }
 
     private static void updateModWield() {
-        if (!modWieldEnabled) return;
+        if (!modWieldActive) return;
         int bow = -1, swd = -1, cur = getInvCur();
         int arrows = 0;
         boolean haveBow = false;
@@ -1423,7 +1509,7 @@ public final class ZMod {
     
     
     //=ZMod=Build=============================================================
-    private static boolean modBuildEnabled;
+    private static boolean modBuildEnabled, modBuildActive;
     private static String tagBuildEnabled;
     private static int keyBuildToggle, keyBuildA, keyBuildB, keyBuildMark, keyBuildCopy, keyBuildPaste, keyBuildSet, keyBuildFill, keyBuildRemove, keyBuildDown, keyBuildDeselect;
     private static int optBuildLockQuantityToNr, optBuildHarvestRule;
@@ -1438,7 +1524,8 @@ public final class ZMod {
 
     private static boolean initModBuild() {
         log("info: loading config for \"build\"");
-        optionsModBuild();
+        if (!checkClass(PlayerControllerMP.class, "build")) return false;
+        optBuildExtension = getBool("optBuildExtension", false);
         if (!optBuildExtension) log("info: build extension is disabled");
         tagBuildEnabled       = getString("tagBuildEnabled", "builder");
         String sets[] = new String[]{
@@ -1474,10 +1561,21 @@ public final class ZMod {
                 }
             }
         }
-        return checkClass(PlayerControllerMP.class, "build");
+        return modBuildActive = true;
+    }
+    
+    private static void quitModBuild() {
+        if (!modBuildActive) return;
+        modBuildActive = false;
     }
 
     private static void optionsModBuild() {
+        boolean wasEnabled = modBuildEnabled;
+        modBuildEnabled = getSetBool(modBuildEnabled, "modBuildEnabled", false,     "Enable Build mod");
+        if (wasEnabled != modBuildEnabled) {
+            if (modBuildEnabled && !modBuildActive) initModBuild(); 
+            if (!modBuildEnabled && modBuildActive) quitModBuild();
+        }
         keyBuildToggle        = getSetBind(keyBuildToggle, "keyBuildToggle",     Keyboard.KEY_B, "Toggle builder mode");
         keyBuildA             = getSetBind(keyBuildA, "keyBuildA",          Keyboard.KEY_LSHIFT, "A item sets (this + number)");
         keyBuildB             = getSetBind(keyBuildB, "keyBuildB",          Keyboard.KEY_LCONTROL, "B item sets (this + number)");
@@ -1499,7 +1597,7 @@ public final class ZMod {
     }
 
     private static void updateModBuild() {
-        if (!modBuildEnabled) return;
+        if (!modBuildActive) return;
         if (!optBuild || isMenu || !optBuildLockQuantity || isMultiplayer) buildHandSlot = -1;
         if (isMenu) return;
         if (keyPress(keyBuildToggle)) optBuild = !optBuild;
@@ -1616,7 +1714,7 @@ public final class ZMod {
     }
     
     public static void drawModBuild(float x, float y, float z) {
-        if (!modBuildEnabled || buildMark <= 0) return;
+        if (!modBuildActive || buildMark <= 0) return;
         // calculate selection box
         float sx = (float)buildSX - x - 0.1f, ex = (float)(buildMark==2 ? buildEX : buildSX) - x + 1.1f;
         float sy = (float)buildSY - y - 0.1f, ey = (float)(buildMark==2 ? buildEY : buildSY) - y + 1.1f;
@@ -1664,13 +1762,13 @@ public final class ZMod {
     }
     
     private static String textModBuild(String txt) {
-        if (!modBuildEnabled || !optBuild || tagBuildEnabled.length()==0) return txt;
+        if (!modBuildActive || !optBuild || tagBuildEnabled.length()==0) return txt;
         return txt + tagBuildEnabled + " ";
     }
     
     
     //=ZMod=Compass===========================================================
-    private static boolean modCompassEnabled;
+    private static boolean modCompassEnabled, modCompassActive;
     private static String tagCompassAlternate;
     private static int keyCompassSet, keyCompassToggle;
     private static boolean optCompassShowPos;
@@ -1680,18 +1778,28 @@ public final class ZMod {
     private static boolean initModCompass() {
         log("info: loading config for \"compass\"");
         tagCompassAlternate = getString("tagCompassAlternate", "altSpawn");
-        optionsModCompass();
-        return true;
+        return modCompassActive = true;
+    }
+    
+    private static void quitModCompass() {
+        if (!modCompassActive) return;
+        modCompassActive = false;
     }
     
     private static void optionsModCompass() {
+        boolean wasEnabled = modCompassEnabled;
+        modCompassEnabled = getSetBool(modCompassEnabled, "modCompassEnabled", false,     "Enable Compass mod");
+        if (wasEnabled != modCompassEnabled) {
+            if (modCompassEnabled && !modCompassActive) initModCompass(); 
+            if (!modCompassEnabled && modCompassActive) quitModCompass();
+        }
         keyCompassSet = getSetBind(keyCompassSet, "keyCompassSet",              Keyboard.KEY_INSERT, "Set alternate compasspoint");
         keyCompassToggle = getSetBind(keyCompassToggle, "keyCompassToggle",        Keyboard.KEY_HOME, "Toggle compasspont original/alternate");
         optCompassShowPos = getSetBool(optCompassShowPos, "optCompassShowPos", true, "Show coordinates");
     }
     
     private static void updateModCompass() {
-        if (!modCompassEnabled || isHell) return;
+        if (!modCompassActive || isHell) return;
         if (isWorldChange) { compassHaveMine = false; compassShowOrig = true; }
         int cX = world.getSpawnX(), cY = world.getSpawnY(), cZ = world.getSpawnZ();
         int pX = fix(posX), pY = fix(posY), pZ = fix(posZ);
@@ -1725,14 +1833,14 @@ public final class ZMod {
     }
     
     private static String textModCompassShared(String txt) {
-        if ((modCompassEnabled && optCompassShowPos) || (modInfoEnabled && optInfoShowPos)) txt += "(" + fix(posX) + "," + fix(posY) + "," + fix(posZ) + " \u00a77" + getAngleName(player.rotationYaw) + "\u00a7f) ";
-        if (modCompassEnabled && !compassShowOrig && tagCompassAlternate.length()>0) txt += tagCompassAlternate + " ";
+        if ((modCompassActive && optCompassShowPos) || (modInfoActive && optInfoShowPos)) txt += "(" + fix(posX) + "," + fix(posY) + "," + fix(posZ) + " \u00a77" + getAngleName(player.rotationYaw) + "\u00a7f) ";
+        if (modCompassActive && !compassShowOrig && tagCompassAlternate.length()>0) txt += tagCompassAlternate + " ";
         return txt;
     }
     
     
     //=ZMod=Sun===============================================================
-    private static boolean modSunEnabled;
+    private static boolean modSunEnabled, modSunActive;
     private static String tagSunTime;
     private static String optSunServerCmd;
     private static int keySunTimeAdd, keySunTimeSub, keySunStop, keySunTimeNormal, keySunServer;
@@ -1743,13 +1851,24 @@ public final class ZMod {
 
     private static boolean initModSun() {
         log("info: loading config for \"sun\"");
+        if (!checkClass(WorldProvider.class, "sun")) return false;
         tagSunTime = getString("tagSunTime", "time");
         optSunServerCmd = getString("optSunServerCmd", "/time add");
-        optionsModSun();
-        return checkClass(WorldProvider.class, "sun");
+        return modSunActive = true;
+    }
+    
+    private static void quitModSun() {
+        if (!modSunActive) return;
+        modSunActive = false;
     }
 
     private static void optionsModSun() {
+        boolean wasEnabled = modSunEnabled;
+        modSunEnabled = getSetBool(modSunEnabled, "modSunEnabled", false,     "Enable Sun mod");
+        if (wasEnabled != modSunEnabled) {
+            if (modSunEnabled && !modSunActive) initModSun(); 
+            if (!modSunEnabled && modSunActive) quitModSun();
+        }
         keySunTimeAdd = getSetBind(keySunTimeAdd, "keySunTimeAdd",              Keyboard.KEY_ADD, "Add time");
         keySunTimeSub = getSetBind(keySunTimeSub, "keySunTimeSub",              Keyboard.KEY_SUBTRACT, "Subtract time");
         optSunTimeStep = getSetInt(optSunTimeStep / 20, "optSunTimeStep", 30, 1, 600, "Time step in seconds") * 20;
@@ -1760,7 +1879,7 @@ public final class ZMod {
     }
 
     private static void updateModSun() {
-        if (!modSunEnabled) return;
+        if (!modSunActive) return;
         long time = getTime();
         if (getIsSleeping(player)) sunSleeping = true;
         else if (sunSleeping) { sunSleeping = false; sunTimeOffset = 0; }
@@ -1784,15 +1903,15 @@ public final class ZMod {
     }
     
     private static String textModSun(String txt) {
-        if (!modSunEnabled || sunTimeOffset==0) return txt;
+        if (!modSunActive || sunTimeOffset==0) return txt;
         return txt + tagSunTime + (sunTimeOffset<0 ? "" : "+") + (sunTimeOffset/20) + " ";
     }
     
-    public static long sunOffsetHandle() { return modSunEnabled && sunTimeOffset!=0 ? sunTimeOffset : 0; }
+    public static long sunOffsetHandle() { return modSunActive && sunTimeOffset!=0 ? sunTimeOffset : 0; }
     
     
     //=ZMod=Fly===============================================================
-    private static boolean modFlyEnabled, modFlyAllowed, modNoClipAllowed;
+    private static boolean modFlyEnabled, modFlyActive, modFlyAllowed, modNoClipAllowed;
     private static String tagFly, tagFlyNoClip;
     private static int keyFlyOn, keyFlyOff, keyFlyUp, keyFlyDown, keyFlySpeed, keyFlyToggle, keyFlyRun, keyFlyNoClip;
     private static double optFlySpeedVertical, optFlySpeedMulNormal, optFlySpeedMulModifier, optFlyRunSpeedMul, optFlyRunSpeedVMul;
@@ -1805,18 +1924,27 @@ public final class ZMod {
 
     private static boolean initModFly() {
         log("info: loading config for \"fly\"");
+        if (!checkClass(EntityPlayer.class, "fly")) return false;
         keyFlyOn = getBind("keyFlyOn",                        Keyboard.KEY_NONE);
         keyFlyOff = getBind("keyFlyOff",                      Keyboard.KEY_NONE);
         flyNoClip = false;
         tagFly = getString("tagFly", "flying");
         tagFlyNoClip = getString("tagFlyNoClip", "noclip");
-        optionsModFly();
-        return checkClass(EntityPlayer.class, "fly");
+        return modFlyActive = true;
+    }
+    
+    private static void quitModFly() {
+        if (!modFlyActive) return;
+        modFlyActive = false;
     }
     
     private static void optionsModFly() {
-        //drawBtn(x, y, w, caption, help, selected, state, center, restart) {
-        //if(drawBtn(opt, 16, optionNr, 6, "enabled", modFlyEnabled, false, false)) { modFlyEnabled = !modFlyEnabled; }  ... fails badly
+        boolean wasEnabled = modFlyEnabled;
+        modFlyEnabled = getSetBool(modFlyEnabled, "modFlyEnabled", false,     "Enable Fly mod");
+        if (wasEnabled != modFlyEnabled) {
+            if (modFlyEnabled && !modFlyActive) initModFly(); 
+            if (!modFlyEnabled && modFlyActive) quitModFly();
+        }
         keyFlyToggle            = getSetBind(keyFlyToggle,                   "keyFlyToggle", Keyboard.KEY_F           , "Toggle fly mode");
         optFlySpeedMulNormal    = getSetFloat((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 10.0f , "Flying speed");
         keyFlyUp                = getSetBind(keyFlyUp,                       "keyFlyUp",     Keyboard.KEY_E           , "Fly up");
@@ -1839,10 +1967,10 @@ public final class ZMod {
 
     private static void updateModFly() {
         if (isWorldChange) {
-            flyNoClip = optFlyNoClip && modNoClipAllowed;
+            flyNoClip = optFlyNoClip && modFlyActive && modNoClipAllowed;
             setNoClip(modFlyAllowed && flyNoClip && fly);
         }
-        if (!modFlyEnabled || isMenu) return;
+        if (!modFlyActive || isMenu) return;
         if (isControllingProjection()) {
             boolean flyPrev = flyProjection;
             if (keyPress(keyFlyToggle)) flyProjection = !flyProjection;
@@ -1895,7 +2023,7 @@ public final class ZMod {
     }
 
     private static String textModFly(String txt) {
-        if (!modFlyEnabled || !fly) return txt;
+        if (!modFlyActive || !fly) return txt;
         if (tagFly.length()>0) txt += tagFly + " ";
         if (flyNoClip && tagFlyNoClip.length()>0) txt += tagFlyNoClip + " ";
         return txt;
@@ -1906,23 +2034,23 @@ public final class ZMod {
     }
 
     private static void flyOnServersidePlayerUpdate(EntityPlayer ent) {
-        if (!modFlyEnabled || !modFlyAllowed) return;
+        if (!modFlyActive || !modFlyAllowed) return;
         ent.noClip = player.noClip;                               // necessary for noclip
         if (!player.capabilities.allowFlying)
         ent.capabilities.isFlying = player.capabilities.isFlying; // necessary for damage-over-lava bug
     }
 
     private static void flyOnClientsidePlayerUpdate(EntityPlayer ent) {
-        if (!playerClassActive || player == null || (modFlyEnabled && fly)) return;
+        if (!playerClassActive || player == null || (modFlyActive && modFlyAllowed && fly)) return;
         setEntityOnGround(player, moveOnGround); // no sure if it has any use
     }
 
     public static boolean allowVanillaFly() {
-        return !modFlyEnabled || !modFlyAllowed || optFlyVanillaFly; 
+        return !modFlyActive || !modFlyAllowed || optFlyVanillaFly; 
     }
 
     public static boolean allowVanillaSprint() {
-        return !modFlyEnabled || !modFlyAllowed || optFlyVanillaSprint; 
+        return !modFlyActive || !modFlyAllowed || optFlyVanillaSprint; 
     }
 
     public static boolean isFly() {
@@ -1936,7 +2064,7 @@ public final class ZMod {
     public static void flyHandle(EntityPlayer ent, double mx, double my, double mz) {
         float flyTmp = 0;
         if (ent == player) {
-            if (modFlyAllowed) {
+            if (modFlyAllowed && modFlyActive) {
                 flyTmp = getEntitySteps(ent);
                 if (fly) {
                     player.movementInput.sneak = false;
@@ -1957,7 +2085,7 @@ public final class ZMod {
             }
         }
         if (ent == cheatProjection) {
-            if (modFlyAllowed) {
+            if (modFlyAllowed && modFlyActive) {
                 flyTmp = getEntitySteps(ent);
                 if (flyProjection) {
                     cheatProjection.movementInput.sneak = false;
@@ -1987,7 +2115,7 @@ public final class ZMod {
             moveOnGround = getEntityOnGround(ent);
             playerClassActive = true;
 
-            if (modFlyAllowed) {
+            if (modFlyAllowed && modFlyActive) {
                 if (fly) {
                     player.movementInput.sneak = false;
                     setFall(ent, 0f); setEntityOnGround(ent, true); setEntitySteps(ent, flyTmp); 
@@ -2007,7 +2135,7 @@ public final class ZMod {
         if (ent == cheatProjection) {
             playerClassActive = true;
 
-            if (modFlyAllowed) {
+            if (modFlyAllowed && modFlyActive) {
                 if (flyProjection) {
                     cheatProjection.movementInput.sneak = false;
                     setEntitySteps(ent, flyTmp);
@@ -2020,33 +2148,44 @@ public final class ZMod {
     }
 
     public static double flyJumpHandle(EntityPlayer ent) {
-        if (!modFlyAllowed) return 1.0D;
+        if (!modFlyAllowed || !modFlyActive) return 1.0D;
         if (ent == player) return flyRun ? optFlyJumpHigh : optFlyJump;
         if (ent == cheatProjection) return flyRunProjection ? optFlyJumpHigh : optFlyJump;
         return 1.0D;
     }
 
     //=ZMod=Craft=============================================================
-    private static boolean modCraftEnabled;
+    private static boolean modCraftEnabled, modCraftActive;
     private static int keyCraftAll;
 
     private static boolean initModCraft() {
         log("info: loading config for \"craft\"");
-        optionsModCraft();
-        return checkClass(GuiContainer.class, "craft");
+        if (!checkClass(GuiContainer.class, "craft")) return false;
+        return modCraftActive = true;
+    }
+    
+    private static void quitModCraft() {
+        if (!modCraftActive) return;
+        modCraftActive = false;
     }
 
     private static void optionsModCraft() {
+        boolean wasEnabled = modCraftEnabled;
+        modCraftEnabled = getSetBool(modCraftEnabled, "modCraftEnabled", false,     "Enable Craft mod");
+        if (wasEnabled != modCraftEnabled) {
+            if (modCraftEnabled && !modCraftActive) initModCraft(); 
+            if (!modCraftEnabled && modCraftActive) quitModCraft();
+        }
         keyCraftAll = getSetBind(keyCraftAll, "keyCraftAll", Keyboard.KEY_LSHIFT, "Craft-all modifier key");
     }
 
     public static int craftingHandle() {
-        return modCraftEnabled && keyDown(keyCraftAll) ? 64 : 1;
+        return modCraftActive && keyDown(keyCraftAll) ? 64 : 1;
     }
     
 
     //=ZMod=Path==============================================================
-    private static boolean modPathEnabled;
+    private static boolean modPathEnabled, modPathActive;
     private static int keyPathShow, keyPathDelete;
     private static boolean optPathShow;
     private static int optPathPoints, optPathSpacing;
@@ -2060,11 +2199,21 @@ public final class ZMod {
         optPathPoints = getInt("optPathPoints", 8192, 256, 32768); pathf = new float[3 * optPathPoints];
         optPathMin = getFloat("optPathMin", 0.25f, 0.1f, 4f); optPathMin *= optPathMin;
         optPathColor = getColor("optPathColor", 0xff0000);
-        optionsModPath();
-        return true;
+        return modPathActive = true;
+    }
+    
+    private static void quitModPath() {
+        if (!modPathActive) return;
+        modPathActive = false;
     }
     
     private static void optionsModPath() {
+        boolean wasEnabled = modPathEnabled;
+        modPathEnabled = getSetBool(modPathEnabled, "modPathEnabled", false,     "Enable Path mod");
+        if (wasEnabled != modPathEnabled) {
+            if (modPathEnabled && !modPathActive) initModPath(); 
+            if (!modPathEnabled && modPathActive) quitModPath();
+        }
         keyPathShow = getSetBind(keyPathShow, "keyPathShow",                  Keyboard.KEY_BACK, "Show / hide path");
         optPathShow = getSetBool(optPathShow, "optPathShow", false, "Path is shown by default");
         optPathSpacing = getSetInt(optPathSpacing - 2, "optPathSpacing", 6, 0, 32, "Spacing") + 2;
@@ -2073,13 +2222,13 @@ public final class ZMod {
     }
 
     private static void updateModPath() {
-        if (!modPathEnabled || isMenu) return;
+        if (!modPathActive || isMenu) return;
         if (keyPress(keyPathShow)) optPathShow = !optPathShow;
         if (keyPress(keyPathDelete)) pathCount = 0;
     }
     
     public static void drawModPath(float x, float y, float z) {
-        if (!modPathEnabled) return;
+        if (!modPathActive) return;
         // get previous location
         float px = (float)posX, py = (float)posY, pz = (float)posZ;
         float tx = pathf[pathLast] - px, ty = pathf[pathLast+1] - (py - 1.25f), tz = pathf[pathLast+2] - pz;
@@ -2121,7 +2270,7 @@ public final class ZMod {
     
     
     //=ZMod=Recipe============================================================
-    private static boolean modRecipeEnabled;
+    private static boolean modRecipeEnabled, modRecipeActive;
     private static boolean optRecipeShowId, optRecipeDump, optRecipeVanillaMP, optRecipeShowHelp;
     private static List recipesSP, recipesMP;
     private static int recipesMobType;
@@ -2131,19 +2280,29 @@ public final class ZMod {
         log("info: loading config for \"recipe\" - deferred");
         optRecipeDump = getBool("optRecipeDump", false);
         optRecipeVanillaMP = getBool("optRecipeVanillaMP", false);
-        optionsModRecipe();
         if (optRecipeVanillaMP) recipesMP = (List)((ArrayList)getValue(fCMRecipes, getCManager())).clone(); // separate copy for MP
         else recipesMP = (List)getValue(fCMRecipes, getCManager()); // no separate copy - use the same for both (default to support server recipes).
-        return true;
+        return modRecipeActive = true;
+    }
+    
+    private static void quitModRecipe() {
+        if (!modRecipeActive) return;
+        modRecipeActive = false;
     }
     
     private static void optionsModRecipe() {
+        boolean wasEnabled = modRecipeEnabled;
+        modRecipeEnabled = getSetBool(modRecipeEnabled, "modRecipeEnabled", false,     "Enable Recipe mod");
+        if (wasEnabled != modRecipeEnabled) {
+            if (modRecipeEnabled && !modRecipeActive) initModRecipe(); 
+            if (!modRecipeEnabled && modRecipeActive) quitModRecipe();
+        }
         optRecipeShowId = getSetBool(optRecipeShowId, "optRecipeShowId", true, "Show selected item id");
         optRecipeShowHelp = getSetBool(optRecipeShowHelp, "optRecipeShowHelp", true, "Show recipe helper");
     }
     
     private static void deferredModRecipe() {
-        if (!modRecipeEnabled || recipesSP != null) return;
+        if (!modRecipeActive || recipesSP != null) return;
         log("info: continuing to load \"recipes\"");
         recipesSP = (List)getValue(fCMRecipes, getCManager());
         log("info: "+recipesSP.size()+" SP recipes before loading mod");
@@ -2187,13 +2346,13 @@ public final class ZMod {
     }
     
     private static void updateModRecipe() {
-        if (!modRecipeEnabled) return;
+        if (!modRecipeActive) return;
         setValue(fCMRecipes, getCManager(), isMultiplayer ? recipesMP : recipesSP);
     }
 
     private static void updateModRecipeShared() { // update mob-type for spawner block
         recipesMobType = 0;
-        if (isMultiplayer || (!modRecipeEnabled && !modBuildEnabled)) return;
+        if (isMultiplayer || (!modRecipeActive && !modBuildActive)) return;
         ItemStack items = invItemsArr[getInvCur()];
         if (items != null && getItemsId(items)==52) {
             int meta = getItemsInfo(items);
@@ -2202,7 +2361,7 @@ public final class ZMod {
     }
     private static void drawGuiModRecipe() {
         // draw "recipe"
-        if (modRecipeEnabled && optRecipeShowHelp && isMenu && !isTMIEnabled()) {
+        if (modRecipeActive && optRecipeShowHelp && isMenu && !isTMIEnabled()) {
             ArrayList recipes = new ArrayList();
             ArrayList make = new ArrayList();
             ItemStack items[] = new ItemStack[9], unique[] = new ItemStack[9];
@@ -2380,7 +2539,7 @@ public final class ZMod {
     }
     
     private static String textModRecipe(String txt) {
-        if (!modRecipeEnabled || !optRecipeShowId) return txt;
+        if (!modRecipeActive || !optRecipeShowId) return txt;
         ItemStack items = invItemsArr[getInvCur()];
         if (items != null) {
             int id = getItemsId(items);
@@ -2390,7 +2549,7 @@ public final class ZMod {
     }
     
     //=ZMod=Safe==============================================================
-    private static boolean modSafeEnabled;
+    private static boolean modSafeEnabled, modSafeActive;
     private static String tagSafe;
     private static int keySafeShow;
     private static int keySafeGhost;
@@ -2413,11 +2572,21 @@ public final class ZMod {
         optSafeDangerColor = getColor("optSafeDangerColor", 0xff0000);
         optSafeDangerColorSun = getColor("optSafeDangerColorSun", 0xdddd00);
         tagSafe = getString("tagSafe", "safe");
-        optionsModSafe();
-        return true;
+        return modSafeActive = true;
+    }
+    
+    private static void quitModSafe() {
+        if (!modSafeActive) return;
+        modSafeActive = false;
     }
 
     private static void optionsModSafe() {
+        boolean wasEnabled = modSafeEnabled;
+        modSafeEnabled = getSetBool(modSafeEnabled, "modSafeEnabled", false,     "Enable Safe mod");
+        if (wasEnabled != modSafeEnabled) {
+            if (modSafeEnabled && !modSafeActive) initModSafe(); 
+            if (!modSafeEnabled && modSafeActive) quitModSafe();
+        }
         keySafeShow = getSetBind(keySafeShow, "keySafeShow",                  Keyboard.KEY_L, "Show / hide un-safe markers");
         keySafeGhost = getSetBind(keySafeGhost, "keySafeGhost",                  Keyboard.KEY_K, "Toggle show marks through walls");
         optSafeShowWithSun = getSetBool(optSafeShowWithSun, "optSafeShowWithSun", true, "Mark 'safe at midday' differently");
@@ -2425,14 +2594,14 @@ public final class ZMod {
     }
 
     private static void updateModSafe() {
-        if (!modSafeEnabled || isMenu) return;
+        if (!modSafeActive || isMenu) return;
         if (keyPress(keySafeShow)) safeShow = !safeShow;
         if (keyPress(keySafeGhost)) safeGhost = !safeGhost;
     }
     
     private static void drawModSafe(float x, float y, float z) {
         float mx, my, mz;
-        if (!modSafeEnabled || !safeShow) return;
+        if (!modSafeActive || !safeShow) return;
         if (--safeUpdate<0) {
             safeUpdate = 16;
             reCheckSafe(fix(x), fix(y), fix(z));
@@ -2460,7 +2629,7 @@ public final class ZMod {
     }
     
     private static String textModSafe(String txt) {
-        if (!modSafeEnabled || !safeShow || tagSafe.length()==0) return txt;
+        if (!modSafeActive || !safeShow || tagSafe.length()==0) return txt;
         return txt + tagSafe + " ";
     }
     
@@ -2499,17 +2668,28 @@ public final class ZMod {
     
     
     //=ZMod=Boom==============================================================
-    private static boolean modBoomEnabled;
+    private static boolean modBoomEnabled, modBoomActive;
     private static int optBoomSafeRange;
     private static float optBoomDropOreChance, optBoomDropChance, optBoomScaleTNT, optBoomScaleCreeper, optBoomScaleFireball;
 
     private static boolean initModBoom() {
         log("info: loading config for \"boom\"");
-        optionsModBoom();
-        return checkClass(Explosion.class, "boom");
+        if (!checkClass(Explosion.class, "boom")) return false;
+        return modBoomActive = true;
+    }
+    
+    private static void quitModBoom() {
+        if (!modBoomActive) return;
+        modBoomActive = false;
     }
 
     private static void optionsModBoom() {
+        boolean wasEnabled = modBoomEnabled;
+        modBoomEnabled = getSetBool(modBoomEnabled, "modBoomEnabled", false,     "Enable Boom mod");
+        if (wasEnabled != modBoomEnabled) {
+            if (modBoomEnabled && !modBoomActive) initModBoom(); 
+            if (!modBoomEnabled && modBoomActive) quitModBoom();
+        }
         optBoomDropOreChance = (float)getSetInt((int)(optBoomDropOreChance * 100f), "optBoomDropOreChance", 100, 0, 100, "Drop ore chance") / 100f;
         optBoomDropChance = (float)getSetInt((int)(optBoomDropChance * 100f), "optBoomDropChance", 30, 0, 100, "Drop non-ore chance") / 100f;
         optBoomScaleTNT = getSetFloat(optBoomScaleTNT, "optBoomScaleTNT", 1f, 0.1f, 10f, "TNT explosion multiplier");
@@ -2519,7 +2699,7 @@ public final class ZMod {
     }
 
     public static float boomDropHandle(int blockId) {
-        if (modBoomEnabled && !isMultiplayer) {
+        if (modBoomActive && !isMultiplayer) {
             if ((block[blockId] & ORE) != 0) return optBoomDropOreChance;
             else return optBoomDropChance;
         }
@@ -2539,7 +2719,7 @@ public final class ZMod {
     }
 
     public static float boomScaleHandle(float boom, int type) {
-        if (!modBoomEnabled || isMultiplayer) return boom;
+        if (!modBoomActive || isMultiplayer) return boom;
         switch(type) {
             case 1: boom *= optBoomScaleCreeper; break; // creeper
             case 2: boom *= optBoomScaleFireball; break; // fireball
@@ -2550,7 +2730,7 @@ public final class ZMod {
 
 
     //=ZMod=Spawn=============================================================
-    private static boolean modSpawnEnabled;
+    private static boolean modSpawnEnabled, modSpawnActive;
     private static boolean optSpawnSupportMods, optSpawnAllowInNonAir, optSpawnAllowOnNonNatural, optSpawnAllowOnGrass, optSpawnAllowOnCobble, optSpawnAllowOnSand, optSpawnAllowOnGravel, optSpawnAllowOnTree, optSpawnAllowOnSandstone;
     private static int optSpawnPigReduction, optSpawnChickenReduction, optSpawnCowReduction, optSpawnSheepReduction, optSpawnSquidReduction, optSpawnGhastReduction, optSpawnWolfReduction;
     private static int optSpawnSpiderReduction, optSpawnSkeletonReduction, optSpawnCreeperReduction, optSpawnZombieReduction, optSpawnSlimeReduction, optSpawnPigZombieReduction;
@@ -2578,11 +2758,21 @@ public final class ZMod {
         optSpawnCaveSpiderReduction = getInt("optSpawnCaveSpiderReduction", 0, 0, 100);
         optSpawnEndermanReduction = getInt("optSpawnEndermanReduction", 0, 0, 100);
         optSpawnSilverfishReduction = getInt("optSpawnSilverfishReduction", 0, 0, 100);
-        optionsModSpawn();
-        return true;
+        return modSpawnActive = true;
+    }
+    
+    private static void quitModSpawn() {
+        if (!modSpawnActive) return;
+        modSpawnActive = false;
     }
 
     private static void optionsModSpawn() {
+        boolean wasEnabled = modSpawnEnabled;
+        modSpawnEnabled = getSetBool(modSpawnEnabled, "modSpawnEnabled", false,     "Enable Spawn mod");
+        if (wasEnabled != modSpawnEnabled) {
+            if (modSpawnEnabled && !modSpawnActive) initModSpawn(); 
+            if (!modSpawnEnabled && modSpawnActive) quitModSpawn();
+        }
         optSpawnAllowInNonAir = getSetBool(optSpawnAllowInNonAir, "optSpawnAllowInNonAir", false, "Allow in non-air (reeds, wheat etc)");
         optSpawnAllowOnNonNatural = getSetBool(optSpawnAllowOnNonNatural, "optSpawnAllowOnNonNatural", false, "Allow on non-natural");
         optSpawnAllowOnGrass = getSetBool(optSpawnAllowOnGrass, "optSpawnAllowOnGrass", true, "Allow on grass");
@@ -2594,7 +2784,7 @@ public final class ZMod {
     }
 
     private static void updateModSpawn(List list) {
-        if (!modSpawnEnabled || isMultiplayer) return;
+        if (!modSpawnActive || isMultiplayer) return;
         Iterator it = list.iterator();
         int mask = 0;
         if (!optSpawnAllowOnGrass) mask |= GRASS;
@@ -2639,7 +2829,7 @@ public final class ZMod {
     
     
     //=ZMod=Ore===============================================================
-    private static boolean modOreEnabled;
+    private static boolean modOreEnabled, modOreActive;
     private static boolean optOreLavaFloor;
     private static int[] optOreCoalRule, optOreIronRule, optOreGoldRule, optOreBlueRule, optOreRedRule, optOreDiamondRule;
 
@@ -2653,15 +2843,25 @@ public final class ZMod {
         if ((optOreBlueRule    = parseRule(getString("optOreBlueRule"   , "100/32/8/2/8/1   5/56/48/64/2/1    5/96/48/1/32/1/1"))) == null) return false;
         if ((optOreRedRule     = parseRule(getString("optOreRedRule"    , "100/32/8/2/8/1   10/120/96/64/1/1"))) == null) return false;
         if ((optOreDiamondRule = parseRule(getString("optOreDiamondRule", "75/16/4/2/8/1    100/32/2/128/2/11 10/120/16/2/8/1"))) == null) return false;
-        optionsModOre();
-        return true;
+        return modOreActive = true;
+    }
+    
+    private static void quitModOre() {
+        if (!modOreActive) return;
+        modOreActive = false;
     }
     
     private static void optionsModOre() {
+        boolean wasEnabled = modOreEnabled;
+        modOreEnabled = getSetBool(modOreEnabled, "modOreEnabled", false,     "Enable Item mod");
+        if (wasEnabled != modOreEnabled) {
+            if (modOreEnabled && !modOreActive) initModOre(); 
+            if (!modOreEnabled && modOreActive) quitModOre();
+        }
     }
 
     private static void updateModOre() {
-        if (!modOreEnabled || isMultiplayer || isHell) return;
+        if (!modOreActive || isMultiplayer || isHell) return;
         int cx = fix(posX) >> 4, cz = fix(posZ) >> 4, tx, ty, tz, id;
         for (int cxi=cx-3;cxi<=cx+3;cxi++) for (int czi=cz-3;czi<=cz+3;czi++) if (mapXGetChunkExists(cxi, czi)) {
             Chunk chunk = map.getChunkFromChunkCoords(cxi, czi);
@@ -2732,7 +2932,7 @@ public final class ZMod {
     
 
     //=ZMod=Teleport==========================================================
-    private static boolean modTeleportEnabled;
+    private static boolean modTeleportEnabled, modTeleportActive;
     private static int keyTeleportUp, keyTeleportDown, keyTeleportCursor;
     private static boolean optTeleportIsSelected;
     private static int optTeleportUseItem;
@@ -2744,11 +2944,21 @@ public final class ZMod {
         optTeleportPlayer = getBlockId("optTeleportPlayer", 41); // gold block
         optTeleportCritter = getBlockId("optTeleportCritter", 57); // diamond block
         optTeleportUseItem = getItemId("optTeleportUseItem", 331); // redstone dust
-        optionsModTeleport();
-        return true;
+        return modTeleportActive = true;
+    }
+    
+    private static void quitModTeleport() {
+        if (!modTeleportActive) return;
+        modTeleportActive = false;
     }
     
     private static void optionsModTeleport() {
+        boolean wasEnabled = modTeleportEnabled;
+        modTeleportEnabled = getSetBool(modTeleportEnabled, "modTeleportEnabled", false,     "Enable Teleport mod");
+        if (wasEnabled != modTeleportEnabled) {
+            if (modTeleportEnabled && !modTeleportActive) initModTeleport(); 
+            if (!modTeleportEnabled && modTeleportActive) quitModTeleport();
+        }
         keyTeleportUp = getSetBind(keyTeleportUp, "keyTeleportUp",              Keyboard.KEY_PRIOR, "Teleport up");
         keyTeleportDown = getSetBind(keyTeleportDown, "keyTeleportDown",          Keyboard.KEY_NEXT, "Teleport down");
         keyTeleportCursor = getSetBind(keyTeleportCursor, "keyTeleportCursor",      Keyboard.KEY_RIGHT, "Teleport at cursor");
@@ -2756,7 +2966,7 @@ public final class ZMod {
     }
 
     private static void updateModTeleport(List list) {
-        if (!modTeleportEnabled || isMultiplayer) return;
+        if (!modTeleportActive || isMultiplayer) return;
         Iterator it = list.iterator();
         int type, x, y, z, id, ofs;
         Entity entTpSound = null;
@@ -2866,7 +3076,7 @@ public final class ZMod {
     
     
     //=ZMod=Cheat=============================================================
-    private static boolean modCheatEnabled, modCheatAllowed;
+    private static boolean modCheatEnabled, modCheatActive, modCheatAllowed;
     private static String tagCheater;
     private static int keyCheat, keyCheatShowMobs, keyCheatShowOres, keyCheatSee, keyCheatHighlight, keyCheatRemoveFire, keyCheatPossession, keyCheatProjection, keyCheatRelocate, keyCheatHealth, keyCheatDamage;
     private static boolean optCheat, optCheatFallDamage, optCheatDisableDamage, optCheatRestoreHealth, optCheatShowDangerous, optCheatShowNeutral, optCheatSeeIsToggle, optCheatShowMobsSize;
@@ -2890,13 +3100,14 @@ public final class ZMod {
     private static int optCheatBlockHitDelay = 5;
 
     private static boolean initModCheat() {
-        cheatMobs = new Mark[MAXTYPE]; cheatOres = new Mark[4096]; cheatMark = new Mark[cheatMax]; cheatDamage = new boolean[cheatItems];
+        log("info: loading config for \"cheat\"");
+        cheatMobs = new Mark[MAXTYPE];
+        cheatOres = new Mark[4096];
+        cheatMark = new Mark[cheatMax]; cheatCur = 0;
+        cheatDamage = new boolean[cheatItems];
         cheatAmbItems = makeBuffer(new float[] {4f, 4f, 4f, 1f});
         cheatAmbGeom  = makeBuffer(new float[] {0f, 0f, 0f, 1f});
-        log("info: loading config for \"cheat\"");
         getDeprecated("optCheatHighlightMode");
-        optionsModCheat();
-        if (!optCheatFallDamage) checkClass(EntityPlayer.class, "cheat", "fall damage is not disabled in MP");
         String val[];
         val = getString("optCheatShowOres", "15/0x008888, 82/0x00ffff, 14/0xffee00, 56/0xeeffff, 48/0x00ff00, 21/0x0000ff, 73/0xff0000, 52/0xff00ff, 16/0x444444").split("[\\t ]*,[\\t ]*");
         for (int i=0;i<val.length;i++) {
@@ -2925,10 +3136,25 @@ public final class ZMod {
         optCheatProjectionSwing = getBool("optCheatProjectionSwing", true);
         optCheatProjectionSpoof = getBool("optCheatProjectionSpoof", false);
         optCheatProjectionPlace = getBool("optCheatProjectionPlace", false);
-        return true;
+        return modCheatActive = true;
+    }
+    
+    private static void quitModCheat() {
+        if (!modCheatActive) return;
+        modCheatActive = false;
+        cheatMobs = null;
+        cheatOres = null;
+        cheatMark = null;
+        cheatDamage = null;
     }
     
     private static void optionsModCheat() {
+        boolean wasEnabled = modCheatEnabled;
+        modCheatEnabled = getSetBool(modCheatEnabled, "modCheatEnabled", false,     "Enable Cheat mod");
+        if (wasEnabled != modCheatEnabled) {
+            if (modCheatEnabled && !modCheatActive) initModCheat(); 
+            if (!modCheatEnabled && modCheatActive) quitModCheat();
+        }
         boolean prev = false;
         keyCheat = getSetBind(keyCheat, "keyCheat",                        Keyboard.KEY_Y, "Toggle cheat mode");
         optCheat = getSetBool(optCheat, "optCheat", false, "Cheats activated by default");
@@ -2959,14 +3185,14 @@ public final class ZMod {
         optCheatNerfEnderman = getSetBool(optCheatNerfEnderman, "optCheatNerfEnderman", false, "Enderman is allowed to pick up blocks.");
         optCheatNoAir = getSetBool(optCheatNoAir, "optCheatNoAir", false, "Infinite air supply");
         optCheatInfArmor = false;
-        //optCheatInfArmor = getSetBool(prev = optCheatInfArmor, "optCheatInfArmor", false, "Indestructible armor");
-        if (prev != optCheatInfArmor) for (int i=298;i<=317;i++) cheatDamage[i] = optCheatInfArmor;
+        //optCheatInfArmor = getSetBool(optCheatInfArmor, "optCheatInfArmor", false, "Indestructible armor");
+        if (modCheatActive) for (int i=298;i<=317;i++) cheatDamage[i] = optCheatInfArmor;
         optCheatInfSword = false;
-        //optCheatInfSword = getSetBool(prev = optCheatInfSword, "optCheatInfSword", false, "Indestructible sword/bow");
-        if (prev != optCheatInfSword) cheatDamage[267] = cheatDamage[268] = cheatDamage[272] = cheatDamage[276] = cheatDamage[283] = cheatDamage[261] = optCheatInfSword;
+        //optCheatInfSword = getSetBool(optCheatInfSword, "optCheatInfSword", false, "Indestructible sword/bow");
+        if (modCheatActive) cheatDamage[267] = cheatDamage[268] = cheatDamage[272] = cheatDamage[276] = cheatDamage[283] = cheatDamage[261] = optCheatInfSword;
         optCheatInfTools = false;
-        //optCheatInfTools = getSetBool(prev = optCheatInfTools, "optCheatInfTools", false, "Indestructible tools");
-        if (prev != optCheatInfTools) cheatDamage[256] = cheatDamage[257] = cheatDamage[258] = cheatDamage[259] = cheatDamage[269] =
+        //optCheatInfTools = getSetBool(optCheatInfTools, "optCheatInfTools", false, "Indestructible tools");
+        if (modCheatActive) cheatDamage[256] = cheatDamage[257] = cheatDamage[258] = cheatDamage[259] = cheatDamage[269] =
             cheatDamage[270] = cheatDamage[271] = cheatDamage[273] = cheatDamage[274] = cheatDamage[275] =
             cheatDamage[277] = cheatDamage[278] = cheatDamage[279] = cheatDamage[284] = cheatDamage[285] =
             cheatDamage[286] = cheatDamage[290] = cheatDamage[291] = cheatDamage[292] = cheatDamage[293] =
@@ -2979,7 +3205,7 @@ public final class ZMod {
         if (minecraft.gameSettings.gammaSetting < 100f) cheatGamma = minecraft.gameSettings.gammaSetting;
         minecraft.gameSettings.gammaSetting = cheating && cheatHighlight && !isMenu ? 1000f : cheatGamma;
 
-        if (!modCheatEnabled) return;
+        if (!modCheatActive) return;
         
         if (isWorldChange) {
             cheating = optCheat && modCheatAllowed;
@@ -3139,8 +3365,8 @@ public final class ZMod {
                         cheatProjection.movementInput = playerMovementInput;
                     }
                     if (!was) {
-                        flyProjection = ((EntityPlayer)getView()).capabilities.isFlying && modFlyAllowed;
-                        flyNoClipProjection =  flyProjection && getView().noClip && modFlyAllowed;
+                        flyProjection = ((EntityPlayer)getView()).capabilities.isFlying && modFlyActive && modFlyAllowed;
+                        flyNoClipProjection =  flyProjection && getView().noClip && modFlyActive && modFlyAllowed;
                     } else if (cheatProjectionLock) {
                         flyProjection = fly;
                         flyNoClipProjection = flyNoClip;
@@ -3186,6 +3412,7 @@ public final class ZMod {
     }
 
     private static void drawModCheat(float x, float y, float z, List list) {
+        if (!modCheatActive) return;
         if (!cheatShowMobs && !cheatShowOres && !optCheatShowHealth && !optInfoShowHealth) return;
         float px = (float)posX, py = (float)posY, pz = (float)posZ, mx, my, mz, dx, dy, dz;
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -3262,6 +3489,7 @@ public final class ZMod {
             }
             for (int i=0;i<cheatCur;i++) {
                 Mark got = cheatMark[i];
+                if (got == null) continue;
                 GL11.glColor3ub(got.r,got.g,got.b);
                 mx = got.x - x; my = got.y - y; mz = got.z - z;
                 GL11.glVertex3f(mx+0.25f,my+0.25f,mz+0.25f); GL11.glVertex3f(mx-0.25f,my-0.25f,mz-0.25f);
@@ -3274,7 +3502,7 @@ public final class ZMod {
     }
     
     private static String textModCheat(String txt) {
-        if (!modCheatAllowed || !modCheatEnabled || !cheating || tagCheater.length()==0) return txt;
+        if (!modCheatAllowed || !modCheatActive || !cheating || tagCheater.length()==0) return txt;
         return txt + tagCheater + " ";
     }
     
@@ -3293,14 +3521,14 @@ public final class ZMod {
     }
 
     private static void cheatOnClientsidePlayerUpdate(EntityPlayer ent) {
-        if (!modCheatEnabled || !modCheatAllowed) return;
+        if (!modCheatActive || !modCheatAllowed) return;
         if (cheatProjection != null && getView() == cheatProjection) {
             cheatProjection.onUpdate();
         }
     }
 
     private static void cheatOnServersidePlayerUpdate(EntityPlayer ent) {
-        if (!modCheatEnabled || !modCheatAllowed) return;
+        if (!modCheatActive || !modCheatAllowed) return;
         ent.capabilities.disableDamage = cheating && optCheatDisableDamage || ent.capabilities.isCreativeMode;
         ent.isImmuneToFire = cheating && optCheatFireImmune;
         if (cheating && optCheatRestoreHealth && getHealth(ent) < getMaxHealth(ent)) setHealth(ent, getHealth(ent)+1);
@@ -3317,7 +3545,7 @@ public final class ZMod {
     }
 
     public static int blockHitDelay() {
-        return (modCheatEnabled && cheating) ? optCheatBlockHitDelay : 5;
+        return (modCheatActive && cheating) ? optCheatBlockHitDelay : 5;
     }
 
     public static boolean allowSwing() {
@@ -3564,13 +3792,14 @@ public final class ZMod {
     }
     
     //=ZMod=Resize============================================================
-    private static boolean modResizeEnabled;
+    private static boolean modResizeEnabled, modResizeActive;
     private static int resizeChanceBig[], resizeChanceSmall[];
     private static float resizeSize[];
 
     private static boolean initModResize() {
-        resizeChanceBig = new int[MAXTYPE]; resizeChanceSmall = new int[MAXTYPE]; resizeSize = new float[MAXTYPE];
         log("info: loading config for \"resize\"");
+        if (!checkClass(RenderLiving.class, "resize")) return false;
+        resizeChanceBig = new int[MAXTYPE]; resizeChanceSmall = new int[MAXTYPE]; resizeSize = new float[MAXTYPE];
         for (int i=0;i<MAXTYPE;i++) resizeChanceBig[i] = 100;
         // big
         resizeChanceBig[COW]    = 100 - getInt("optResizeCowBig"   , 10, 0, 100);
@@ -3586,15 +3815,25 @@ public final class ZMod {
         resizeChanceSmall[SKELLY] = getInt("optResizeSkellySmall", 10, 0, 100);
         resizeChanceSmall[ZOMBIE] = getInt("optResizeZombieSmall", 30, 0, 100);
         resizeChanceSmall[PIG]    = getInt("optResizePigSmall"   , 50, 0, 100);
-        optionsModResize();
-        return checkClass(RenderLiving.class, "resize");
+        return modResizeActive = true;
+    }
+    
+    private static void quitModResize() {
+        if (!modResizeActive) return;
+        modResizeActive = false;
     }
 
     private static void optionsModResize() {
+        boolean wasEnabled = modResizeEnabled;
+        modResizeEnabled = getSetBool(modResizeEnabled, "modResizeEnabled", false,     "Enable Resize mod");
+        if (wasEnabled != modResizeEnabled) {
+            if (modResizeEnabled && !modResizeActive) initModResize(); 
+            if (!modResizeEnabled && modResizeActive) quitModResize();
+        }
     }
 
     private static void updateResizeMod(List list) {
-        if (!modResizeEnabled || isMultiplayer) return;
+        if (!modResizeActive || isMultiplayer) return;
         Iterator it = list.iterator();
         int chance;
         while (it.hasNext()) {
@@ -3619,7 +3858,7 @@ public final class ZMod {
     }
     
     public static void resizeHandle(EntityLiving ent) {
-        if (!modResizeEnabled || isMultiplayer || resizeSize==null) return;
+        if (!modResizeActive || isMultiplayer || resizeSize==null) return;
         float resize = resizeSize[getEntityType(ent)];
         if (resize<=0.000001f) return;
         float scale = getEntityHeight(ent) / resize;
@@ -3628,48 +3867,61 @@ public final class ZMod {
     
     
     //=ZMod=Furnace===========================================================
-    private static boolean modFurnaceEnabled;
+    private static boolean modFurnaceEnabled, modFurnaceActive;
     private static boolean optFurnaceFuelWaste, optFurnaceReturnBucket;
     private static int optFurnaceWoodFuel, optFurnaceInfiniteFuel, optFurnaceSmeltingTime;
     private static HashMap<Integer,Integer> furnaceFuel;
     private static HashMap<Integer,ItemStack> furnaceSmelting;
 
     private static boolean initModFurnace() {
+        log("info: loading config for \"furnace\"");
+        if (!checkClass(TileEntityFurnace.class, "furnace")) return false;
         pFuel = furnaceFuel = new HashMap<Integer,Integer>();
         pSmelt = furnaceSmelting = new HashMap<Integer,ItemStack>();
-        log("info: loading config for \"furnace\"");
         optFurnaceWoodFuel = getInt("optFurnaceWoodFuel", 300, 1, 32767);
         optFurnaceInfiniteFuel = getInt("optFurnaceInfiniteFuel", 32767, 1, 32767);
-        optionsModFurnace();
         parse(null, "fuel.txt", FUEL);
         parse(null, "smelting.txt", SMELTING);
-        return checkClass(TileEntityFurnace.class, "furnace");
+        return modDigActive = true;
+    }
+    
+    private static void quitModFurnace() {
+        if (!modFurnaceActive) return;
+        modFurnaceActive = false;
+        pFuel = furnaceFuel = null;
+        pSmelt = furnaceSmelting = null;
     }
     
     private static void optionsModFurnace() {
+        boolean wasEnabled = modFurnaceEnabled;
+        modFurnaceEnabled = getSetBool(modFurnaceEnabled, "modFurnaceEnabled", false,     "Enable Furnace mod");
+        if (wasEnabled != modFurnaceEnabled) {
+            if (modFurnaceEnabled && !modFurnaceActive) initModFurnace(); 
+            if (!modFurnaceEnabled && modFurnaceActive) quitModFurnace();
+        }
         optFurnaceSmeltingTime = getSetInt(optFurnaceSmeltingTime, "optFurnaceSmeltingTime", 200, 1, 1000, "Smelting time (20 = 1second)") & 0xfffe;
         if (optFurnaceSmeltingTime == 0) optFurnaceSmeltingTime = 1;
         optFurnaceFuelWaste = getSetBool(optFurnaceFuelWaste, "optFurnaceFuelWaste", true, "Fuel waste");
         optFurnaceReturnBucket = getSetBool(optFurnaceReturnBucket, "optFurnaceReturnBucket", false, "Return bucket from lava bucket");
     }
 
-    public static boolean furnaceWasteHandle() { return isMultiplayer || !modFurnaceEnabled || optFurnaceFuelWaste; }
-    public static int furnaceSmeltTimeHandle() { return isMultiplayer || !modFurnaceEnabled ? 200 : optFurnaceSmeltingTime; }
-    public static boolean furnaceUseFuelHandle(int fuel, boolean canSmelt) { return isMultiplayer || !modFurnaceEnabled || (optFurnaceInfiniteFuel > fuel && (optFurnaceFuelWaste || canSmelt)); }
-    public static ItemStack furnaceSmeltingHandle(Integer id) { if (modFurnaceEnabled && !isMultiplayer && furnaceSmelting!=null) return furnaceSmelting.get(id); return null; }
-    public static int furnaceWoodFuelHandle() { return !isMultiplayer && modFurnaceEnabled ? optFurnaceWoodFuel : 300; }
-    public static int furnaceFuelHandle(Integer id) { return !isMultiplayer && modFurnaceEnabled && furnaceFuel!=null && furnaceFuel.containsKey(id) ? furnaceFuel.get(id) : 0; }
+    public static boolean furnaceWasteHandle() { return isMultiplayer || !modFurnaceActive || optFurnaceFuelWaste; }
+    public static int furnaceSmeltTimeHandle() { return isMultiplayer || !modFurnaceActive ? 200 : optFurnaceSmeltingTime; }
+    public static boolean furnaceUseFuelHandle(int fuel, boolean canSmelt) { return isMultiplayer || !modFurnaceActive || (optFurnaceInfiniteFuel > fuel && (optFurnaceFuelWaste || canSmelt)); }
+    public static ItemStack furnaceSmeltingHandle(Integer id) { if (modFurnaceActive && !isMultiplayer && furnaceSmelting!=null) return furnaceSmelting.get(id); return null; }
+    public static int furnaceWoodFuelHandle() { return !isMultiplayer && modFurnaceActive ? optFurnaceWoodFuel : 300; }
+    public static int furnaceFuelHandle(Integer id) { return !isMultiplayer && modFurnaceActive && furnaceFuel!=null && furnaceFuel.containsKey(id) ? furnaceFuel.get(id) : 0; }
     public static boolean furnaceWorldUpdateHandle(boolean mustBurn, int x, int y, int z) { return mustBurn != (mapXGetId(x,y,z)==62); }
     public static ItemStack furnaceDecFuelHandle(ItemStack items) {
         int count = getItemsCount(items);
-        if (modFurnaceEnabled && !isMultiplayer && optFurnaceReturnBucket && getItemsId(items) == 327) return newItems(325, count);
+        if (modFurnaceActive && !isMultiplayer && optFurnaceReturnBucket && getItemsId(items) == 327) return newItems(325, count);
         if (count == 1) return null;
         setItemsCount(items, count-1);
         return items;
     }
 
     //=ZMod=Dig===============================================================
-    private static boolean modDigEnabled;
+    private static boolean modDigEnabled, modDigActive;
     private static boolean optDigHarvestAlways, optDigCheckReach, optDigSyncDigged;
     private static boolean optDigReachSet, optDigReachSetDig, optDigReachSetUse;
     private static float optDigSpeed, optDigReach, optDigReachDig, optDigReachUse;
@@ -3677,12 +3929,23 @@ public final class ZMod {
 
     private static boolean initModDig() {
         log("info: loading config for \"dig\"");
-        optionsModDig();
+        if (!checkClass(PlayerControllerMP.class, "dig")) return false;
         featureCustomReachAvailable = checkClass(NetServerHandler.class) && checkClass(PlayerControllerMP.class);
-        return checkClass(PlayerControllerMP.class, "dig");
+        return modDigActive = true;
+    }
+    
+    private static void quitModDig() {
+        if (!modDigActive) return;
+        modDigActive = false;
     }
 
     private static void optionsModDig() {
+        boolean wasEnabled = modDigEnabled;
+        modDigEnabled = getSetBool(modDigEnabled, "modDigEnabled", false,     "Enable Dig mod");
+        if (wasEnabled != modDigEnabled) {
+            if (modDigEnabled && !modDigActive) initModDig(); 
+            if (!modDigEnabled && modDigActive) quitModDig();
+        }
         optDigCheckReach = getSetBool(optDigCheckReach, "optDigCheckReach", false, "Cancel out of reach actions");
         optDigSyncDigged = false; // broken as of 1.4.6, they removed the BlockDig Request-status (3)
         //optDigSyncDigged = getSetBool(optDigSyncDigged, "optDigSyncDigged", false, "Synchronize newly digged blocks");
@@ -3702,15 +3965,15 @@ public final class ZMod {
     public static float digReachHandle() {
         float res = 4f;
         if (!isMultiplayer) {
-            if (modDigEnabled && res < optDigReach) res = optDigReach;
-            if (optBuild && modBuildEnabled && res < optBuildReach) res = optBuildReach;
+            if (modDigActive && res < optDigReach) res = optDigReach;
+            if (optBuild && modBuildActive && res < optBuildReach) res = optBuildReach;
         }
         return res;
     }
     
     public static boolean harvestableHandle(boolean harvest) {
-        if (modDigEnabled && optDigHarvestAlways) harvest = true;
-        if (modBuildEnabled && optBuild) {
+        if (modDigActive && optDigHarvestAlways) harvest = true;
+        if (modBuildActive && optBuild) {
             if (optBuildHarvestRule == -1) harvest = false;
             else if (optBuildHarvestRule == 1) harvest = true;
         }
@@ -3718,15 +3981,15 @@ public final class ZMod {
     }
 
     public static float digProgressHandle(float progress, int blockId) {
-        if (modBuildEnabled && optBuild) return (block[blockId] & TOUCH) != 0 ? 0.1f : optBuildDigSpeed;
-        else if (ZMod.modDigEnabled) return progress * optDigSpeed;
+        if (modBuildActive && optBuild) return (block[blockId] & TOUCH) != 0 ? 0.1f : optBuildDigSpeed;
+        else if (ZMod.modDigActive) return progress * optDigSpeed;
         return progress;
     }
     */
 
     public static float actualReachDig() {
         float reach = 6;
-        if (modDigEnabled) {
+        if (modDigActive) {
             if (!isMultiplayer && featureCustomReachAvailable) {
                 if (optDigReachSet) reach = optDigReach;
                 if (optDigReachSetDig) reach = optDigReachDig;
@@ -3741,7 +4004,7 @@ public final class ZMod {
 
     public static float actualReachUse() {
         float reach = 8;
-        if (modDigEnabled) {
+        if (modDigActive) {
             if (!isMultiplayer && featureCustomReachAvailable) {
                 if (optDigReachSet) reach = optDigReach;
                 if (optDigReachSetUse) reach = optDigReachUse;
@@ -3756,7 +4019,7 @@ public final class ZMod {
 
     public static float actualPlayerReach() {
         float reach = 4.5f;
-        if (modDigEnabled) {
+        if (modDigActive) {
             reach = java.lang.Math.min(actualReachDig()-1.5f, actualReachUse());
         }
         if (player != null && player.capabilities.isCreativeMode) reach += 0.5;
@@ -3764,7 +4027,7 @@ public final class ZMod {
     }
 
     public static boolean digCheckReachDig(int x, int y, int z) {
-        if (!modDigEnabled || player == null || !optDigCheckReach) return true;
+        if (!modDigActive || player == null || !optDigCheckReach) return true;
         double dx = player.posX - (x + 0.5);
         double dy = player.posY - (y + 0.5) + 1.5;
         double dz = player.posZ - (z + 0.5);
@@ -3773,7 +4036,7 @@ public final class ZMod {
     }
 
     public static boolean digCheckReachUse(int x, int y, int z, int side) {
-        if (!modDigEnabled || player == null || !optDigCheckReach) return true;
+        if (!modDigActive || player == null || !optDigCheckReach) return true;
         double dx = player.posX - (x + 0.5);
         double dy = player.posY - (y + 0.5);
         double dz = player.posZ - (z + 0.5);
@@ -3795,7 +4058,7 @@ public final class ZMod {
     }
 
     private static void digOnBlockDigged(int x, int y, int z, int side) {
-        if (!modDigEnabled || player == null) return;
+        if (!modDigActive || player == null) return;
         if (optDigSyncDigged) {
             askBlockInfo(x,y,z);
         }
@@ -3806,7 +4069,7 @@ public final class ZMod {
     }
     
     //=ZMod=Weather===========================================================
-    private static boolean modWeatherEnabled;
+    private static boolean modWeatherEnabled, modWeatherActive;
     private static int keyWeatherRain, keyWeatherThunderstorm, keyWeatherMayhem, keyWeatherLightning;
     private static boolean optWeatherLocked, optWeatherNoDraw;
     private static int optWeatherThunderChance, optWeatherThunderMayhemChance;
@@ -3829,11 +4092,21 @@ public final class ZMod {
         tagWeatherRaining = getString("tagWeatherRaining", "raining");
         tagWeatherThundering = getString("tagWeatherThundering", "thunder");
         tagWeatherMayhem = getString("tagWeatherMayhem", "mayhem");
-        optionsModWeather();
-        return true;
+        return modWeatherActive = true;
+    }
+    
+    private static void quitModWeather() {
+        if (!modWeatherActive) return;
+        modWeatherActive = false;
     }
     
     private static void optionsModWeather() {
+        boolean wasEnabled = modWeatherEnabled;
+        modWeatherEnabled = getSetBool(modWeatherEnabled, "modWeatherEnabled", false,     "Enable Weather mod");
+        if (wasEnabled != modWeatherEnabled) {
+            if (modWeatherEnabled && !modWeatherActive) initModWeather(); 
+            if (!modWeatherEnabled && modWeatherActive) quitModWeather();
+        }
         keyWeatherRain = getSetBind(keyWeatherRain, "keyWeatherRain",            Keyboard.KEY_J, "Toggle rain");
         keyWeatherThunderstorm = getSetBind(keyWeatherThunderstorm, "keyWeatherThunderstorm", Keyboard.KEY_K, "Toggle thunderstorm");
         keyWeatherMayhem = getSetBind(keyWeatherMayhem, "keyWeatherMayhem",        Keyboard.KEY_LSHIFT, "Mayhem modifier");
@@ -3843,7 +4116,7 @@ public final class ZMod {
     }
 
     private static void updateModWeather() {
-        if (!modWeatherEnabled || isMultiplayer) return;
+        if (!modWeatherActive || isMultiplayer) return;
         // spawn lightning
         if (!isMenu && keyPress(keyWeatherLightning) && rayTrace(256d, 0f)) {
             int x = rayHitX(),y = rayHitY(),z = rayHitZ(), s = rayHitSide();
@@ -3883,7 +4156,7 @@ public final class ZMod {
     }
 
     private static String textModWeather(String txt) {
-        if (!modWeatherEnabled || isMultiplayer || !getRain()) return txt;
+        if (!modWeatherActive || isMultiplayer || !getRain()) return txt;
         return txt + (getThunder() ? (weatherMayhem ? tagWeatherMayhem : tagWeatherThundering) : tagWeatherRaining) + " ";
     }
     
@@ -3900,7 +4173,7 @@ public final class ZMod {
     }
     
     public static int mapRandomHandle(int n, int res) {
-        if (n==0x186a0 && modWeatherEnabled && !isMultiplayer) {
+        if (n==0x186a0 && modWeatherActive && !isMultiplayer) {
             if (weatherMayhem) return rnd.nextInt(optWeatherThunderMayhemChance);
             return rnd.nextInt(optWeatherThunderChance);
         }
@@ -3909,7 +4182,7 @@ public final class ZMod {
     
     
     //=ZMod=Growth============================================================
-    private static boolean modGrowthEnabled;
+    private static boolean modGrowthEnabled, modGrowthActive;
     private static boolean optGrowthRooting, optGrowthPlanting;
     private static int optGrowthFlower, optGrowthShroom, optGrowthPumpkin, optGrowthSappling, optGrowthReed, optGrowthRootingSpace, optGrowthRootingTime;
     private static float growthSqrRadius;
@@ -3925,16 +4198,26 @@ public final class ZMod {
         optGrowthRootingSpace = getInt("optGrowthRootingSpace", 3, 1, 5);
         optGrowthRootingTime = getInt("optGrowthRootingTime", 10, 1, 300) * 20;
         growthSqrRadius = (0.5f + optGrowthRootingSpace) * (0.5f + optGrowthRootingSpace);
-        optionsModGrowth();
-        return true;
+        return modGrowthActive = true;
+    }
+    
+    private static void quitModGrowth() {
+        if (!modGrowthActive) return;
+        modGrowthActive = false;
     }
     
     private static void optionsModGrowth() {
+        boolean wasEnabled = modGrowthEnabled;
+        modGrowthEnabled = getSetBool(modGrowthEnabled, "modGrowthEnabled", false,     "Enable Growth mod");
+        if (wasEnabled != modGrowthEnabled) {
+            if (modGrowthEnabled && !modGrowthActive) initModGrowth(); 
+            if (!modGrowthEnabled && modGrowthActive) quitModGrowth();
+        }
         optGrowthRooting = getSetBool(optGrowthRooting, "optGrowthRooting", true, "Auto root sapplings");
     }
     
     private static void updateModGrowth(List list) {
-        if (!modGrowthEnabled || isMultiplayer) return;
+        if (!modGrowthActive || isMultiplayer) return;
         // grow plants.
         int pX = fix(posX) >> 4, pZ = fix(posZ) >> 4;
         for (int cX=-15;cX<=15;cX++) for (int cZ=-15;cZ<=15;cZ++) if (mapXGetChunkExists(pX + cX, pZ + cZ)) {
@@ -4079,7 +4362,7 @@ public final class ZMod {
         x *= 5; y *= 11; w *= 5; // add y offset if needed here
         int stateOn = 0xff66bb66, stateOff = 0xffbb6666;
         boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w && mouseY<y+11;
-        if (!optionsModEnabled) { caption = "???"; restart = true; center = true; }
+        //if (!optionsModEnabled) { caption = "???"; restart = true; center = true; }
         if (hover) { stateOn = 0xff88dd88; stateOff = 0xffdd8888; }
         if (selected) opt.drawRect(x-2, y-1, x+w+2, y+11, 0xff0000ff);
         if (restart) opt.drawGradientRect(x, y, x+w, y+10, stateOn, stateOff);
@@ -4088,7 +4371,7 @@ public final class ZMod {
         if (help != null) showText(help, x+w+8, y, 0xcccccc);
         if (center) x += (w - showTextLength(caption)) >> 1;
         showText(caption, x, y, 0xffffff);
-        return optionsModEnabled && hover && mousePress(0);
+        return hover && mousePress(0);
     }
 
     private static float drawBar(int x, int y, int w, float val, float min, float max, String help, boolean intType) {
@@ -4096,11 +4379,11 @@ public final class ZMod {
         float ratio = (val - min) / (max - min);
         int bar = x + (int)(w * ratio);
         boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w+1 && mouseY<y+11;
-        if (!optionsModEnabled) bar = -10;
+        //if (!optionsModEnabled) bar = -10;
         opt.drawRect(x, y+4, x+w, y+5, 0xff66bb66);
         opt.drawRect(bar-1, y+2, bar+1, y+8, 0xffffffff);
         showText(help, x+w+8, y+1, 0xcccccc);
-        if (optionsModEnabled && hover) {
+        if (hover) {
             float res = ((mouseX - x) / (float)w) * (max - min) + min;
             showText(String.format(intType ? "%.0f (%.0f)" : "%.2f (%.2f)", res, val), mouseX, mouseY - 9, 0xffffcc);
             if (Mouse.isButtonDown(0)) val = res;
