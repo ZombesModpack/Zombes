@@ -36,16 +36,16 @@
 
     Starting from your local Minecraft folder (see I):
 
-     1) Open mods/zombe/config.txt with notepad or your prefered text editor
+     1) (optional) Open mods/zombe/config.txt with your favorite text editor
          a) Enable the wanted mods by finding their corresponding line, like:
                 #modCloudEnabled       = yes
-            and uncommenting them, like :
+            and uncommenting them, like:
                 modCloudEnabled       = yes
          b) (optional) Configure the enabled mods by setting the values you 
             want to the variables that immediately follow
 
      2) Launch the game and enjoy
-          - (optional) While ingame (in a world), 
+          - (optional) While ingame (in a world),
             press F7 to access to the Zombe ingame config menu
 
 
@@ -87,6 +87,6 @@
     Then, credits can go to the contributors:
         md_5 for 1.3.1
         NolanSyKinsley for 1.3.2 and 1.4.2
-        Nilat for 1.4.4 and 1.4.5
+        Nilat for 1.4.4, 1.4.5 and 1.4.6
 
 
