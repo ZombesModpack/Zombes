@@ -1946,21 +1946,21 @@ public final class ZMod {
             if (!modFlyEnabled && modFlyActive) quitModFly();
         }
         keyFlyToggle            = getSetBind(keyFlyToggle,                   "keyFlyToggle", Keyboard.KEY_F           , "Toggle fly mode");
-        optFlySpeedMulNormal    = getSetFloat((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 10.0f , "Flying speed");
+        optFlySpeedMulNormal    = getSetLog((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 100.0f , "Flying speed");
         keyFlyUp                = getSetBind(keyFlyUp,                       "keyFlyUp",     Keyboard.KEY_E           , "Fly up");
         keyFlyDown              = getSetBind(keyFlyDown,                     "keyFlyDown",   Keyboard.KEY_Q           , "Fly down");
-        optFlySpeedVertical     = getSetFloat((float)optFlySpeedVertical,    "optFlySpeedVertical"     , 0.2f, 0.1f, 1.0f  , "Vertical flying speed");
+        optFlySpeedVertical     = getSetLog((float)optFlySpeedVertical,    "optFlySpeedVertical"     , 0.2f, 0.1f, 10.0f  , "Vertical flying speed");
         keyFlySpeed             = getSetBind(keyFlySpeed,                    "keyFlySpeed",  Keyboard.KEY_LSHIFT      , "Fly speed modifier");
         optFlySpeedIsToggle     = getSetBool(optFlySpeedIsToggle,            "optFlySpeedIsToggle"   , false, "Fly speed modifier is toggle");
-        optFlySpeedMulModifier  = getSetFloat((float)optFlySpeedMulModifier, "optFlySpeedMulModifier"  , 2.0f, 1.0f, 10.0f , "Flying speed with speed modifier");
+        optFlySpeedMulModifier  = getSetLog((float)optFlySpeedMulModifier, "optFlySpeedMulModifier"  , 2.0f, 1.0f, 100.0f , "Flying speed with speed modifier");
         keyFlyRun               = getSetBind(keyFlyRun,                      "keyFlyRun",    Keyboard.KEY_LSHIFT      , "Running speed modifier");
         optFlyRunSpeedIsToggle  = getSetBool(optFlyRunSpeedIsToggle,         "optFlyRunSpeedIsToggle", false, "Run speed modifier is toggle");
-        optFlyRunSpeedMul       = getSetFloat((float)optFlyRunSpeedMul,      "optFlyRunSpeedMul"       , 1.5f, 0.1f, 10.0f , "Running speed");
-        optFlyRunSpeedVMul      = getSetFloat((float)optFlyRunSpeedVMul,     "optFlyRunSpeedVMul"      , 1.5f, 0.1f, 10.0f , "Vertical speed (ladders / water)");
+        optFlyRunSpeedMul       = getSetLog((float)optFlyRunSpeedMul,      "optFlyRunSpeedMul"       , 1.5f, 0.1f, 100.0f , "Running speed");
+        optFlyRunSpeedVMul      = getSetLog((float)optFlyRunSpeedVMul,     "optFlyRunSpeedVMul"      , 1.5f, 0.1f, 100.0f , "Vertical speed (ladders / water)");
         keyFlyNoClip            = getSetBind(keyFlyNoClip,                   "keyFlyNoClip", Keyboard.KEY_F8          , "Toggle no-clip mode");
         optFlyNoClip            = getSetBool(optFlyNoClip,                   "optFlyNoClip"          , true , "No-clip is enabled by default");
-        optFlyJump              = getSetFloat((float)optFlyJump,             "optFlyJump"              , 1.0f, 1.0f, 10.0f , "Jump speed");
-        optFlyJumpHigh          = getSetFloat((float)optFlyJumpHigh,         "optFlyJumpHigh"          , 1.25f, 1.0f, 10.0f, "Jump speed with speed modifier (run)");
+        optFlyJump              = getSetLog((float)optFlyJump,             "optFlyJump"              , 1.0f, 1.0f, 100.0f , "Jump speed");
+        optFlyJumpHigh          = getSetLog((float)optFlyJumpHigh,         "optFlyJumpHigh"          , 1.25f, 1.0f, 100.0f, "Jump speed with speed modifier (run)");
         optFlyVanillaFly        = getSetBool(optFlyVanillaFly,               "optFlyVanillaFly", true, "Allow vanilla MC fly toggle");
         optFlyVanillaSprint     = getSetBool(optFlyVanillaSprint,            "optFlyVanillaSprint", true, "Allow vanilla MC sprint toggle");
     }
@@ -4382,7 +4382,7 @@ public final class ZMod {
         x *= 5; y *= 11; w *= 5; // add y offset if needed here
         float ratio = (scale != SCALE_LOG)
                     ? (val - min) / (max - min)
-                    : Math.log(val/min) / Math.log(max/min);
+                    : (float) (Math.log(val/min) / Math.log(max/min));
         int bar = x + (int)(w * ratio);
         boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w+1 && mouseY<y+11;
         //if (!optionsModEnabled) bar = -10;
@@ -4395,20 +4395,12 @@ public final class ZMod {
             if (ratio > 1) ratio = 1;
             float res = (scale != SCALE_LOG)
                       ? min + ratio * (max - min)
-                      : min * Math.pow(max/min, ratio);
+                      : (float) (min * Math.pow(max/min, ratio));
             showText(String.format((scale == SCALE_DISCRETE) ? "%.0f (%.0f)" : "%.2f (%.2f)", res, val), mouseX, mouseY - 9, 0xffffcc);
             if (Mouse.isButtonDown(0)) val = res;
         }
         return val;
     }
-    
-    /*
-    known: a, b
-    [a            b]
-    [0      c     1]
-    
-    log(x) + z*log(y/x) = log(x*y)
-    */
 
     private static void updateConfigFile(String find, String replace) {
         try {
