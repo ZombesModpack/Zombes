@@ -4373,10 +4373,16 @@ public final class ZMod {
         showText(caption, x, y, 0xffffff);
         return hover && mousePress(0);
     }
-
-    private static float drawBar(int x, int y, int w, float val, float min, float max, String help, boolean intType) {
+    
+    private static final int SCALE_DISCRETE = 1,
+                             SCALE_LINEAR   = 2,
+                             SCALE_LOG      = 3;
+    
+    private static float drawBar(int x, int y, int w, float val, float min, float max, String help, int scale) {
         x *= 5; y *= 11; w *= 5; // add y offset if needed here
-        float ratio = (val - min) / (max - min);
+        float ratio = (scale != SCALE_LOG)
+                    ? (val - min) / (max - min)
+                    : Math.log(val/min) / Math.log(max/min);
         int bar = x + (int)(w * ratio);
         boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w+1 && mouseY<y+11;
         //if (!optionsModEnabled) bar = -10;
@@ -4384,12 +4390,25 @@ public final class ZMod {
         opt.drawRect(bar-1, y+2, bar+1, y+8, 0xffffffff);
         showText(help, x+w+8, y+1, 0xcccccc);
         if (hover) {
-            float res = ((mouseX - x) / (float)w) * (max - min) + min;
-            showText(String.format(intType ? "%.0f (%.0f)" : "%.2f (%.2f)", res, val), mouseX, mouseY - 9, 0xffffcc);
+            ratio = (mouseX - x) / (float)w;
+            if (ratio < 0) ratio = 0;
+            if (ratio > 1) ratio = 1;
+            float res = (scale != SCALE_LOG)
+                      ? min + ratio * (max - min)
+                      : min * Math.pow(max/min, ratio);
+            showText(String.format((scale == SCALE_DISCRETE) ? "%.0f (%.0f)" : "%.2f (%.2f)", res, val), mouseX, mouseY - 9, 0xffffcc);
             if (Mouse.isButtonDown(0)) val = res;
         }
         return val;
     }
+    
+    /*
+    known: a, b
+    [a            b]
+    [0      c     1]
+    
+    log(x) + z*log(y/x) = log(x*y)
+    */
 
     private static void updateConfigFile(String find, String replace) {
         try {
@@ -4411,7 +4430,7 @@ public final class ZMod {
         if (!initialized) return getInt(name, initial, min, max);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        int res = (int)drawBar(22, optionNr - optionOfs, 20, current, min, max, help, true);
+        int res = (int)drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_DISCRETE);
         if (res != current) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %d", name, res));
             return res;
@@ -4423,7 +4442,19 @@ public final class ZMod {
         if (!initialized) return getFloat(name, initial, min, max);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, false);
+        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LINEAR);
+        if (res != current) {
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
+            return res;
+        }
+        return current;
+    }
+    
+    private static float getSetLog(float current, String name, float initial, float min, float max, String help) {
+        if (!initialized) return getFloat(name, initial, min, max);
+        optionNr++; // new GUI element
+        int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
+        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LOG);
         if (res != current) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
             return res;
