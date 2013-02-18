@@ -907,7 +907,7 @@ public final class ZMod {
     private static int keyInfoToggle, keyInfoPlayersToggle;
     private static String optInfoPrefixNear, optInfoPrefixFar;
     private static boolean optInfoShowPos, optInfoShowTime, optInfoShowBiome, optInfoShowHealth, optInfoHideAchievement, optInfoShowItem, optInfoShowFPS;
-    private static float optInfoRangeMax, optInfoRangeNear;
+    private static float optInfoRangeMax = 1000, optInfoRangeNear = 1;
     private static int optInfoTimeOffset;
     private static boolean infoShow, infoPlayerShow;
     private static int infoDeathX, infoDeathY, infoDeathZ, infoFrames = 0;
@@ -943,8 +943,8 @@ public final class ZMod {
         optInfoShowHealth = getSetBool(optInfoShowHealth, "optInfoShowHealth", false, "Show critter health at all times");
         optInfoHideAchievement = getSetBool(optInfoHideAchievement, "optInfoHideAchievement", false, "Hide the obnoxious achievements");
         keyInfoPlayersToggle = getSetBind(keyInfoPlayersToggle, "keyInfoPlayersToggle", Keyboard.KEY_F4, "Toggle player list");
-        optInfoRangeMax = getSetFloat(optInfoRangeMax, "optInfoRangeMax", 1000f, 10f, 1000f, "Player 'far' range");
-        optInfoRangeNear = getSetFloat(optInfoRangeNear, "optInfoRangeNear", 50f, 1f, 1000f, "Player 'near' range");
+        optInfoRangeNear = getSetLog(optInfoRangeNear, "optInfoRangeNear", 50f, 1f, Math.max(Math.min(optInfoRangeMax,500),10), "Player 'near' range");
+        optInfoRangeMax = getSetLog(optInfoRangeMax, "optInfoRangeMax", 1000f, Math.min(Math.max(optInfoRangeNear,10),500), 1000f, "Player 'far' range");
         optInfoShowFPS = getSetBool(optInfoShowFPS, "optInfoShowFPS", false, "Show FPS counter on info bar");
     }
 
@@ -1094,6 +1094,7 @@ public final class ZMod {
     }
     
     private static String textModInfo(String txt) {
+        if (!modInfoActive) return txt;
         if (optInfoShowFPS) {
             long time = System.currentTimeMillis();
             infoFrames++;
@@ -1104,8 +1105,10 @@ public final class ZMod {
             }
             txt += infoFps;
         }
-        if (!modInfoActive || !optInfoShowTime) return txt;
-        return txt + "[" + getTime(getTime() + sunTimeOffset) + "] ";
+        if (optInfoShowTime) {
+            txt += "[" + getTime(getTime() + sunTimeOffset) + "] ";
+        }
+        return txt;
     }
 
     private static String textModInfoBiome(String txt) {
