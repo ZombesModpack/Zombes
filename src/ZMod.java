@@ -56,7 +56,7 @@ public final class ZMod {
         "bf_abilityToCatchFire",    "abilityToCatchFire",       "b"
     };
     
-    // ########################################################################################################################### Consts / lookups
+    //#Consts#Enums#Lookups###################################################
     private static final int KNOWN     = 0x00000001, SOLID    = 0x00000002, LIQUID  = 0x00000004, CRAFT  = 0x00000008,
                              BASIC     = 0x00000010, SPACE    = 0x00000020, TREE    = 0x00000040, GRASS  = 0x00000080,
                              COBBLE    = 0x00000100, DECAL    = 0x00000200, SAND    = 0x00000400, GRAVEL = 0x00000800,
@@ -206,14 +206,129 @@ public final class ZMod {
         block[123] = KNOWN | SOLID | CRAFT;         // redstone lamp (off)
         block[124] = KNOWN | SOLID | CRAFT;         // redstone lamp (on)
         for (int i=0;i<256;i++) if (getBlockIsSpawn(i)) block[i] |= SPAWN;
+    }
+    
+    // classes and features list
+    private static final int
+        CLASS_BEGIN                    = 1,
+        CLASS_ENTITYPLAYER             = 1,
+        CLASS_ENTITYPLAYERSP           = 2,
+        CLASS_ENTITYPLAYERMP           = 3,
+        CLASS_ENUMGAMETYPE             = 4,
+        CLASS_EXPLOSION                = 5,
+        CLASS_GUICONTAINER             = 6,
+        CLASS_MINECRAFTAPPLETIMPL      = 7,
+        CLASS_MOVEMENTINPUTFROMOPTIONS = 8,
+        CLASS_NETCLIENTHANDLER         = 9,
+        CLASS_NETSERVERHANDLER         = 10,
+        CLASS_PLAYERCONTROLLERMP       = 11,
+        CLASS_RENDERLIVING             = 12,
+        CLASS_TILEENTITYFURNACE        = 13,
+        CLASS_WORLDPROVIDER            = 14,
+        CLASS_END                      = 15,
+        MOD_BEGIN                      = CLASS_END,
+        MOD_BOOM                       = MOD_BEGIN+0,
+        MOD_BUILD                      = MOD_BEGIN+1,
+        MOD_CART                       = MOD_BEGIN+2,
+        MOD_CHEAT                      = MOD_BEGIN+3,
+        MOD_CHEST                      = MOD_BEGIN+4,
+        MOD_CLOUD                      = MOD_BEGIN+5,
+        MOD_COMPASS                    = MOD_BEGIN+6,
+        MOD_CRAFT                      = MOD_BEGIN+7,
+        MOD_DEATH                      = MOD_BEGIN+8,
+        MOD_DIG                        = MOD_BEGIN+9,
+        MOD_FLY                        = MOD_BEGIN+10,
+        MOD_FURNACE                    = MOD_BEGIN+11,
+        MOD_GROWTH                     = MOD_BEGIN+12,
+        MOD_ICON                       = MOD_BEGIN+13,
+        MOD_INFO                       = MOD_BEGIN+14,
+        MOD_ITEM                       = MOD_BEGIN+15,
+        MOD_ORE                        = MOD_BEGIN+16,
+        MOD_PATH                       = MOD_BEGIN+17,
+        MOD_RECIPE                     = MOD_BEGIN+18,
+        MOD_RESIZE                     = MOD_BEGIN+19,
+        MOD_SAFE                       = MOD_BEGIN+20,
+        MOD_SPAWN                      = MOD_BEGIN+21,
+        MOD_SUN                        = MOD_BEGIN+22,
+        MOD_TELEPORT                   = MOD_BEGIN+23,
+        MOD_WEATHER                    = MOD_BEGIN+24,
+        MOD_WIELD                      = MOD_BEGIN+25,
+        MOD_END                        = MOD_BEGIN+26,
+        FEATURE_BEGIN                  = MOD_END,
+        FEATURE_FLY                    = FEATURE_BEGIN+0,
+        FEATURE_NOCLIP                 = FEATURE_BEGIN+1,
+        FEATURE_END                    = FEATURE_BEGIN+3;
+
+    private static final int
+        STATUS_AVAILABLE = 0,
+        STATUS_MISSING   = 1,
+        STATUS_BROKEN    = 2,
+        STATUS_BADMODE   = 4,
+        STATUS_FORBIDDEN = 8;
+
+    private static int status[] = new int[FEATURE_END];
+    
+    private static int classStatus(Class c) {
+        return checkClass(c) ? STATUS_AVAILABLE : STATUS_MISSING;
+    }
+    
+    private static void initStatusLookupArray() {
+        status[CLASS_ENTITYPLAYER]             = classStatus(EntityPlayer.class);
+        status[CLASS_ENTITYPLAYERMP]           = classStatus(EntityPlayerMP.class);
+        status[CLASS_ENTITYPLAYERSP]           = classStatus(EntityPlayerSP.class);
+        status[CLASS_ENUMGAMETYPE]             = classStatus(EnumGameType.class);
+        status[CLASS_EXPLOSION]                = classStatus(Explosion.class);
+        status[CLASS_GUICONTAINER]             = classStatus(GuiContainer.class);
+        status[CLASS_MINECRAFTAPPLETIMPL]      = classStatus(MinecraftAppletImpl.class);
+        status[CLASS_MOVEMENTINPUTFROMOPTIONS] = classStatus(MovementInputFromOptions.class);
+        status[CLASS_NETCLIENTHANDLER]         = classStatus(NetClientHandler.class);
+        status[CLASS_NETSERVERHANDLER]         = classStatus(NetServerHandler.class);
+        status[CLASS_PLAYERCONTROLLERMP]       = classStatus(PlayerControllerMP.class);
+        status[CLASS_RENDERLIVING]             = classStatus(RenderLiving.class);
+        status[CLASS_TILEENTITYFURNACE]        = classStatus(TileEntityFurnace.class);
+        status[CLASS_WORLDPROVIDER]            = classStatus(WorldProvider.class);
         
-        // hack
-        //boolean arr[] = (boolean[])getValue(getField(EntityEnderman.class, "b"), null);
-        //for(int i=0;i<256;i++) arr[i] = false;
+        status[MOD_BOOM]     = STATUS_BROKEN
+                             | status[CLASS_EXPLOSION];
+        status[MOD_BUILD]    = STATUS_BROKEN
+                             | status[CLASS_PLAYERCONTROLLERMP];
+        status[MOD_CART]     = STATUS_AVAILABLE;
+        status[MOD_CHEAT]    = status[CLASS_ENTITYPLAYER];
+        status[MOD_CHEST]    = STATUS_BROKEN;
+        status[MOD_CLOUD]    = STATUS_AVAILABLE;
+        status[MOD_COMPASS]  = STATUS_AVAILABLE;
+        status[MOD_CRAFT]    = STATUS_BROKEN
+                             | status[CLASS_GUICONTAINER];
+        status[MOD_DEATH]    = status[CLASS_ENTITYPLAYER]
+                             | status[CLASS_ENTITYPLAYERMP];
+        status[MOD_DIG]      = status[CLASS_PLAYERCONTROLLERMP];
+        status[MOD_FLY]      = status[CLASS_ENTITYPLAYER];
+        status[MOD_FURNACE]  = STATUS_BROKEN
+                             | status[CLASS_TILEENTITYFURNACE];
+        status[MOD_GROWTH]   = STATUS_BROKEN;
+        status[MOD_ICON]     = STATUS_AVAILABLE;
+        status[MOD_INFO]     = STATUS_AVAILABLE;
+        status[MOD_ITEM]     = STATUS_AVAILABLE;
+        status[MOD_ORE]      = STATUS_BROKEN;
+        status[MOD_PATH]     = STATUS_AVAILABLE;
+        status[MOD_RECIPE]   = STATUS_AVAILABLE;
+        status[MOD_RESIZE]   = STATUS_BROKEN
+                             | status[CLASS_RENDERLIVING];
+        status[MOD_SAFE]     = STATUS_AVAILABLE;
+        status[MOD_SPAWN]    = STATUS_BROKEN;
+        status[MOD_SUN]      = status[CLASS_WORLDPROVIDER];
+        status[MOD_TELEPORT] = STATUS_BROKEN;
+        status[MOD_WEATHER]  = STATUS_AVAILABLE;
+        status[MOD_WIELD]    = STATUS_AVAILABLE;
+        
+        status[FEATURE_FLY]    = status[CLASS_ENTITYPLAYER];
+        status[FEATURE_NOCLIP] = status[CLASS_ENTITYPLAYER] 
+                               | status[CLASS_NETSERVERHANDLER];
+        
     }
 
-    // ########################################################################################################################### Global handles
-    // ===========================================================================================================================
+    //#Global#Handles#########################################################
+    //========================================================================
     private static Minecraft minecraft;
     private static Random rnd = new Random();
     private static String path; // mod data folder path
@@ -252,6 +367,7 @@ public final class ZMod {
         optionsModModpack();
         parse(null, "names.txt", NAMEMAP); names = pNames; // load names
         initBlockLookupArray();
+        initStatusLookupArray();
         // load mods
         int mods = 0;
         optionsModBoom();     if (modBoomActive)     ++mods;
@@ -373,7 +489,7 @@ public final class ZMod {
         } catch(Exception error) { err("error: overrides failed", error); }
     }
 
-    // ===========================================================================================================================
+    //=Handle=EntityPlayerMP.onDeath==========================================
     private static void onServersidePlayerDeath(EntityPlayer ent) {
         deathOnServersidePlayerDeath(ent);
     }
@@ -384,7 +500,7 @@ public final class ZMod {
         }
     }
 
-    // ===========================================================================================================================
+    //=Handle=EntityPlayer.onUpdate===========================================
     private static void onClientsidePlayerUpdate(EntityPlayer ent) {
         cheatOnClientsidePlayerUpdate(ent);
         flyOnClientsidePlayerUpdate(ent);
@@ -404,6 +520,11 @@ public final class ZMod {
         if (ent instanceof EntityPlayerMP && getPlayerName(ent).equals(getPlayerName(player))) {
             onServersidePlayerUpdate(ent);
         }
+    }
+    
+    //=Handle=NetServerHandler.networkTick====================================
+    public static void onNetworkTick(EntityPlayerMP ent) {
+        
     }
     
     // ===========================================================================================================================

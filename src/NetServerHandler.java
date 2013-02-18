@@ -72,6 +72,9 @@ public class NetServerHandler extends NetHandler
      */
     public void networkTick()
     {
+        //-ZMod---------------------------------------------------------------
+        ZMod.onNetworkTick(playerEntity);
+        //--------------------------------------------------------------------
         this.field_72584_h = false;
         ++this.currentTicks;
         this.mcServer.theProfiler.startSection("packetflow");
