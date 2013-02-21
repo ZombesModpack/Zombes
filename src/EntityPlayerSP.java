@@ -30,6 +30,8 @@ public class EntityPlayerSP extends EntityPlayer
     /** The amount of time an entity has been in a Portal the previous tick */
     public float prevTimeInPortal;
 
+    //-ZMod-------------------------------------------------------------------
+    protected static boolean zmodmarker2 = true;
     //-ZMod-Cheat-projection--------------------------------------------------
     public void setAngles(float par1, float par2) {
         if (ZMod.onSetAngles(par1,par2)) super.setAngles(par1,par2);

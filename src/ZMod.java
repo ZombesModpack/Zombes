@@ -271,11 +271,16 @@ public final class ZMod {
     private static int classStatus(Class c) {
         return checkClass(c) ? STATUS_AVAILABLE : STATUS_MISSING;
     }
+    private static int classStatus(Class c, String name) {
+        return checkClass(name, c) ? STATUS_AVAILABLE : STATUS_MISSING;
+    }
     
     private static void initStatusLookupArray() {
+        status[0] = STATUS_AVAILABLE;
+        
         status[CLASS_ENTITYPLAYER]             = classStatus(EntityPlayer.class);
-        status[CLASS_ENTITYPLAYERMP]           = classStatus(EntityPlayerMP.class);
-        status[CLASS_ENTITYPLAYERSP]           = classStatus(EntityPlayerSP.class);
+        status[CLASS_ENTITYPLAYERMP]           = classStatus(EntityPlayerMP.class, "zmodmarker2");
+        status[CLASS_ENTITYPLAYERSP]           = classStatus(EntityPlayerSP.class, "zmodmarker2");
         status[CLASS_ENUMGAMETYPE]             = classStatus(EnumGameType.class);
         status[CLASS_EXPLOSION]                = classStatus(Explosion.class);
         status[CLASS_GUICONTAINER]             = classStatus(GuiContainer.class);
@@ -412,10 +417,14 @@ public final class ZMod {
     }
     
     private static boolean optionsMod(String name, boolean enabled) {
+        return optionsMod(name, enabled, 0);
+    }
+    
+    private static boolean optionsMod(String name, boolean enabled, int mod) {
         int column = 14;
         int x = (optionModNr / column) * 10 + 2, y = (optionModNr % column) + 1;
         optionsModEnabled = true;
-        if (drawBtn(x, y, 9, name, null ,optionsSelMod == optionModNr, enabled, false, false)) { optionsSelMod = optionModNr; optionSel = -1; optionNr = -100; optionOfs = 0; }
+        if (drawBtn(x, y, 9, name, null ,optionsSelMod == optionModNr, enabled, false, false, status[mod])) { optionsSelMod = optionModNr; optionSel = -1; optionNr = -100; optionOfs = 0; }
         optionsModEnabled = enabled;
         return optionsSelMod == optionModNr++;
     }
@@ -432,41 +441,41 @@ public final class ZMod {
         showText("Zombe's modpack v"+version+":", 2, 2, 0xcccccc);
         
         if (optionOfs > 0) {
-            if (drawBtn(22, 1, 20, "^^^", null, false, false, true, true)) { optionOfs -= optionsPage; return; }
+            if (drawBtn(22, 1, 20, "^^^", null, false, false, true, true, 0)) { optionOfs -= optionsPage; return; }
             optionNr++;
         }
 
-        if (optionsMod("\u00a7emodpack", true             )) optionsModModpack();
-        if (optionsMod("Boom"    , modBoomActive    )) optionsModBoom();
-        if (optionsMod("Build"   , modBuildActive   )) optionsModBuild();
-        if (optionsMod("Cart"    , modCartActive    )) optionsModCart();
-        if (optionsMod("Cheat"   , modCheatActive   )) optionsModCheat();
-        if (optionsMod("Chest"   , modChestActive   )) optionsModChest();
-        if (optionsMod("Cloud"   , modCloudActive   )) optionsModCloud();
-        if (optionsMod("Compass" , modCompassActive )) optionsModCompass();
-        if (optionsMod("Craft"   , modCraftActive   )) optionsModCraft();
-        if (optionsMod("Death"   , modDeathActive   )) optionsModDeath();
-        if (optionsMod("Dig"     , modDigActive     )) optionsModDig();
-        if (optionsMod("Fly"     , modFlyActive     )) optionsModFly();
-        if (optionsMod("Furnace" , modFurnaceActive )) optionsModFurnace();
-        if (optionsMod("Growth"  , modGrowthActive  )) optionsModGrowth();
-        if (optionsMod("Icon"    , modIconActive    )) optionsModIcon();
-        if (optionsMod("Info"    , modInfoActive    )) optionsModInfo();
-        if (optionsMod("Ite\u00a7fm"  , modItemActive    )) optionsModItem();
-        if (optionsMod("Ore"     , modOreActive     )) optionsModOre();
-        if (optionsMod("Path"    , modPathActive    )) optionsModPath();
-        if (optionsMod("Recipe"  , modRecipeActive  )) optionsModRecipe();
-        if (optionsMod("Resize"  , modResizeActive  )) optionsModResize();
-        if (optionsMod("Safe"    , modSafeActive    )) optionsModSafe();
-        if (optionsMod("Spawn"   , modSpawnActive   )) optionsModSpawn();
-        if (optionsMod("Sun"     , modSunActive     )) optionsModSun();
-        if (optionsMod("Teleport", modTeleportActive)) optionsModTeleport();
-        if (optionsMod("Weather" , modWeatherActive )) optionsModWeather();
-        if (optionsMod("Wield"   , modWieldActive   )) optionsModWield();
+        if (optionsMod("\u00a7emodpack", true)) optionsModModpack();
+        if (optionsMod("Boom"    , modBoomActive    , MOD_BOOM    )) optionsModBoom();
+        if (optionsMod("Build"   , modBuildActive   , MOD_BUILD   )) optionsModBuild();
+        if (optionsMod("Cart"    , modCartActive    , MOD_CART    )) optionsModCart();
+        if (optionsMod("Cheat"   , modCheatActive   , MOD_CHEAT   )) optionsModCheat();
+        if (optionsMod("Chest"   , modChestActive   , MOD_CHEST   )) optionsModChest();
+        if (optionsMod("Cloud"   , modCloudActive   , MOD_CLOUD   )) optionsModCloud();
+        if (optionsMod("Compass" , modCompassActive , MOD_COMPASS )) optionsModCompass();
+        if (optionsMod("Craft"   , modCraftActive   , MOD_CRAFT   )) optionsModCraft();
+        if (optionsMod("Death"   , modDeathActive   , MOD_DEATH   )) optionsModDeath();
+        if (optionsMod("Dig"     , modDigActive     , MOD_DIG     )) optionsModDig();
+        if (optionsMod("Fly"     , modFlyActive     , MOD_FLY     )) optionsModFly();
+        if (optionsMod("Furnace" , modFurnaceActive , MOD_FURNACE )) optionsModFurnace();
+        if (optionsMod("Growth"  , modGrowthActive  , MOD_GROWTH  )) optionsModGrowth();
+        if (optionsMod("Icon"    , modIconActive    , MOD_ICON    )) optionsModIcon();
+        if (optionsMod("Info"    , modInfoActive    , MOD_INFO    )) optionsModInfo();
+        if (optionsMod("Item"    , modItemActive    , MOD_ITEM    )) optionsModItem();
+        if (optionsMod("Ore"     , modOreActive     , MOD_ORE     )) optionsModOre();
+        if (optionsMod("Path"    , modPathActive    , MOD_PATH    )) optionsModPath();
+        if (optionsMod("Recipe"  , modRecipeActive  , MOD_RECIPE  )) optionsModRecipe();
+        if (optionsMod("Resize"  , modResizeActive  , MOD_RESIZE  )) optionsModResize();
+        if (optionsMod("Safe"    , modSafeActive    , MOD_SAFE    )) optionsModSafe();
+        if (optionsMod("Spawn"   , modSpawnActive   , MOD_SPAWN   )) optionsModSpawn();
+        if (optionsMod("Sun"     , modSunActive     , MOD_SUN     )) optionsModSun();
+        if (optionsMod("Teleport", modTeleportActive, MOD_TELEPORT)) optionsModTeleport();
+        if (optionsMod("Weather" , modWeatherActive , MOD_WEATHER )) optionsModWeather();
+        if (optionsMod("Wield"   , modWieldActive   , MOD_WIELD   )) optionsModWield();
 
         if (optionOfs + optionsPage < optionNr) {
             optionNr = optionOfs + optionsPage + 1;
-            if (drawBtn(22, optionNr - optionOfs, 20, "vvv", null, false, false, true, true)) optionOfs += optionsPage;
+            if (drawBtn(22, optionNr - optionOfs, 20, "vvv", null, false, false, true, true, 0)) optionOfs += optionsPage;
         }
 
     }
@@ -785,7 +794,7 @@ public final class ZMod {
     private static Mark itemOrig[], itemMine[];
 
     private static boolean initModItem() {
-        if (!modItemEnabled) return false;
+        if (!checkStatus(MOD_ITEM, "item")) return false;
         log("info: loading config for \"item\" - deferred");
         optItemDump = getBool("optItemDump", false);
         if (optItemChangeFence = getBool("optItemChangeFence", true)) { itemFenceO = getBlock(85); setBlock(85, null); itemFenceM = new ZBF(); setBlock(85, itemFenceO); }
@@ -945,8 +954,8 @@ public final class ZMod {
     private static float deathXpP;
 
     private static boolean initModDeath() {
+        if (!checkStatus(MOD_DEATH, "death")) return false;
         log("info: loading config for \"death\"");
-        if (!checkClass(EntityPlayer.class, "death")) return false;
         return modDeathActive = true;
     }
     
@@ -1036,6 +1045,7 @@ public final class ZMod {
     private static String infoFps = "";
 
     private static boolean initModInfo() {
+        if (!checkStatus(MOD_INFO, "info")) return false;
         log("info: loading config for \"info\"");
         optInfoTimeOffset = getInt("optInfoTimeOffset", 300, 0, 1199) * 20;
         optInfoPrefixNear = getString("optInfoPrefixNear", "\u00a7b");
@@ -1244,6 +1254,7 @@ public final class ZMod {
     private static boolean iconMPSupport;
 
     private static boolean initModIcon() {
+        if (!checkStatus(MOD_ICON, "icon")) return false;
         log("info: loading config for \"icon\"");
         optIconMP = getBool("optIconMP", false);
         iconMPSupport = false;
@@ -1374,6 +1385,7 @@ public final class ZMod {
     private static int optChestStoreRadius, optChestStoreBlock;
 
     private static boolean initModChest() {
+        if (!checkStatus(MOD_CHEST, "chest")) return false;
         log("info: loading config for \"chest\"");
         optChestStoreBlock = getBlockId("optChestStoreBlock", 58); // workbench
         return modChestActive = true;
@@ -1461,6 +1473,7 @@ public final class ZMod {
     private static double cloudOrigPlayerY;
 
     private static boolean initModCloud() {
+        if (!checkStatus(MOD_CLOUD, "cloud")) return false;
         log("info: loading config for \"cloud\"");
         tagCloudVanilla       = getString("tagCloudVanilla", "no-cloud-mod");
         return modCloudActive = true;
@@ -1526,6 +1539,7 @@ public final class ZMod {
     private static double cartSpeed;
 
     private static boolean initModCart() {
+        if (!checkStatus(MOD_CART, "cart")) return false;
         log("info: loading config for \"cart\"");
         tagCartPerpetual      = getString("tagCartPerpetual", "perpetual");
         return modCartActive = true;
@@ -1591,6 +1605,7 @@ public final class ZMod {
     public static boolean optWieldBowFirst, optWieldShowAmmo;
 
     private static boolean initModWield() {
+        if (!checkStatus(MOD_WIELD, "wield")) return false;
         log("info: loading config for \"wield\"");
         tagWieldAmmo          = getString("tagWieldAmmo", "Arrows :") + " ";
         return modWieldActive = true;
@@ -1647,8 +1662,8 @@ public final class ZMod {
     private static ItemStack buildHand;
 
     private static boolean initModBuild() {
+        if (!checkStatus(MOD_BUILD, "build")) return false;
         log("info: loading config for \"build\"");
-        if (!checkClass(PlayerControllerMP.class, "build")) return false;
         optBuildExtension = getBool("optBuildExtension", false);
         if (!optBuildExtension) log("info: build extension is disabled");
         tagBuildEnabled       = getString("tagBuildEnabled", "builder");
@@ -1900,6 +1915,7 @@ public final class ZMod {
     private static int compassOX, compassOY, compassOZ, compassMX, compassMY, compassMZ;
 
     private static boolean initModCompass() {
+        if (!checkStatus(MOD_COMPASS, "compass")) return false;
         log("info: loading config for \"compass\"");
         tagCompassAlternate = getString("tagCompassAlternate", "altSpawn");
         return modCompassActive = true;
@@ -1974,8 +1990,8 @@ public final class ZMod {
     private static long sunTimeOffset, sunTimeMoment;
 
     private static boolean initModSun() {
+        if (!checkStatus(MOD_SUN, "sun")) return false;
         log("info: loading config for \"sun\"");
-        if (!checkClass(WorldProvider.class, "sun")) return false;
         tagSunTime = getString("tagSunTime", "time");
         optSunServerCmd = getString("optSunServerCmd", "/time add");
         return modSunActive = true;
@@ -2047,8 +2063,8 @@ public final class ZMod {
     private static boolean flew = false, moveOnGround;
 
     private static boolean initModFly() {
+        if (!checkStatus(MOD_FLY, "fly")) return false;
         log("info: loading config for \"fly\"");
-        if (!checkClass(EntityPlayer.class, "fly")) return false;
         keyFlyOn = getBind("keyFlyOn",                        Keyboard.KEY_NONE);
         keyFlyOff = getBind("keyFlyOff",                      Keyboard.KEY_NONE);
         flyNoClip = false;
@@ -2283,8 +2299,8 @@ public final class ZMod {
     private static int keyCraftAll;
 
     private static boolean initModCraft() {
+        if (!checkStatus(MOD_CRAFT, "craft")) return false;
         log("info: loading config for \"craft\"");
-        if (!checkClass(GuiContainer.class, "craft")) return false;
         return modCraftActive = true;
     }
     
@@ -2319,6 +2335,7 @@ public final class ZMod {
     private static float pathAnimCur, pathf[];
 
     private static boolean initModPath() {
+        if (!checkStatus(MOD_PATH, "path")) return false;
         log("info: loading config for \"path\"");
         optPathPoints = getInt("optPathPoints", 8192, 256, 32768); pathf = new float[3 * optPathPoints];
         optPathMin = getFloat("optPathMin", 0.25f, 0.1f, 4f); optPathMin *= optPathMin;
@@ -2401,6 +2418,7 @@ public final class ZMod {
     private static IRecipe selRecipe;
     
     private static boolean initModRecipe() {
+        if (!checkStatus(MOD_RECIPE, "recipe")) return false;
         log("info: loading config for \"recipe\" - deferred");
         optRecipeDump = getBool("optRecipeDump", false);
         optRecipeVanillaMP = getBool("optRecipeVanillaMP", false);
@@ -2687,12 +2705,13 @@ public final class ZMod {
     private static int safeCur, safeUpdate;
 
     private static boolean initModSafe() {
+        if (!checkStatus(MOD_SAFE, "safe")) return false;
+        log("info: loading config for \"safe\"");
         safeMark = new Mark[safeMax];
         safeCur = 0;
         safeUpdate = 0;
         safeShow = false;
         safeGhost = false;
-        log("info: loading config for \"safe\"");
         optSafeDangerColor = getColor("optSafeDangerColor", 0xff0000);
         optSafeDangerColorSun = getColor("optSafeDangerColorSun", 0xdddd00);
         tagSafe = getString("tagSafe", "safe");
@@ -2797,8 +2816,8 @@ public final class ZMod {
     private static float optBoomDropOreChance, optBoomDropChance, optBoomScaleTNT, optBoomScaleCreeper, optBoomScaleFireball;
 
     private static boolean initModBoom() {
+        if (!checkStatus(MOD_BOOM, "boom")) return false;
         log("info: loading config for \"boom\"");
-        if (!checkClass(Explosion.class, "boom")) return false;
         return modBoomActive = true;
     }
     
@@ -2861,6 +2880,7 @@ public final class ZMod {
     private static int optSpawnCaveSpiderReduction, optSpawnEndermanReduction, optSpawnSilverfishReduction;
 
     private static boolean initModSpawn() {
+        if (!checkStatus(MOD_SPAWN, "spawn")) return false;
         log("info: loading config for \"spawn\"");
         optSpawnSupportMods = getBool("optSpawnSupportMods", true);
 
@@ -2958,6 +2978,7 @@ public final class ZMod {
     private static int[] optOreCoalRule, optOreIronRule, optOreGoldRule, optOreBlueRule, optOreRedRule, optOreDiamondRule;
 
     private static boolean initModOre() {
+        if (!checkStatus(MOD_ORE, "ore")) return false;
         log("info: loading config for \"ore\"");
         optOreLavaFloor   = getBool("optOreLavaFloor", true);
         // chance_for_chunk / max_height / min_height / attempts / size / what_must_be_above
@@ -3063,6 +3084,7 @@ public final class ZMod {
     private static int optTeleportItem, optTeleportPlayer, optTeleportCritter;
 
     private static boolean initModTeleport() {
+        if (!checkStatus(MOD_TELEPORT, "teleport")) return false;
         log("info: loading config for \"teleport\"");
         optTeleportItem = getBlockId("optTeleportItem", 42); // iron block
         optTeleportPlayer = getBlockId("optTeleportPlayer", 41); // gold block
@@ -3224,6 +3246,7 @@ public final class ZMod {
     private static int optCheatBlockHitDelay = 5;
 
     private static boolean initModCheat() {
+        if (!checkStatus(MOD_CHEAT, "cheat")) return false;
         log("info: loading config for \"cheat\"");
         cheatMobs = new Mark[MAXTYPE];
         cheatOres = new Mark[4096];
@@ -3921,8 +3944,8 @@ public final class ZMod {
     private static float resizeSize[];
 
     private static boolean initModResize() {
+        if (!checkStatus(MOD_RESIZE, "resize")) return false;
         log("info: loading config for \"resize\"");
-        if (!checkClass(RenderLiving.class, "resize")) return false;
         resizeChanceBig = new int[MAXTYPE]; resizeChanceSmall = new int[MAXTYPE]; resizeSize = new float[MAXTYPE];
         for (int i=0;i<MAXTYPE;i++) resizeChanceBig[i] = 100;
         // big
@@ -3998,8 +4021,8 @@ public final class ZMod {
     private static HashMap<Integer,ItemStack> furnaceSmelting;
 
     private static boolean initModFurnace() {
+        if (!checkStatus(MOD_FURNACE, "furnace")) return false;
         log("info: loading config for \"furnace\"");
-        if (!checkClass(TileEntityFurnace.class, "furnace")) return false;
         pFuel = furnaceFuel = new HashMap<Integer,Integer>();
         pSmelt = furnaceSmelting = new HashMap<Integer,ItemStack>();
         optFurnaceWoodFuel = getInt("optFurnaceWoodFuel", 300, 1, 32767);
@@ -4052,8 +4075,8 @@ public final class ZMod {
     private static boolean featureCustomReachAvailable;
 
     private static boolean initModDig() {
+        if (!checkStatus(MOD_DIG, "dig")) return false;
         log("info: loading config for \"dig\"");
-        if (!checkClass(PlayerControllerMP.class, "dig")) return false;
         featureCustomReachAvailable = checkClass(NetServerHandler.class) && checkClass(PlayerControllerMP.class);
         return modDigActive = true;
     }
@@ -4202,6 +4225,7 @@ public final class ZMod {
     private static boolean weatherMayhem;
 
     private static boolean initModWeather() {
+        if (!checkStatus(MOD_WEATHER, "weather")) return false;
         log("info: loading config for \"weather\"");
         optWeatherThunderChance = getInt("optWeatherThunderChance", 100000, 1, 500000);
         optWeatherThunderMayhemChance = getInt("optWeatherThunderMayhemChance", 2000, 1, 10000);
@@ -4312,6 +4336,7 @@ public final class ZMod {
     private static float growthSqrRadius;
 
     private static boolean initModGrowth() {
+        if (!checkStatus(MOD_GROWTH, "growth")) return false;
         log("info: loading config for \"growth\"");
         optGrowthPlanting = getBool("optGrowthPlanting", true);
         optGrowthFlower = getInt("optGrowthFlower", 25, 1, 1000);
@@ -4482,19 +4507,62 @@ public final class ZMod {
 
     }
     
-    private static boolean drawBtn(int x, int y, int w, String caption, String help, boolean selected, boolean state, boolean center, boolean restart) {
+    private static void drawHelp(int x, int y, String help, int status) {
+        int w = showTextLength(help);
+        int colorOk = 0xcccccc, colorBroken = 0x999999, colorMissing = 0xcccc99;
+        boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w && mouseY<y+11;
+        int color = colorOk;
+        String statusmsg = null;
+        if ((status & STATUS_BROKEN) != 0) {
+            color = colorBroken;
+            statusmsg = "This feature is broken";
+        } else if ((status & STATUS_MISSING) != 0) {
+            color = colorMissing;
+            statusmsg = "Feature unavailable: missing class file";
+        }
+        showText(help, x, y, color);
+        if (hover && statusmsg != null) {
+            w = showTextLength(statusmsg);
+            x += 10; y -= 11;
+            opt.drawRect(x-1, y-1, x+w+1, y+11, 0x99000000);
+            showText(statusmsg, x, y, 0xcc9999);
+        }
+    }
+    
+    private static boolean drawBtn(int x, int y, int w, String caption, String help, boolean selected, boolean state, boolean center, boolean restart, int status) {
         x *= 5; y *= 11; w *= 5; // add y offset if needed here
-        int stateOn = 0xff66bb66, stateOff = 0xffbb6666;
+        int stateOn = 0xff66bb66, stateOff = 0xffbb6666, 
+            stateBroken = 0xff666666, stateMissing = 0xff888866;
         boolean hover = mouseX>=x && mouseY>=y && mouseX<x+w && mouseY<y+11;
         //if (!optionsModEnabled) { caption = "???"; restart = true; center = true; }
-        if (hover) { stateOn = 0xff88dd88; stateOff = 0xffdd8888; }
-        if (selected) opt.drawRect(x-2, y-1, x+w+2, y+11, 0xff0000ff);
+        if (hover) { stateOn = 0xff88dd88; stateOff = 0xffdd8888;
+                     stateBroken = 0xff888888; stateMissing = 0xffaaaa88; }
+        int stateColor = state ? stateOn : stateOff;
+        String statusmsg = null;
+        if (help != null) {
+        } else if ((status & STATUS_BROKEN) != 0) {
+            stateColor = stateBroken;
+            statusmsg = "This feature is broken";
+        } else if ((status & STATUS_MISSING) != 0) {
+            stateColor = stateMissing;
+            statusmsg = "Feature unavailable: missing class file";
+        }
+        if (selected) opt.drawRect(x-1, y-1, x+w+1, y+11, 0xff0066cc);
         if (restart) opt.drawGradientRect(x, y, x+w, y+10, stateOn, stateOff);
-        else opt.drawRect(x, y, x+w, y+10, state ? stateOn : stateOff);
+        else opt.drawRect(x, y, x+w, y+10, stateColor);
         x++; y++;
-        if (help != null) showText(help, x+w+8, y, 0xcccccc);
+        if (help != null) {
+            drawHelp(x+w+8, y, help, status);
+            //showText(help, x+w+8, y, 0xcccccc);
+        }
         if (center) x += (w - showTextLength(caption)) >> 1;
         showText(caption, x, y, 0xffffff);
+        if (hover && statusmsg != null) {
+            w = showTextLength(statusmsg);
+            x += 10; y -= 11;
+            opt.drawRect(x-1, y-1, x+w+1, y+11, 0x99000000);
+            showText(statusmsg, x, y, 0xcc9999);
+        }
         return hover && mousePress(0);
     }
     
@@ -4502,7 +4570,7 @@ public final class ZMod {
                              SCALE_LINEAR   = 2,
                              SCALE_LOG      = 3;
     
-    private static float drawBar(int x, int y, int w, float val, float min, float max, String help, int scale) {
+    private static float drawBar(int x, int y, int w, float val, float min, float max, String help, int scale, int status) {
         x *= 5; y *= 11; w *= 5; // add y offset if needed here
         float ratio = (scale != SCALE_LOG)
                     ? (val - min) / (max - min)
@@ -4512,7 +4580,10 @@ public final class ZMod {
         //if (!optionsModEnabled) bar = -10;
         opt.drawRect(x, y+4, x+w, y+5, 0xff66bb66);
         opt.drawRect(bar-1, y+2, bar+1, y+8, 0xffffffff);
-        showText(help, x+w+8, y+1, 0xcccccc);
+        if (help != null) {
+            drawHelp(x+w+8, y, help, status);
+            //showText(help, x+w+8, y+1, 0xcccccc);
+        }
         if (hover) {
             ratio = (mouseX - x) / (float)w;
             if (ratio < 0) ratio = 0;
@@ -4543,10 +4614,14 @@ public final class ZMod {
     }
 
     private static int getSetInt(int current, String name, int initial, int min, int max, String help) {
+        return getSetInt(current, name, initial, min, max, help, 0);
+    }
+
+    private static int getSetInt(int current, String name, int initial, int min, int max, String help, int feature) {
         if (!initialized) return getInt(name, initial, min, max);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        int res = (int)drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_DISCRETE);
+        int res = (int)drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_DISCRETE, status[feature]);
         if (res != current) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %d", name, res));
             return res;
@@ -4555,10 +4630,14 @@ public final class ZMod {
     }
 
     private static float getSetFloat(float current, String name, float initial, float min, float max, String help) {
+        return getSetFloat(current, name, initial, min, max, help, 0);
+    }
+
+    private static float getSetFloat(float current, String name, float initial, float min, float max, String help, int feature) {
         if (!initialized) return getFloat(name, initial, min, max);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LINEAR);
+        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LINEAR, status[feature]);
         if (res != current) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
             return res;
@@ -4567,10 +4646,14 @@ public final class ZMod {
     }
     
     private static float getSetLog(float current, String name, float initial, float min, float max, String help) {
+        return getSetLog(current, name, initial, min, max, help, 0);
+    }
+    
+    private static float getSetLog(float current, String name, float initial, float min, float max, String help, int feature) {
         if (!initialized) return getFloat(name, initial, min, max);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LOG);
+        float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LOG, status[feature]);
         if (res != current) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
             return res;
@@ -4579,11 +4662,15 @@ public final class ZMod {
     }
 
     private static int getSetBind(int current, String name, int initial, String help) {
+        return getSetBind(current, name, initial, help, 0);
+    }
+
+    private static int getSetBind(int current, String name, int initial, String help, int feature) {
         if (!initialized) return getBind(name, initial);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
         // draw element / select if clicked / return without changes if not selected
-        if (drawBtn(22, optionNr - optionOfs, 20, optionSel == optionNr ? "..." : keyName(current), help, optionSel == optionNr, true, true, false)) optionSel = optionNr;
+        if (drawBtn(22, optionNr - optionOfs, 20, optionSel == optionNr ? "..." : keyName(current), help, optionSel == optionNr, true, true, false, status[feature])) optionSel = optionNr;
         else if (optionSel != optionNr) return current;
         // try to rebind
         for (int key = 1; key<255; key++) if (keyDown(key)) {
@@ -4597,10 +4684,14 @@ public final class ZMod {
     }
 
     private static boolean getSetBool(boolean current, String name, boolean initial, String help) {
+        return getSetBool(current, name, initial, help, 0);
+    }
+    
+    private static boolean getSetBool(boolean current, String name, boolean initial, String help, int feature) {
         if (!initialized) return getBool(name, initial);
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
-        if (drawBtn(22, optionNr - optionOfs, 20, current ? "yes" : "no", help, false, current, true, false)) {
+        if (drawBtn(22, optionNr - optionOfs, 20, current ? "yes" : "no", help, false, current, true, false, status[feature])) {
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, current ? "no" : "yes"));
             return !current;
         }
@@ -5265,8 +5356,11 @@ public final class ZMod {
     private static Object getResult(Method m, Object obj, Object p1, Object p2, Object p3) { return getResult(m, obj, new Object[]{p1,p2,p3}); }
     private static Object getResult(Method m, Object obj, Object p1, Object p2, Object p3, Object p4) { return getResult(m, obj, new Object[]{p1,p2,p3,p4}); }
     private static boolean checkClass(Class c) {
+        return checkClass("zmodmarker", c);
+    }
+    private static boolean checkClass(String name, Class c) {
         try {
-            Field field = c.getDeclaredField("zmodmarker");
+            Field field = c.getDeclaredField(name);
             if (field != null) return true;
         } catch(Exception whatever) { }
         return false;
@@ -5276,6 +5370,21 @@ public final class ZMod {
         if (checkClass(c)) return true;
         if (warning == null) err("error: "+c.getName()+".class has not been installed - "+mod+" mod disabled");
         else log("warning: "+c.getName()+".class has not been installed - "+mod+" mod: "+warning);
+        return false;
+    }
+    
+    private static boolean checkStatus(int feature) {
+        return status[feature] == STATUS_AVAILABLE;
+    }
+    
+    private static boolean checkStatus(int feature, String what) {
+        if (status[feature] == STATUS_AVAILABLE) return true;
+        String msg = what+": ";
+        if ((status[feature] & STATUS_BROKEN) != 0) msg += "this feature is broken";
+        else if ((status[feature] & STATUS_MISSING) != 0) msg += "feature unavailable: a required class file is missing";
+        else msg += "feature unavailable: reason unknown";
+        if (initialized) err("error: "+msg);
+        else log("warning: "+msg);
         return false;
     }
 

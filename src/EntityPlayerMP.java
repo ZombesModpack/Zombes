@@ -11,6 +11,10 @@ import net.minecraft.server.MinecraftServer;
 
 public class EntityPlayerMP extends EntityPlayer implements ICrafting
 {
+    //-ZMod-------------------------------------------------------------------
+    protected static boolean zmodmarker2 = true;
+    //------------------------------------------------------------------------
+
     private StringTranslate translator = new StringTranslate("en_US");
 
     /**
