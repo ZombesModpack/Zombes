@@ -226,7 +226,11 @@ public final class ZMod {
         CLASS_TILEENTITYFURNACE        = 13,
         CLASS_WORLDPROVIDER            = 14,
         CLASS_END                      = 15,
-        MOD_BEGIN                      = CLASS_END,
+        HOOK_BEGIN                     = CLASS_END,
+        HOOK_CLIENTTICK                = HOOK_BEGIN+0,
+        HOOK_SERVERTICK                = HOOK_BEGIN+1,
+        HOOK_END                       = HOOK_BEGIN+2,
+        MOD_BEGIN                      = HOOK_END,
         MOD_BOOM                       = MOD_BEGIN+0,
         MOD_BUILD                      = MOD_BEGIN+1,
         MOD_CART                       = MOD_BEGIN+2,
@@ -257,7 +261,9 @@ public final class ZMod {
         FEATURE_BEGIN                  = MOD_END,
         FEATURE_FLY                    = FEATURE_BEGIN+0,
         FEATURE_NOCLIP                 = FEATURE_BEGIN+1,
-        FEATURE_END                    = FEATURE_BEGIN+3;
+        FEATURE_POSSESSION             = FEATURE_BEGIN+2,
+        FEATURE_PROJECTION             = FEATURE_BEGIN+3,
+        FEATURE_END                    = FEATURE_BEGIN+4;
 
     private static final int
         STATUS_AVAILABLE = 0,
@@ -293,10 +299,15 @@ public final class ZMod {
         status[CLASS_TILEENTITYFURNACE]        = classStatus(TileEntityFurnace.class);
         status[CLASS_WORLDPROVIDER]            = classStatus(WorldProvider.class);
         
+        status[HOOK_CLIENTTICK] = status[CLASS_ENTITYPLAYER];
+        status[HOOK_SERVERTICK] = status[CLASS_ENTITYPLAYER]
+                                & status[CLASS_NETSERVERHANDLER];
+        
         status[MOD_BOOM]     = STATUS_BROKEN
                              | status[CLASS_EXPLOSION];
         status[MOD_BUILD]    = STATUS_BROKEN
-                             | status[CLASS_PLAYERCONTROLLERMP];
+                             | status[CLASS_PLAYERCONTROLLERMP]
+                             | status[HOOK_SERVERTICK];
         status[MOD_CART]     = STATUS_AVAILABLE;
         status[MOD_CHEAT]    = status[CLASS_ENTITYPLAYER];
         status[MOD_CHEST]    = STATUS_BROKEN;
@@ -314,7 +325,8 @@ public final class ZMod {
         status[MOD_ICON]     = STATUS_AVAILABLE;
         status[MOD_INFO]     = STATUS_AVAILABLE;
         status[MOD_ITEM]     = STATUS_AVAILABLE;
-        status[MOD_ORE]      = STATUS_BROKEN;
+        status[MOD_ORE]      = STATUS_BROKEN
+                             | status[HOOK_SERVERTICK];
         status[MOD_PATH]     = STATUS_AVAILABLE;
         status[MOD_RECIPE]   = STATUS_AVAILABLE;
         status[MOD_RESIZE]   = STATUS_BROKEN
@@ -329,7 +341,8 @@ public final class ZMod {
         status[FEATURE_FLY]    = status[CLASS_ENTITYPLAYER];
         status[FEATURE_NOCLIP] = status[CLASS_ENTITYPLAYER] 
                                | status[CLASS_NETSERVERHANDLER];
-        
+        status[FEATURE_POSSESSION] = STATUS_AVAILABLE;
+        status[FEATURE_PROJECTION] = status[CLASS_ENTITYPLAYERSP];
     }
 
     //#Global#Handles#########################################################
@@ -482,14 +495,14 @@ public final class ZMod {
 
     public static Minecraft getMinecraft() { return minecraft; }
 
-    // ===========================================================================================================================
+    // =======================================================================
     public static void pingRespawnHandle(boolean first) { try {
         if (!isMultiplayer && modDeathActive && !first) respawnDeathMod();
         if (modInfoActive && !first) respawnInfoMod();
         } catch(Exception error) { err("error: respawn failed", error); }
     }
     
-    // ===========================================================================================================================
+    // =======================================================================
     public static void initOverrides() {
         try {
             log("info: init render");
@@ -497,46 +510,76 @@ public final class ZMod {
             overloadEntityRender();
         } catch(Exception error) { err("error: overrides failed", error); }
     }
-
-    //=Handle=EntityPlayerMP.onDeath==========================================
-    private static void onServersidePlayerDeath(EntityPlayer ent) {
-        deathOnServersidePlayerDeath(ent);
+    
+    //
+    private static boolean isServerPlayer(EntityPlayer ent) {
+        return (ent != null && player != null && ent instanceof EntityPlayerMP 
+             && getPlayerName(ent).equals(getPlayerName(player)));
     }
     
-    public static void onPlayerDeath(EntityPlayer ent) {
-        if (ent instanceof EntityPlayerMP && getPlayerName(ent).equals(getPlayerName(player))) {
-            onServersidePlayerDeath(ent);
+    //=Hook=ClientTick========================================================
+    private static void onClientTick(EntityPlayerSP ent) {
+        
+    }
+    
+    //=Hook=ServerTick========================================================
+    private static void onServerTick(EntityPlayerMP ent) {
+        
+    }
+    
+    //=Hook=PlayerDeath
+    private static void onServerPlayerDeath(EntityPlayerMP ent) {
+        deathOnServerPlayerDeath(ent);
+    }
+    
+    //=Hook=PlayerUpdate======================================================
+    private static void onClientPlayerUpdate(EntityPlayerSP ent) {
+        cheatOnClientPlayerUpdate(ent);
+        flyOnClientPlayerUpdate(ent);
+    }
+
+    private static void onServerPlayerUpdate(EntityPlayerMP ent) {
+        cheatOnServerPlayerUpdate(ent);
+        deathOnServerPlayerUpdate(ent);
+        flyOnServerPlayerUpdate(ent);
+        if (status[CLASS_NETSERVERHANDLER] != 0) {
+            onServerTick(ent);
         }
     }
-
+    
+    //=Handle=EntityPlayerMP.onDeath==========================================
+    public static void onPlayerDeath(EntityPlayer ent) {
+        if (isServerPlayer(ent)) {
+            onServerPlayerDeath((EntityPlayerMP) ent);
+        }
+    }
+    
     //=Handle=EntityPlayer.onUpdate===========================================
-    private static void onClientsidePlayerUpdate(EntityPlayer ent) {
-        cheatOnClientsidePlayerUpdate(ent);
-        flyOnClientsidePlayerUpdate(ent);
-    }
-
-    private static void onServersidePlayerUpdate(EntityPlayer ent) {
-        cheatOnServersidePlayerUpdate(ent);
-        deathOnServersidePlayerUpdate(ent);
-        flyOnServersidePlayerUpdate(ent);
-    }
-
     public static void onPlayerUpdate(EntityPlayer ent) {
         if (player == null) return;
         if (ent == player) {
-            onClientsidePlayerUpdate(ent);
+            onClientPlayerUpdate((EntityPlayerSP) ent);
         }
-        if (ent instanceof EntityPlayerMP && getPlayerName(ent).equals(getPlayerName(player))) {
-            onServersidePlayerUpdate(ent);
+        if (isServerPlayer(ent)) {
+            onServerPlayerUpdate((EntityPlayerMP) ent);
+        }
+    }
+    
+    //=Handle=NetClientHandler.networkTick====================================
+    public static void onNetworkTick(EntityPlayerSP ent) {
+        if (ent == player) {
+            onClientTick(ent);
         }
     }
     
     //=Handle=NetServerHandler.networkTick====================================
     public static void onNetworkTick(EntityPlayerMP ent) {
-        
+        if (isServerPlayer(ent)) {
+            onServerTick(ent);
+        }
     }
     
-    // ===========================================================================================================================
+    // =======================================================================
     private static Object prevPC, PC; // used to detect world change
     private static boolean deferredInit;
     private static boolean isMenu, isMultiplayer, isHell, isMapChange, isWorldChange;
@@ -980,7 +1023,7 @@ public final class ZMod {
         
     }
     
-    private static void deathOnServersidePlayerDeath(EntityPlayer ent) {
+    private static void deathOnServerPlayerDeath(EntityPlayer ent) {
         if (!modDeathActive || isMultiplayer) return;
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
@@ -1004,7 +1047,7 @@ public final class ZMod {
         }
     }
 
-    private static void deathOnServersidePlayerUpdate(EntityPlayer ent) {
+    private static void deathOnServerPlayerUpdate(EntityPlayer ent) {
         if (!modDeathActive || isMultiplayer) return;
         if (ent.isDead || getHealth(ent) <= 0) return;
         if (!optDeathDropInv && deathHaveInv) {
@@ -2085,7 +2128,7 @@ public final class ZMod {
             if (modFlyEnabled && !modFlyActive) initModFly(); 
             if (!modFlyEnabled && modFlyActive) quitModFly();
         }
-        keyFlyToggle            = getSetBind(keyFlyToggle,                   "keyFlyToggle", Keyboard.KEY_F           , "Toggle fly mode");
+        keyFlyToggle            = getSetBind(keyFlyToggle,                   "keyFlyToggle", Keyboard.KEY_F           , "Toggle fly mode", FEATURE_FLY);
         optFlySpeedMulNormal    = getSetLog((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 100.0f , "Flying speed");
         keyFlyUp                = getSetBind(keyFlyUp,                       "keyFlyUp",     Keyboard.KEY_E           , "Fly up");
         keyFlyDown              = getSetBind(keyFlyDown,                     "keyFlyDown",   Keyboard.KEY_Q           , "Fly down");
@@ -2097,7 +2140,7 @@ public final class ZMod {
         optFlyRunSpeedIsToggle  = getSetBool(optFlyRunSpeedIsToggle,         "optFlyRunSpeedIsToggle", false, "Run speed modifier is toggle");
         optFlyRunSpeedMul       = getSetLog((float)optFlyRunSpeedMul,      "optFlyRunSpeedMul"       , 1.5f, 0.1f, 100.0f , "Running speed");
         optFlyRunSpeedVMul      = getSetLog((float)optFlyRunSpeedVMul,     "optFlyRunSpeedVMul"      , 1.5f, 0.1f, 100.0f , "Vertical speed (ladders / water)");
-        keyFlyNoClip            = getSetBind(keyFlyNoClip,                   "keyFlyNoClip", Keyboard.KEY_F8          , "Toggle no-clip mode");
+        keyFlyNoClip            = getSetBind(keyFlyNoClip,                   "keyFlyNoClip", Keyboard.KEY_F8          , "Toggle no-clip mode", FEATURE_NOCLIP);
         optFlyNoClip            = getSetBool(optFlyNoClip,                   "optFlyNoClip"          , true , "No-clip is enabled by default");
         optFlyJump              = getSetLog((float)optFlyJump,             "optFlyJump"              , 1.0f, 1.0f, 100.0f , "Jump speed");
         optFlyJumpHigh          = getSetLog((float)optFlyJumpHigh,         "optFlyJumpHigh"          , 1.25f, 1.0f, 100.0f, "Jump speed with speed modifier (run)");
@@ -2173,14 +2216,14 @@ public final class ZMod {
         return (playerClassActive && player != null) ? moveOnGround : (player != null) ? getEntityOnGround(player) : true;
     }
 
-    private static void flyOnServersidePlayerUpdate(EntityPlayer ent) {
+    private static void flyOnServerPlayerUpdate(EntityPlayer ent) {
         if (!modFlyActive || !modFlyAllowed) return;
         ent.noClip = player.noClip;                               // necessary for noclip
         if (!player.capabilities.allowFlying)
         ent.capabilities.isFlying = player.capabilities.isFlying; // necessary for damage-over-lava bug
     }
 
-    private static void flyOnClientsidePlayerUpdate(EntityPlayer ent) {
+    private static void flyOnClientPlayerUpdate(EntityPlayer ent) {
         if (!playerClassActive || player == null || (modFlyActive && modFlyAllowed && fly)) return;
         setEntityOnGround(player, moveOnGround); // no sure if it has any use
     }
@@ -3310,9 +3353,9 @@ public final class ZMod {
         keyCheatHighlight = getSetBind(keyCheatHighlight, "keyCheatHighlight",      Keyboard.KEY_H, "Toggle light level");
         keyCheatRemoveFire = Keyboard.KEY_NONE;
         //keyCheatRemoveFire = getSetBind(keyCheatRemoveFire, "keyCheatRemoveFire",    Keyboard.KEY_N, "Remove fire nearby");
-        keyCheatPossession = getSetBind(keyCheatPossession, "keyCheatPossession",    Keyboard.KEY_NUMPAD5, "Get player possession view");
-        keyCheatProjection = getSetBind(keyCheatProjection, "keyCheatProjection",    Keyboard.KEY_NUMPAD8, "Get ghost projection view");
-        keyCheatRelocate = getSetBind(keyCheatRelocate, "keyCheatRelocate",    Keyboard.KEY_NUMPAD2, "Relocate projection view");
+        keyCheatPossession = getSetBind(keyCheatPossession, "keyCheatPossession",    Keyboard.KEY_NUMPAD5, "Get player possession view", FEATURE_POSSESSION);
+        keyCheatProjection = getSetBind(keyCheatProjection, "keyCheatProjection",    Keyboard.KEY_NUMPAD8, "Get ghost projection view", FEATURE_PROJECTION);
+        keyCheatRelocate = getSetBind(keyCheatRelocate, "keyCheatRelocate",    Keyboard.KEY_NUMPAD2, "Relocate projection view", FEATURE_PROJECTION);
         keyCheatHealth = getSetBind(keyCheatHealth, "keyCheatHealth",            Keyboard.KEY_NONE, "Toggle health regen");
         keyCheatDamage = getSetBind(keyCheatDamage, "keyCheatDamage",            Keyboard.KEY_NONE, "Toggle damages (invulnerability)");
         keyCheatShowMobs = getSetBind(keyCheatShowMobs, "keyCheatShowMobs",        Keyboard.KEY_M, "Show / hide critters");
@@ -3667,14 +3710,14 @@ public final class ZMod {
         }
     }
 
-    private static void cheatOnClientsidePlayerUpdate(EntityPlayer ent) {
+    private static void cheatOnClientPlayerUpdate(EntityPlayer ent) {
         if (!modCheatActive || !modCheatAllowed) return;
         if (cheatProjection != null && getView() == cheatProjection) {
             cheatProjection.onUpdate();
         }
     }
 
-    private static void cheatOnServersidePlayerUpdate(EntityPlayer ent) {
+    private static void cheatOnServerPlayerUpdate(EntityPlayer ent) {
         if (!modCheatActive || !modCheatAllowed) return;
         ent.capabilities.disableDamage = cheating && optCheatDisableDamage || ent.capabilities.isCreativeMode;
         ent.isImmuneToFire = cheating && optCheatFireImmune;
