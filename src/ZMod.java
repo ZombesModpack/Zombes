@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.Timestamp;
 import java.nio.*;
+import java.util.concurrent.locks.*;
 
 public final class ZMod {
     public static final String version = "6.8.2 for MC 1.4.6";
@@ -305,10 +306,9 @@ public final class ZMod {
         
         status[MOD_BOOM]     = STATUS_BROKEN
                              | status[CLASS_EXPLOSION];
-        status[MOD_BUILD]    = STATUS_BROKEN
-                             | status[CLASS_PLAYERCONTROLLERMP]
+        status[MOD_BUILD]    = STATUS_AVAILABLE
                              | status[HOOK_SERVERTICK];
-        status[MOD_CART]     = STATUS_AVAILABLE;
+        status[MOD_CART]     = STATUS_BROKEN;
         status[MOD_CHEAT]    = status[CLASS_ENTITYPLAYER];
         status[MOD_CHEST]    = STATUS_BROKEN;
         status[MOD_CLOUD]    = STATUS_AVAILABLE;
@@ -524,7 +524,7 @@ public final class ZMod {
     
     //=Hook=ServerTick========================================================
     private static void onServerTick(EntityPlayerMP ent) {
-        
+        buildOnServerTick(ent);
     }
     
     //=Hook=PlayerDeath
@@ -1703,6 +1703,17 @@ public final class ZMod {
     private static int buildHandSlot, buildHandCount;
     private static NBTTagCompound buildBufNBT[];
     private static ItemStack buildHand;
+    private static Lock buildLock = new ReentrantLock();
+    private static List<int[]> buildActions;
+
+    private static final int
+        BUILD_ACTION_BITS = 3,
+        BUILD_ACTION_SET = 1,
+        BUILD_ACTION_COPY = 2,
+        BUILD_ACTION_PASTE = 3,
+        BUILD_MODIFIER_FILL = 64,
+        BUILD_MODIFIER_REMOVE = 128;
+        
 
     private static boolean initModBuild() {
         if (!checkStatus(MOD_BUILD, "build")) return false;
@@ -1743,15 +1754,21 @@ public final class ZMod {
                 }
             }
         }
+        buildMark = 0;
+        buildActions = new LinkedList<int[]>();
         return modBuildActive = true;
     }
     
     private static void quitModBuild() {
         if (!modBuildActive) return;
         modBuildActive = false;
+        buildSets = null;
+        buildActions = null;
     }
 
     private static void optionsModBuild() {
+        buildLock.lock();
+        try {
         boolean wasEnabled = modBuildEnabled;
         modBuildEnabled = getSetBool(modBuildEnabled, "modBuildEnabled", false,     "Enable Build mod");
         if (wasEnabled != modBuildEnabled) {
@@ -1763,7 +1780,7 @@ public final class ZMod {
         keyBuildB             = getSetBind(keyBuildB, "keyBuildB",          Keyboard.KEY_LCONTROL, "B item sets (this + number)");
         optBuild              = getSetBool(optBuild, "optBuild", false, "Builder mode is enabled by default");
         optBuildLockQuantity  = getSetBool(optBuildLockQuantity, "optBuildLockQuantity", true, "Lock item quantity");
-        optBuildLockQuantityToNr = getSetInt(optBuildLockQuantityToNr, "optBuildLockQuantityToNr", 0, 0, 32, "Lock item quatity to nr (0 = don't)");
+        optBuildLockQuantityToNr = getSetInt(optBuildLockQuantityToNr, "optBuildLockQuantityToNr", 0, 0, 32, "Lock item quantity to nr (0 = don't)");
         optBuildDigSpeed      = getSetFloat(optBuildDigSpeed, "optBuildDigSpeed", 1f, 0.1f, 6f, "Digging speed");
         optBuildHarvestRule   = getSetInt(optBuildHarvestRule, "optBuildHarvestRule", -1, -1, 1, "Harvest rule (-1=never, 0=vanilla, 1=always)");
         optBuildReach         = getSetFloat(optBuildReach, "optBuildReach", 16f, 2f, 128f, "Arm length");
@@ -1776,9 +1793,14 @@ public final class ZMod {
         keyBuildRemove        = getSetBind(keyBuildRemove, "keyBuildRemove",     Keyboard.KEY_RSHIFT, "Modifier to remove matching");
         keyBuildDown          = getSetBind(keyBuildDown, "keyBuildDown",       Keyboard.KEY_LCONTROL, "Modifier to set marker at feet level");
         keyBuildDeselect      = getSetBind(keyBuildDeselect, "keyBuildDeselect",   Keyboard.KEY_NONE, "Remove markers");
+        } finally {
+            buildLock.unlock();
+        }
     }
 
     private static void updateModBuild() {
+        buildLock.lock();
+        try {
         if (!modBuildActive) return;
         if (!optBuild || isMenu || !optBuildLockQuantity || isMultiplayer) buildHandSlot = -1;
         if (isMenu) return;
@@ -1805,10 +1827,61 @@ public final class ZMod {
         // map edit part of mod follows
         int x = fix(posX),y = fix(posY),z = fix(posZ);
         if (keyPress(keyBuildDeselect)) buildMark = 0; // deselect
-        if (optBuildExtension && keyPress(keyBuildMark)) {
-            if (buildMark==1) { buildEX = x; buildEY = keyDown(keyBuildDown) ? y - 1 : y; buildEZ = z; buildMark = 2; }
-            else { buildSX = x; buildSY = keyDown(keyBuildDown) ? y - 1 : y; buildSZ = z; buildMark = 1; }
-        } else if (buildMark==2) {
+        if (optBuildExtension && keyPress(keyBuildMark) && buildActions.isEmpty()) {
+            if (buildMark == 1) {
+                buildEX = x; 
+                buildEY = keyDown(keyBuildDown) ? y - 1 : y; 
+                buildEZ = z; 
+                buildMark = 2; 
+            } else { 
+                buildSX = x; 
+                buildSY = keyDown(keyBuildDown) ? y - 1 : y; 
+                buildSZ = z; buildMark = 1; 
+            }
+        } else if (buildMark == 2 && buildActions.isEmpty()) {
+            // fix coords
+            int tmp;
+            if (buildSX > buildEX) { tmp = buildSX; buildSX = buildEX; buildEX = tmp; }
+            if (buildSY > buildEY) { tmp = buildSY; buildSY = buildEY; buildEY = tmp; }
+            if (buildSZ > buildEZ) { tmp = buildSZ; buildSZ = buildEZ; buildEZ = tmp; }
+            // ready
+            if (keyPress(keyBuildSet) && !isMultiplayer) {
+                int id = 0, meta = 0;
+                if (invItemsArr[getInvCur()] != null) {
+                    id = getItemsId(invItemsArr[getInvCur()]);
+                    meta = getItemsInfo(invItemsArr[getInvCur()]);
+                    if (id >= 4096) id = meta = 0;
+                }
+                int[] data = new int[9];
+                data[0] = BUILD_ACTION_SET
+                        | (keyDown(keyBuildFill) ? BUILD_MODIFIER_FILL : 0)
+                        | (keyDown(keyBuildRemove) ? BUILD_MODIFIER_REMOVE : 0);
+                data[1] = buildSX; data[2] = buildSY; data[3] = buildSZ;
+                data[4] = buildEX; data[5] = buildEY; data[6] = buildEZ;
+                data[7] = id; data[8] = meta;
+                buildActions.add(data);
+            } else if (keyPress(keyBuildCopy) && !isMultiplayer) {
+                int[] data = new int[7];
+                data[0] = BUILD_ACTION_COPY;
+                data[1] = buildSX; data[2] = buildSY; data[3] = buildSZ;
+                data[4] = buildEX; data[5] = buildEY; data[6] = buildEZ;
+                buildActions.add(data);
+            } else if (keyPress(keyBuildPaste) && !isMultiplayer) {
+                int sx = 1 + buildEX - buildSX; sx = sx > buildSizeX ? sx % buildSizeX : 0;
+                int sy = 1 + buildEY - buildSY; sy = sy > buildSizeY ? sy % buildSizeY : 0;
+                int sz = 1 + buildEZ - buildSZ; sz = sz > buildSizeZ ? sz % buildSizeZ : 0;
+                if (sx!=0 || sy!=0 || sz!=0) { // adjust selection (try to avoid partial copy)
+                    buildEX -= sx; buildEY -= sy; buildEZ -= sz;
+                }
+                int[] data = new int[7];
+                data[0] = BUILD_ACTION_PASTE
+                        | (keyDown(keyBuildFill) ? BUILD_MODIFIER_FILL : 0)
+                        | (keyDown(keyBuildRemove) ? BUILD_MODIFIER_REMOVE : 0);
+                data[1] = buildSX; data[2] = buildSY; data[3] = buildSZ;
+                data[4] = buildEX; data[5] = buildEY; data[6] = buildEZ;
+                buildActions.add(data);
+            }
+        } else if (false) {
             // fix coords
             int tmp;
             if (buildSX > buildEX) { tmp = buildSX; buildSX = buildEX; buildEX = tmp; }
@@ -1820,7 +1893,7 @@ public final class ZMod {
                 if (invItemsArr[getInvCur()] != null) {
                     id = getItemsId(invItemsArr[getInvCur()]);
                     meta = getItemsInfo(invItemsArr[getInvCur()]);
-                    if (id >= 255) id = meta = 0;
+                    if (id >= 4096) id = meta = 0;
                 }
                 if (keyDown(keyBuildFill)) {
                     for (x=buildSX;x<=buildEX;x++) for (y=buildSY;y<=buildEY;y++) for (z=buildSZ;z<=buildEZ;z++) if (mapXGetId(x,y,z)==0) mapXSetIdMetaNoUpdate(x,y,z,id,meta);
@@ -1874,7 +1947,7 @@ public final class ZMod {
                 }
                 mapXNeedsUpdate(buildSX-1,buildSY-1,buildSZ-1,buildEX+1,buildEY+1,buildEZ+1);
             }
-        } else if (buildMark==1 && keyPress(keyBuildPaste) && !isMultiplayer) {
+        } else if (buildMark==1 && keyPress(keyBuildPaste) && !isMultiplayer && buildActions.isEmpty()) {
             buildEX = buildSX + buildSizeX - 1; buildEY = buildSY + buildSizeY - 1; buildEZ = buildSZ + buildSizeZ - 1; buildMark = 2;
         }
         // lock items in hand
@@ -1892,6 +1965,119 @@ public final class ZMod {
                     setInvItems(cur, buildHand);
                 }
             }
+        }
+        } finally {
+            buildLock.unlock();
+        }
+    }
+    
+    private static void buildAction(World world, int[] data) {
+        int action = data[0] & BUILD_ACTION_BITS;
+        boolean fill = (data[0] & BUILD_MODIFIER_FILL) != 0;
+        boolean remove = (data[0] & BUILD_MODIFIER_REMOVE) != 0;
+        
+        int sx = data[1], sy = data[2], sz = data[3];
+        int ex = data[4], ey = data[5], ez = data[6];
+        
+        if (action == BUILD_ACTION_SET) {
+            int id = data[7], meta = data[8];
+            
+            if (fill) {
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z)
+                if (getWorldId(world, x,y,z) == 0) 
+                    setWorldIdMetaWithoutNotify(world, x,y,z, id,meta);
+            } else if (remove) {
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z) {
+                    int got = getWorldId(world, x,y,z);
+                    if (got==id || (id==8 && got==9) || (id==10 && got==11)) 
+                        setWorldIdMetaWithoutNotify(world, x,y,z, 0,0);
+                }
+            } else {
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z)
+                setWorldIdMetaWithoutNotify(world, x,y,z, id,meta);
+            }
+            markWorldNeedsUpdate(world, sx-1,sy-1,sz-1, ex+1,ey+1,ez+1);
+        } else if (action == BUILD_ACTION_COPY) {
+            buildMark = 0;
+            buildSizeX = 1 + ex - sx;
+            buildSizeY = 1 + ey - sy;
+            buildSizeZ = 1 + ez - sz;
+            int size = buildSizeX * buildSizeY * buildSizeZ, at = 0;
+            buildBufBlock = new int[size];
+            buildBufExtra = new int[size];
+            buildBufNBT = new NBTTagCompound[size];
+            for (int x = sx; x <= ex; ++x)
+            for (int y = sy; y <= ey; ++y)
+            for (int z = sz; z <= ez; ++z) {
+                buildBufBlock[at] = getWorldId(world, x,y,z);
+                buildBufExtra[at] = getWorldMeta(world, x,y,z);
+                buildBufNBT[at] = getTileEntityCopy(getWorldTileEntity(world, x,y,z));
+                at++;
+            }
+        }
+        if (action == BUILD_ACTION_PASTE && buildBufBlock != null) {
+            int wx = 1 + ex - sx; wx = (wx > buildSizeX) ? wx % buildSizeX : 0;
+            int wy = 1 + ey - sy; wy = (wy > buildSizeY) ? wy % buildSizeY : 0;
+            int wz = 1 + ez - sz; wz = (wz > buildSizeZ) ? wz % buildSizeZ : 0;
+            if (wx != 0 || wy != 0 || wz != 0) {
+                ex -= wx; ey -= wy; ez -= wz;
+                // assert : (1+ex-sx) % buildSizeX == 0 || (1+ex-sx) < buildSizeX
+            }
+            if (fill) { // fill space
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z)
+                if (getWorldId(world, x,y,z) == 0) {
+                    int cx = (x-sx) % buildSizeX, cy = (y-sy) % buildSizeY, cz = (z-sz)% buildSizeZ;
+                    int at = (cx*buildSizeY + cy)*buildSizeZ + cz;
+                    setWorldIdMetaWithoutNotify(world, x,y,z, buildBufBlock[at],buildBufExtra[at]);
+                }
+            } else if (remove) { // remove matching
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z) {
+                    int cx = (x-sx) % buildSizeX, cy = (y-sy) % buildSizeY, cz = (z-sz)% buildSizeZ;
+                    int at = (cx*buildSizeY + cy)*buildSizeZ + cz;
+                    int id = buildBufBlock[at], got = getWorldId(world, x,y,z);
+                    if (id == got || (id==8 && got==9) || (id==10 && got==11)) 
+                        setWorldIdMetaWithoutNotify(world, x,y,z, 0,0);
+                }
+            } else { // replace
+                for (int x = sx; x <= ex; ++x)
+                for (int y = sy; y <= ey; ++y)
+                for (int z = sz; z <= ez; ++z) {
+                    int cx = (x-sx) % buildSizeX, cy = (y-sy) % buildSizeY, cz = (z-sz)% buildSizeZ;
+                    int at = (cx*buildSizeY + cy)*buildSizeZ + cz;
+                    setWorldIdMetaWithoutNotify(world, x,y,z, buildBufBlock[at],buildBufExtra[at]);
+                    if (buildBufNBT[at] != null) {
+                        setTileEntityFromCopy(getWorldTileEntity(world, x,y,z), 
+                                              setNBTPos(buildBufNBT[at], x,y,z));
+                    }
+                }
+            }
+            markWorldNeedsUpdate(world, sx-1,sy-1,sz-1, ex+1,ey+1,ez+1);
+        }
+    }
+    
+    private static void buildOnServerTick(EntityPlayerMP ent) {
+        buildLock.lock();
+        try {
+            if (!modBuildActive) return;
+            World world = getEntityWorld(ent);
+            if (!buildActions.isEmpty()) {
+                for (int[] action : buildActions) {
+                    buildAction(world, action);
+                }
+                buildActions.clear();
+            }
+        } finally {
+            buildLock.unlock();
         }
     }
     
@@ -4893,6 +5079,7 @@ public final class ZMod {
             player.noClip = val;
         }
     }
+    private static World getEntityWorld(Entity ent) { return ent.worldObj; }
     private static float getEntityWidth(Entity ent) { return ent.width; }
     private static float getEntityHeight(Entity ent) { return ent.height; }
     private static float getEntityYaw(Entity ent) { return ent.rotationYaw; }
@@ -5011,16 +5198,33 @@ public final class ZMod {
     private static int getCartType(EntityMinecart ent) { return ent.minecartType; }
     private static int getCartFuel(EntityMinecart ent) { return (Integer)getValue(fCartFuel, ent); }
     private static void setCartFuel(EntityMinecart ent, int val) { setValue(fCartFuel, ent, val); }
-    // ---------------------------------------------------------------------------------------------------------------- EntityItem
+    
+    //-ZMod-Wrapper-EntityItem------------------------------------------------
     private static ItemStack getEntityItemStack(EntityItem ent) { return ent.func_92059_d(); }
-    // ---------------------------------------------------------------------------------------------------------------- TileEntity
+    
+    //-ZMod-Wrapper-TileEntity------------------------------------------------
     private static void setChanged(TileEntity tent) { tent.onInventoryChanged(); }
+    private static NBTTagCompound getTileEntityCopy(TileEntity ent) {
+        if (ent == null) return null;
+        NBTTagCompound nbt = new NBTTagCompound();
+        ent.writeToNBT(nbt);
+        return nbt;
+    }
     private static NBTTagCompound mapGetTileCopy(int x,int y,int z) {
         TileEntity ent = getTileEntity(x,y,z);
         if (ent == null) return null;
         NBTTagCompound nbt = new NBTTagCompound();
         ent.writeToNBT(nbt);
         return nbt;
+    }
+    private static NBTTagCompound setNBTPos(NBTTagCompound nbt, int x, int y, int z) {
+        nbt.setInteger("x", x);
+        nbt.setInteger("y", y);
+        nbt.setInteger("z", z);
+        return nbt;
+    }
+    private static void setTileEntityFromCopy(TileEntity ent, NBTTagCompound nbt) {
+        ent.readFromNBT(nbt);
     }
     private static void mapSetTileCopy(NBTTagCompound nbt, int x,int y,int z) {
         nbt.setInteger("x", x);
@@ -5089,8 +5293,18 @@ public final class ZMod {
     private static void setTime(long val) { world.setWorldTime(val); }
     private static long getSeed() { return world.getSeed(); }
     private static String getName() { return world.getWorldName(); }
-    // ---------------------------------------------------------------------------------------------------------------- World
+    
+    //-ZMod-Wrapper-World-- --------------------------------------------------
     private static World getMap() { return minecraft.theWorld; }
+    
+    private static int getWorldId(World world, int x, int y, int z) { return world.getBlockId(x,y,z); }
+    private static int getWorldMeta(World world, int x, int y, int z) { return world.getBlockMetadata(x,y,z); }
+    private static TileEntity getWorldTileEntity(World world, int x, int y, int z) { return world.getBlockTileEntity(x,y,z); }
+    private static void setWorldIdWithNotify(World world, int x, int y, int z, int id) { world.setBlockWithNotify(x,y,z, id); }
+    private static void setWorldIdMetaWithNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta); }
+    private static void setWorldIdMetaWithoutNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadata(x,y,z, id, meta); }
+    private static void markWorldNeedsUpdate(World world, int sx, int sy, int sz, int ex, int ey, int ez) { world.markBlockRangeForRenderUpdate(sx, sy, sz, ex, ey, ez); }
+    
     private static void spawnLightning(int x, int y, int z) { map.spawnEntityInWorld(new EntityLightningBolt(map, x, y, z)); }
     
     // new light functions, the one used in the F3 debug screen
@@ -5111,18 +5325,18 @@ public final class ZMod {
     private static float getLight(int x, int y, int z) { return map.getLightBrightness(x, y, z); }
     // real light level
     private static int getLightLevel(int x,int y,int z) { return map.getFullBlockLightValue(x, y, z); }
-    private static int mapXGetId(int x, int y, int z) { return map.getBlockId(x,y,z); }
-    private static int mapXGetMeta(int x, int y, int z) { return map.getBlockMetadata(x,y,z); }
-    private static void mapXSetIdMetaNoUpdate(int x, int y, int z, int id, int meta) { map.setBlockAndMetadata(x,y,z,id,meta); }
-    private static void mapXSetIdMeta(int x, int y, int z, int id, int meta) { map.setBlockAndMetadataWithNotify(x,y,z,id,meta); }
-    private static void mapXSetId(int x, int y, int z, int id) { map.setBlockWithNotify(x,y,z,id); }
+    private static int mapXGetId(int x, int y, int z) { return getWorldId(map, x,y,z); }
+    private static int mapXGetMeta(int x, int y, int z) { return getWorldMeta(map, x,y,z); }
+    private static void mapXSetIdMetaNoUpdate(int x, int y, int z, int id, int meta) { setWorldIdMetaWithoutNotify(map, x,y,z, id, meta); }
+    private static void mapXSetIdMeta(int x, int y, int z, int id, int meta) { setWorldIdMetaWithNotify(map, x,y,z, id, meta); }
+    private static void mapXSetId(int x, int y, int z, int id) { setWorldIdWithNotify(map, x,y,z, id); }
     private static boolean mapXGetChunkExists(int cx, int cy) { return map.getChunkProvider().chunkExists(cx, cy); }
     private static void chunkNeedsUpdate(int cx, int cz) { cx <<= 4; cz <<= 4; map.markBlockRangeForRenderUpdate(cx, 0, cz, cx+15, 127, cz+15); }
-    private static void mapXNeedsUpdate(int sx, int sy, int sz, int ex, int ey, int ez) { map.markBlockRangeForRenderUpdate(sx, sy, sz, ex, ey, ez); }
+    private static void mapXNeedsUpdate(int sx, int sy, int sz, int ex, int ey, int ez) { markWorldNeedsUpdate(map, sx, sy, sz, ex, ey, ez); }
     private static List getEntities() { return (List)((ArrayList)map.loadedEntityList).clone(); }
     private static void noiseTP(Entity ent) { map.playSoundAtEntity(ent, "mob.slimeattack", 0.4f,( (rnd.nextFloat() - rnd.nextFloat())*0.2f + 1.0f )*0.8f); }
     private static void overloadMapRandom() { if (map.rand != null && !(map.rand instanceof ZRND)) map.rand = new ZRND(map.rand); }
-    private static TileEntity getTileEntity(int x, int y, int z) { return map.getBlockTileEntity(x,y,z); }
+    private static TileEntity getTileEntity(int x, int y, int z) { return getWorldTileEntity(map, x,y,z); }
     // ----------------------------------------------------------------------------------------------------------------
     private static String getBiomeName(int x, int z) { return map.getChunkFromBlockCoords(x, z).getBiomeGenForWorldCoords(x & 0xf, z & 0xf, map.getWorldChunkManager()).biomeName; }
     // ---------------------------------------------------------------------------------------------------------------- GuiIngame
