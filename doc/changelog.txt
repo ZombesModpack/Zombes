@@ -1,5 +1,11 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v6.8.3 for MC 1.4.6
+- added support for logarithmic scale in the F7 menu
+- improved feature availability detection
+- added support for feature availability in the F7 menu
+- build mod partly rewritten, build extension working again
+
 v6.8.2 for MC 1.4.6
 - mod toggles now available in the ingame F7 menu
 

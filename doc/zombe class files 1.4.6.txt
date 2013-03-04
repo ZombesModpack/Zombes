@@ -7,7 +7,6 @@ Cheat   - EntityPlayer, PlayerControllerMP (bhd)
 
 1 bis) Optional mods absent from the package, theoretical dependencies
 Boom    - Explosion
-Build   - PlayerControllerMP
 Craft   - GuiContainer
 Furnace - TileEntityFurnace
 Resize  - RenderLiving
@@ -16,7 +15,7 @@ Resize  - RenderLiving
 File/ Class Name               / Used by
 aaq - WorldProvider            - Sun
 ayh - NetClienthandler         - Fly
-ayo - PlayerControllerMP       - Build, Dig, Cheat (bhd)
+ayo - PlayerControllerMP       - Dig, Cheat (bhd)
 baf - MovementInputFromOptions - Fly
 bag - EntityPlayerSP           - Fly
 iq  - EntityPlayerMP           - Death
