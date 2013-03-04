@@ -260,11 +260,12 @@ public final class ZMod {
         MOD_WIELD                      = MOD_BEGIN+25,
         MOD_END                        = MOD_BEGIN+26,
         FEATURE_BEGIN                  = MOD_END,
-        FEATURE_FLY                    = FEATURE_BEGIN+0,
-        FEATURE_NOCLIP                 = FEATURE_BEGIN+1,
-        FEATURE_POSSESSION             = FEATURE_BEGIN+2,
-        FEATURE_PROJECTION             = FEATURE_BEGIN+3,
-        FEATURE_END                    = FEATURE_BEGIN+4;
+        FEATURE_BROKEN                 = FEATURE_BEGIN+0,
+        FEATURE_FLY                    = FEATURE_BEGIN+1,
+        FEATURE_NOCLIP                 = FEATURE_BEGIN+2,
+        FEATURE_POSSESSION             = FEATURE_BEGIN+3,
+        FEATURE_PROJECTION             = FEATURE_BEGIN+4,
+        FEATURE_END                    = FEATURE_BEGIN+5;
 
     private static final int
         STATUS_AVAILABLE = 0,
@@ -338,6 +339,7 @@ public final class ZMod {
         status[MOD_WEATHER]  = STATUS_AVAILABLE;
         status[MOD_WIELD]    = STATUS_AVAILABLE;
         
+        status[FEATURE_BROKEN] = STATUS_BROKEN;
         status[FEATURE_FLY]    = status[CLASS_ENTITYPLAYER];
         status[FEATURE_NOCLIP] = status[CLASS_ENTITYPLAYER] 
                                | status[CLASS_NETSERVERHANDLER];
@@ -1016,7 +1018,7 @@ public final class ZMod {
         }
         optDeathDropInv   = getSetBool(optDeathDropInv,  "optDeathDropInv",   false,     "Drop inventory on death");
         optDeathLoseExp   = getSetBool(optDeathLoseExp,  "optDeathLoseExp",   false,     "Lose experience on death");
-        optDeathHPPenalty = getSetInt(optDeathHPPenalty, "optDeathHPPenalty", 0, 0, 100, "Respawn HP penalty");
+        optDeathHPPenalty = getSetInt(optDeathHPPenalty, "optDeathHPPenalty", 0, 0, 100, "Respawn HP penalty", FEATURE_BROKEN);
     }
 
     private static void updateModDeath() {
@@ -1779,11 +1781,11 @@ public final class ZMod {
         keyBuildA             = getSetBind(keyBuildA, "keyBuildA",          Keyboard.KEY_LSHIFT, "A item sets (this + number)");
         keyBuildB             = getSetBind(keyBuildB, "keyBuildB",          Keyboard.KEY_LCONTROL, "B item sets (this + number)");
         optBuild              = getSetBool(optBuild, "optBuild", false, "Builder mode is enabled by default");
-        optBuildLockQuantity  = getSetBool(optBuildLockQuantity, "optBuildLockQuantity", true, "Lock item quantity");
+        optBuildLockQuantity  = getSetBool(optBuildLockQuantity, "optBuildLockQuantity", true, "Lock item quantity", FEATURE_BROKEN);
         optBuildLockQuantityToNr = getSetInt(optBuildLockQuantityToNr, "optBuildLockQuantityToNr", 0, 0, 32, "Lock item quantity to nr (0 = don't)");
-        optBuildDigSpeed      = getSetFloat(optBuildDigSpeed, "optBuildDigSpeed", 1f, 0.1f, 6f, "Digging speed");
-        optBuildHarvestRule   = getSetInt(optBuildHarvestRule, "optBuildHarvestRule", -1, -1, 1, "Harvest rule (-1=never, 0=vanilla, 1=always)");
-        optBuildReach         = getSetFloat(optBuildReach, "optBuildReach", 16f, 2f, 128f, "Arm length");
+        optBuildDigSpeed      = getSetFloat(optBuildDigSpeed, "optBuildDigSpeed", 1f, 0.1f, 6f, "Digging speed", FEATURE_BROKEN);
+        optBuildHarvestRule   = getSetInt(optBuildHarvestRule, "optBuildHarvestRule", -1, -1, 1, "Harvest rule (-1=never, 0=vanilla, 1=always)", FEATURE_BROKEN);
+        optBuildReach         = getSetLog(optBuildReach, "optBuildReach", 16f, 2f, 128f, "Arm length", FEATURE_BROKEN);
         optBuildExtension     = getSetBool(optBuildExtension, "optBuildExtension", false, "Build extension enabled");
         keyBuildMark          = getSetBind(keyBuildMark, "keyBuildMark",       Keyboard.KEY_X, "Set marker");
         keyBuildCopy          = getSetBind(keyBuildCopy, "keyBuildCopy",       Keyboard.KEY_C, "Copy selected area");
