@@ -26,8 +26,8 @@ showOptions           = F7
 clearDisplayedError   = F9
 
 # ==================== cloud mod - aka. Cloud Control ========================
-# Uncomment to enable mod:
-#modCloudEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modCloudEnabled       = no
 
 # Turns clouds on and off.
 keyCloudToggle        = MULTIPLY
@@ -52,8 +52,8 @@ tagCloudVanilla       = no-cloud-mod
 
 
 # ==================== cart mod - aka. Cart Control ==========================
-# Uncomment to enable mod:
-#modCartEnabled        = yes
+# Replace 'no' with 'yes' to enable mod:
+modCartEnabled        = no
 
 # Stops the cart immediately.
 keyCartStop           = RETURN
@@ -75,8 +75,8 @@ tagCartPerpetual      = perpetual
 
 
 # ==================== build mod - aka. Classic Building =====================
-# Uncomment to enable mod:
-#modBuildEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modBuildEnabled       = no
 
 # Enable / disable build mode.
 keyBuildToggle        = B
@@ -161,8 +161,8 @@ tagBuildEnabled       = builder
 
 
 # ==================== compass mod - aka. Compass ============================
-# Uncomment to enable mod:
-#modCompassEnabled     = yes
+# Replace 'no' with 'yes' to enable mod:
+modCompassEnabled     = no
 
 # Creates an alternate spawn location and makes it current.
 keyCompassSet         = INSERT
@@ -178,16 +178,16 @@ tagCompassAlternate   = altSpawn
 
 
 # ==================== craft mod - aka. Craft All Key ========================
-# Uncomment to enable mod:
-#modCraftEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modCraftEnabled       = no
 
 # Crafting will be done as many times as possible while holding this key down
 keyCraftAll           = LSHIFT
 
 
 # ==================== fly mod - aka. Flying =================================
-# Uncomment to enable mod:
-#modFlyEnabled         = yes
+# Replace 'no' with 'yes' to enable mod:
+modFlyEnabled         = no
 
 # Turns fly mode on.
 keyFlyOn              =
@@ -258,8 +258,8 @@ tagFlyNoClip          = noclip
 
 
 # ==================== path mod - aka. Path Tracker ==========================
-# Uncomment to enable mod:
-#modPathEnabled        = yes
+# Replace 'no' with 'yes' to enable mod:
+modPathEnabled        = no
 
 # Show / hide path (BACK is aka BACKSPACE).
 keyPathShow           = BACK
@@ -287,8 +287,8 @@ optPathShow           = no
 
 
 # ==================== sun mod - aka. Sun Control ============================
-# Uncomment to enable mod:
-#modSunEnabled         = yes
+# Replace 'no' with 'yes' to enable mod:
+modSunEnabled         = no
 
 # Adds time.
 keySunTimeAdd         = ADD
@@ -319,8 +319,8 @@ tagSunTime            = time
 
 
 # ==================== wield mod - aka. Wield Key ============================
-# Uncomment to enable mod:
-#modWieldEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modWieldEnabled       = no
 
 # Key to wield a weapon.
 keyWield              = R
@@ -336,8 +336,8 @@ tagWieldAmmo          = Arrows :
 
 
 # ==================== safe mod - aka. Critter Spawn Highlighter =============
-# Uncomment to enable mod:
-#modSafeEnabled        = yes
+# Replace 'no' with 'yes' to enable mod:
+modSafeEnabled        = no
 
 # Show / hide non-spawn-safe spots.
 keySafeShow           = L
@@ -362,8 +362,8 @@ tagSafe               = safe
 
 
 # ==================== recipe mod - aka. Custom Crafting Recipies ============
-# Uncomment to enable mod:
-#modRecipeEnabled      = yes
+# Replace 'no' with 'yes' to enable mod:
+modRecipeEnabled      = no
 
 # NB! Recipes are defined in recipes.txt - there are also the instructions.
 
@@ -381,8 +381,8 @@ optRecipeDump         = no
 
 
 # ==================== boom mod - aka. Explosion Damage Control ==============
-# Uncomment to enable mod:
-#modBoomEnabled        = yes
+# Replace 'no' with 'yes' to enable mod:
+modBoomEnabled        = no
 
 # Precentage chance of dropping the destroyed block if it is not an ore. [0 .. 100]
 optBoomDropChance     = 30
@@ -407,8 +407,8 @@ optBoomSafeRange      = 16
 
 
 # ==================== spawn mod - aka. Critter Spawn Control ================
-# Uncomment to enable mod:
-#modSpawnEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modSpawnEnabled       = no
 
 # Support all other mods that add critters - aka apply the same spawning rules to all of them.
 optSpawnSupportMods   = yes
@@ -447,8 +447,8 @@ optSpawnSilverfishReduction = 0
 
 # ==================== ore mod - aka. Ore Redistribution =====================
 # WARNING: This mod will alter your savegame! Make a backup before using this!
-# Uncomment to enable mod:
-#modOreEnabled         = yes
+# Replace 'no' with 'yes' to enable mod:
+modOreEnabled         = no
 
 # Use lava instead of smoothstone for flattening the bedrock.
 optOreLavaFloor       = yes
@@ -470,8 +470,8 @@ optOreDiamondRule     = 75/16/4/2/8/1    100/32/2/128/2/11 10/120/16/2/8/1
 
 
 # ==================== teleport mod - aka. Teleportation =====================
-# Uncomment to enable mod:
-#modTeleportEnabled    = yes
+# Replace 'no' with 'yes' to enable mod:
+modTeleportEnabled    = no
 
 # For teleportation pad to work - there bust be a sign (on stick or on wall) above it (0-1 blocks).
 # On sign, use on a separate line for teleport target area: "!x,y,z" - use "compass" mod
@@ -513,8 +513,8 @@ optTeleportIsSelected = yes
 
 
 # ==================== cheat mod - aka. Cheat ================================
-# Uncomment to enable mod:
-#modCheatEnabled       = yes
+# Replace 'no' with 'yes' to enable mod:
+modCheatEnabled       = no
 
 # Toggles cheat mode on / off.
 keyCheat              = Y
@@ -617,8 +617,8 @@ tagCheater            = cheater
 
 
 # ==================== resize mod - aka. Critter size variety ================
-# Uncomment to enable mod:
-#modResizeEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modResizeEnabled = no
 
 # Percentage chance for smaller than usual critter.  [0..100]
 optResizeCowSmall     = 30
@@ -638,8 +638,8 @@ optResizePigBig       = 10
 
 
 # ==================== furnace mod - aka. Custom Smelting Recipes ============
-# Uncomment to enable mod:
-#modFurnaceEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modFurnaceEnabled = no
 
 # How many units of time is wooden item worth if not told otherwise [1..32767]
 optFurnaceWoodFuel    = 300
@@ -660,8 +660,8 @@ optFurnaceReturnBucket = no
 
 
 # ==================== dig mod - aka. Digging Speed Adjustment ===============
-# Uncomment to enable mod:
-#modDigEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modDigEnabled = no
 
 # Cancel out of reach actions
 optDigCheckReach      = yes
@@ -693,8 +693,8 @@ optDigHarvestAlways   = false
 
 
 # ==================== weather mod - aka. Weather Control ====================
-# Uncomment to enable mod:
-#modWeatherEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modWeatherEnabled = no
 
 # Used to call rain / end of rain.
 keyWeatherRain        = J
@@ -744,8 +744,8 @@ tagWeatherMayhem      = mayhem
 
 
 # ==================== growth mod - aka. Plant Growth ========================
-# Uncomment to enable mod:
-#modGrowthEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modGrowthEnabled = no
 
 # Chance to spread to adjacent dirt block (not grass!), 1 in x. [1..1000]
 # NB! a chance value of 1000 will disable spreading.
@@ -770,8 +770,8 @@ optGrowthRootingTime  = 10
 
 
 # ==================== chest mod - aka. Autostore ============================
-# Uncomment to enable mod:
-#modChestEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modChestEnabled = no
 
 # Autostore items on top of chests.
 optChestStore         = yes
@@ -785,8 +785,8 @@ optChestStoreRadius   = 2
 
 
 # ==================== icon mod - aka. Container Content Icons ===============
-# Uncomment to enable mod:
-#modIconEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modIconEnabled = no
 
 # Show on chest the item icon of the first item in it.
 optIconShowChest      = yes
@@ -802,8 +802,8 @@ optIconMP             = no
 
 
 # ==================== info mod - aka. World Information =====================
-# Uncomment to enable mod:
-#modInfoEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modInfoEnabled = no
 
 # Key to show / hide info.
 keyInfoToggle         = F12
@@ -849,8 +849,8 @@ optInfoPrefixFar      = §9
 
 
 # ==================== death mod - aka. Death Behavior =======================
-# Uncomment to enable mod:
-#modDeathEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modDeathEnabled = no
 
 # Drop player inventory on death.
 optDeathDropInv       = no
@@ -863,8 +863,8 @@ optDeathLoseExp       = no
 optDeathHPPenalty     = 0
 
 # ==================== item mod - aka. Item/Block Properties =================
-# Uncomment to enable mod:
-#modItemEnabled = yes
+# Replace 'no' with 'yes' to enable mod:
+modItemEnabled = no
 
 # NB! Properties are defined in items.txt - there are also the instructions.
 
