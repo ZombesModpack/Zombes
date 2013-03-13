@@ -1,0 +1,46 @@
+1) Optional mods dependencies :
+Death   - EntityPlayerMP
+Dig     - PlayerControllerMP, NetServerHandler (reach)
+Sun     - WorldProvider
+Fly     - EntityPlayer, EntityPlayerSP, EnumGameType, MovementInputFromOptions, NetClienthandler, NetServerHandler (noclip)
+Cheat   - EntityPlayer, PlayerControllerMP (secondary)
+
+1 bis) Optional mods absent from the package, theoretical dependencies
+Boom    - Explosion
+Craft   - GuiContainer
+Furnace - TileEntityFurnace
+Resize  - RenderLiving
+
+2) Optional mods classes
+File/ Class Name               / Used by
+aad - EnumGameType             - Fly
+ach - WorldProvider            - Sun
+bde - NetClienthandler         - Fly
+bdl - PlayerControllerMP       - Dig, Cheat (bhd)
+bfc - MovementInputFromOptions - Fly
+bfd - EntityPlayerSP           - Fly
+jc  - EntityPlayerMP           - Death
+jh  - NetServerHandler         - Fly (noclip), Dig (reach)
+sk  - EntityPlayer             - Fly core, Cheat
+
+2 bis) Class files absent from the package for now
+    - Explosion                - Boom
+    - GuiContainer             - Craft
+    - RenderLiving             - Resize
+    - TileEntityFurnace        - Furnace
+
+3) All included files
+File/ Class Name               / Used by
+aad - EnumGameType             - Fly
+ach - WorldProvider            - Sun
+avp - MinecraftAppletImpl      - core
+bde - NetClienthandler         - Fly
+bdl - PlayerControllerMP       - Dig, Cheat (bhd)
+bfc - MovementInputFromOptions - Fly
+bfd - EntityPlayerSP           - Fly
+jc  - EntityPlayerMP           - Death
+jh  - NetServerHandler         - Fly (noclip), Dig (reach)
+sk  - EntityPlayer             - Fly core, Cheat
+Z** - Zombe's Modpack files    - core
+
+*.java -   source code files   - devs.
