@@ -5,8 +5,8 @@ import java.util.Random;
 public final class ZBB extends BlockBookshelf {
 
     public ZBB() {
-        super(47, 35);
-        setHardness(1.5F).setStepSound(soundWoodFootstep).setBlockName("bookshelf");
+        super(47);
+        setHardness(1.5F).setStepSound(soundWoodFootstep).setUnlocalizedName("bookshelf");
     }
 
     public int quantityDroppedWithBonus(int zero, Random random) {

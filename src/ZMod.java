@@ -12,7 +12,7 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "6.8.3 for MC 1.4.6";
+    public static final String version = "7.0-pre for MC 1.5-pre";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -1326,15 +1326,17 @@ public final class ZMod {
     public static void drawModIcon(float x, float y, float z) {
         if ((isMultiplayer && !iconMPSupport) || !modIconActive) return;
         int ix = fix(posX), iy = fix(posY), iz = fix(posZ), range = 16, blockId;
-        textureBlock = getTexture("/terrain.png"); textureItems = getTexture("/gui/items.png"); texture = -1;
+        textureBlock = "/terrain.png"; textureItems = "/gui/items.png"; texture = null;
         GL11.glBegin(GL11.GL_QUADS);
         for (int dx=-range;dx<=range;dx++) for (int dy=-range;dy<=range;dy++) for (int dz=-range;dz<=range;dz++) if ((block[blockId = mapXGetId(ix+dx, iy+dy, iz+dz)] & STORAGE) != 0) {
-            int icon = -1, side, i, xx = ix+dx, yy = iy+dy, zz = iz+dz;
+            Icon icon = null; 
+            int side, i, xx = ix+dx, yy = iy+dy, zz = iz+dz;
             TileEntity tent = getTileEntity(xx, yy, zz);
             if (tent == null) continue;
             float vx, vy, vz, tx, ty;
             if (blockId == 54) { // chest
                 if (!optIconShowChest) continue;
+                /*
                 ItemStack items[] = getChestItems(tent);
                 for (i=0;i<27;i++) if (items[i] != null) { icon = bindAndGetIcon(items[i]); break; }
                 if (icon < 0) continue;
@@ -1347,7 +1349,7 @@ public final class ZMod {
                 if (!optIconShowDispenser) continue;
                 ItemStack items[] = getDispItems(tent);
                 for (i=0;i<9;i++) if (items[i] != null) { icon = bindAndGetIcon(items[i]); break; }
-                if (icon < 0) continue;
+                if (icon == null) continue;
                 vx = 0.5f + xx - x; vy = 0.5f + yy - y; vz = 0.5f + zz - z; tx = 0.0625f * (icon % 16); ty = 0.0625f * (icon / 16);
                 side = mapXGetMeta(xx, yy, zz); if (side < 4) zz += side == 2 ? -1 : 1; else xx += side == 4 ? -1 : 1;
                 if ((block[mapXGetId(xx, yy, zz)] & SPACE) != 0) chestDrawIcon(side, getLight(xx, yy, zz), tx, ty, vx, vy, vz, -0.1f, 0.1f, -0.1f, 0.1f, 0.0f);
@@ -1371,6 +1373,7 @@ public final class ZMod {
                         chestDrawIcon(side, light, tx, ty, vx, vy, vz,  0.2f,  0.4f,  0.2f,  0.4f, 0.0f);
                     }
                 }
+                */
             }
         }
         GL11.glEnd();
@@ -1381,7 +1384,7 @@ public final class ZMod {
         loadTileEntityFromNBT(obj);
     }
 
-    private static int textureBlock, textureItems, texture;
+    private static String textureBlock, textureItems, texture;
     private static final float iconSize = 1f / 16f;
     private static void chestDrawIcon(int side, float color, float tx, float ty, float x, float y, float z, float xs, float xe, float ys, float ye, float depth) {
         depth += 0.52f;
@@ -1410,16 +1413,20 @@ public final class ZMod {
         }
     }
 
-    private static int bindAndGetIcon(ItemStack items) {
+    private static Icon bindAndGetIcon(ItemStack items) {
         int id = getItemsId(items);
-        if (getItem(id) == null) return -1; // chest contains unknown stuff
+        if (getItem(id) == null) return null; // chest contains unknown stuff
         if (id == 35) setItemsInfo(items, 15 - getItemsInfo(items)); // wool icon fix (why the hell is this messed up !?)
-        int tex = id < 256 ? textureBlock : textureItems, icon = getItemsIcon(items);
+        String tex = id < 256 ? textureBlock : textureItems;
+        Icon icon = getItemsIcon(items);
         if (id == 35) setItemsInfo(items, 15 - getItemsInfo(items)); // wool icon fix
         if (tex == texture) return icon;
+        /*
         GL11.glEnd();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture = tex);
         GL11.glBegin(GL11.GL_QUADS);
+        */
+        bindTexture(texture = tex);
         return icon;
     }
     
@@ -1631,8 +1638,8 @@ public final class ZMod {
                 Object obj = iter.next();
                 if (!(obj instanceof EntityMinecart)) continue;
                 EntityMinecart ent = (EntityMinecart)obj;
-                if (getCartType(ent) != 2) continue;
-                if (getCartFuel(ent) > 0) setCartFuel(ent, 1200);
+                //if (getCartType(ent) != 2) continue;
+                //if (getCartFuel(ent) > 0) setCartFuel(ent, 1200);
             }
         }
     }
@@ -3242,16 +3249,16 @@ public final class ZMod {
         for (int cxi=cx-3;cxi<=cx+3;cxi++) for (int czi=cz-3;czi<=cz+3;czi++) if (mapXGetChunkExists(cxi, czi)) {
             Chunk chunk = map.getChunkFromChunkCoords(cxi, czi);
             if (chunk.getBlockID(0, 0, 8) != 7) continue; // already done
-            chunk.setBlockID(0, 0, 8, 0); chunk.setBlockID(0, 1, 8, 7); // mark the chunk done
+            chunk.setBlockIDWithMetadata(0, 0, 8, 0, 0); chunk.setBlockIDWithMetadata(0, 1, 8, 7, 0); // mark the chunk done
             // clear ores
             for (int X=0;X<16;X++) for (int Z=0;Z<16;Z++) {
                 int max = chunk.getHeightValue(X, Z);
                 for (int Y=0;Y<=max;Y++) {
                     id = chunk.getBlockID(X, Y, Z);
                     if (id > 255) continue;
-                    if ((block[id] & ORE) != 0) chunk.setBlockID(X, Y, Z, 1); // remove previous ore
-                    else if (id == 7 && Y > 1) chunk.setBlockID(X, Y, Z, optOreLavaFloor ? 11 : 1); // lava or stone?
-                    else if (Y == 1) chunk.setBlockID(X, Y, Z, 7); // flatten
+                    if ((block[id] & ORE) != 0) chunk.setBlockIDWithMetadata(X, Y, Z, 1, 0); // remove previous ore
+                    else if (id == 7 && Y > 1) chunk.setBlockIDWithMetadata(X, Y, Z, optOreLavaFloor ? 11 : 1, 0); // lava or stone?
+                    else if (Y == 1) chunk.setBlockIDWithMetadata(X, Y, Z, 7, 0); // flatten
                 }
             }
             // redistribute
@@ -3288,7 +3295,7 @@ public final class ZMod {
                 || data.getBlockID(x, y, z+1)!=1
                 || data.getBlockID(x, y, z-1)!=1) continue;
                 cnt = size - 1;
-                data.setBlockID(x, y, z, result);
+                data.setBlockIDWithMetadata(x, y, z, result, 0);
                 while (cnt-->0) {
                     switch(rnd.nextInt(7)) {
                         case 0: continue;
@@ -3300,7 +3307,7 @@ public final class ZMod {
                         case 6: z--; break;
                     }
                     x &= 15; z &= 15; y &= 255;
-                    if (data.getBlockID(x, y, z)==1) data.setBlockID(x, y, z, result);
+                    if (data.getBlockID(x, y, z)==1) data.setBlockIDWithMetadata(x, y, z, result, 0);
                 }
             }
         }
@@ -4009,7 +4016,7 @@ public final class ZMod {
         }
 
         public void onLivingUpdate() {
-            if (this.mc.playerController.func_78747_a()) {
+            if (this.mc.playerController.enableEverythingIsScrewedUpMode()) {
                 this.posX = this.posZ = 0.5D;
                 this.posX = 0.0D;
                 this.posZ = 0.0D;
@@ -5042,7 +5049,10 @@ public final class ZMod {
     //#ZMod#Wrappers##########################################################
     //-ZMod-Wrapper-Minecraft-------------------------------------------------
     private static String getPath() { String res = ""; try { res = Minecraft.getMinecraftDir().getCanonicalPath(); } catch(Exception whatever) { res = ""; } return res; }
-    private static int getTexture(String name) { return minecraft.renderEngine.getTexture(name); }
+    //private static int getTexture(String name) { return minecraft.renderEngine.getTexture(name); }
+    private static void bindTexture(String name) {
+        minecraft.renderEngine.func_98187_b(name);
+    }
     private static List getChat() { return (List)getValue(fChat, minecraft.ingameGUI.getChatGUI()); }
     private static boolean getIsMenu() { return minecraft.currentScreen != null; }
     private static boolean getIsOptions() { return minecraft.currentScreen instanceof Options; }
@@ -5058,7 +5068,7 @@ public final class ZMod {
     private static RenderItem itemRenderer;
 
     //-ZMod-Wrapper-NetClientHandler------------------------------------------
-    private static NetClientHandler getSendQueue() { return minecraft.getSendQueue(); }
+    private static NetClientHandler getSendQueue() { return minecraft.getNetHandler(); }
     private static void queuePacket(NetClientHandler queue, Packet packet) { queue.addToSendQueue(packet); }
     private static void queuePacket(Packet packet) { queuePacket(getSendQueue(), packet); }
 
@@ -5196,13 +5206,13 @@ public final class ZMod {
     private static void sendChat(String var0) { ((EntityClientPlayerMP)player).sendChatMessage(var0); }
 
     //-ZMod-Wrapper-EntityMinecart--------------------------------------------
-    private static Field fCartFuel = getField(EntityMinecart.class, "em_fuel");
-    private static int getCartType(EntityMinecart ent) { return ent.minecartType; }
-    private static int getCartFuel(EntityMinecart ent) { return (Integer)getValue(fCartFuel, ent); }
-    private static void setCartFuel(EntityMinecart ent, int val) { setValue(fCartFuel, ent, val); }
+    //private static Field fCartFuel = getField(EntityMinecart.class, "em_fuel");
+    //private static int getCartType(EntityMinecart ent) { return ent.minecartType; }
+    //private static int getCartFuel(EntityMinecart ent) { return (Integer)getValue(fCartFuel, ent); }
+    //private static void setCartFuel(EntityMinecart ent, int val) { setValue(fCartFuel, ent, val); }
     
     //-ZMod-Wrapper-EntityItem------------------------------------------------
-    private static ItemStack getEntityItemStack(EntityItem ent) { return ent.func_92059_d(); }
+    private static ItemStack getEntityItemStack(EntityItem ent) { return ent.getEntityItem(); }
     
     //-ZMod-Wrapper-TileEntity------------------------------------------------
     private static void setChanged(TileEntity tent) { tent.onInventoryChanged(); }
@@ -5255,7 +5265,7 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- TileEntitySign
     private static String[] getSignText(int x, int y, int z) { return ((TileEntitySign)getTileEntity(x,y,z)).signText; }
     // ---------------------------------------------------------------------------------------------------------------- ItemStack
-    private static int getItemsIcon(ItemStack items) { return items.getIconIndex(); }
+    private static Icon getItemsIcon(ItemStack items) { return items.getIconIndex(); }
     private static ItemStack newItemsE(int id, int count) { return newItems(id & 0xffff, count, id >> 16); }
     private static ItemStack newItems(int id, int count, int param) { return new ItemStack(id, count, param == 9999 ? -1 : param); }
     private static ItemStack newItems(int id, int count) { return newItems(id, count, 0); }
@@ -5302,10 +5312,19 @@ public final class ZMod {
     private static int getWorldId(World world, int x, int y, int z) { return world.getBlockId(x,y,z); }
     private static int getWorldMeta(World world, int x, int y, int z) { return world.getBlockMetadata(x,y,z); }
     private static TileEntity getWorldTileEntity(World world, int x, int y, int z) { return world.getBlockTileEntity(x,y,z); }
-    private static void setWorldIdWithNotify(World world, int x, int y, int z, int id) { world.setBlockWithNotify(x,y,z, id); }
-    private static void setWorldIdMetaWithNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta); }
-    private static void setWorldIdMetaWithoutNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadata(x,y,z, id, meta); }
-    private static void markWorldNeedsUpdate(World world, int sx, int sy, int sz, int ex, int ey, int ez) { world.markBlockRangeForRenderUpdate(sx, sy, sz, ex, ey, ez); }
+    private static void setWorldIdWithNotify(World world, int x, int y, int z, int id) { world.func_94575_c(x,y,z, id); }
+    private static void setWorldIdMetaWithNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta, 1); }
+    private static void setWorldIdMetaWithoutNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta, 0); }
+    private static void markWorldNeedsUpdate(World world, int x, int y, int z) {
+        world.notifyBlockChange(x,y,z, getWorldId(world, x,y,z));
+        world.markBlockForUpdate(x,y,z);
+    }
+    private static void markWorldNeedsUpdate(World world, int sx, int sy, int sz, int ex, int ey, int ez) {
+        for (int x = sx; x <= ex; ++x)
+        for (int y = sy; y <= ey; ++y)
+        for (int z = sz; z <= ez; ++z)
+        markWorldNeedsUpdate(world, x,y,z);
+    }
     
     private static void spawnLightning(int x, int y, int z) { map.spawnEntityInWorld(new EntityLightningBolt(map, x, y, z)); }
     
@@ -5398,7 +5417,7 @@ public final class ZMod {
     private static void setItemMax(Item item, int val) { if (item != null) item.setMaxStackSize(val); }
     private static int getItemDmgCap(Item item) { return item.getMaxDamage(); }
     private static void setItemDmgCap(Item item, int val) { item.setMaxDamage(val); }
-    private static String getItemName(Item item) { return item.getItemName(); }
+    private static String getItemName(Item item) { return item.getUnlocalizedName(); }
     private static boolean getItemHasSubTypes(Item item) { return item.getHasSubtypes(); }
     // ---------------------------------------------------------------------------------------------------------------- GameSettings
     private static void setOrtho(){

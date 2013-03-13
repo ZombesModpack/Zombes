@@ -5,8 +5,8 @@ import java.util.Random;
 public final class ZBI extends BlockIce {
 
     public ZBI() {
-        super(79, 67);
-        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setBlockName("ice");
+        super(79);
+        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setUnlocalizedName("ice");
     }
     
     public int quantityDroppedWithBonus(int zero, Random random) {
@@ -41,7 +41,7 @@ public final class ZBI extends BlockIce {
 
         if (material.isLiquid())
         {
-            par1World.setBlockWithNotify(par3, par4, par5, Block.waterMoving.blockID);
+            par1World.func_94575_c(par3, par4, par5, Block.waterMoving.blockID);
         }
     }
 

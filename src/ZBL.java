@@ -6,8 +6,8 @@ import java.util.Random;
 public final class ZBL extends BlockLeaves {
 
     public ZBL() {
-        super(18, 52);
-        setHardness(0.2F).setLightOpacity(1).setStepSound(soundGrassFootstep).setBlockName("leaves").setRequiresSelfNotify();
+        super(18);
+        setHardness(0.2F).setLightOpacity(1).setStepSound(soundGrassFootstep).setUnlocalizedName("leaves");
     }
 
     public int quantityDroppedWithBonus(int zero, Random random) {

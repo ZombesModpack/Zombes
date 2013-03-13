@@ -5,8 +5,8 @@ import java.util.Random;
 public final class ZBM extends BlockMobSpawner {
 
     public ZBM() {
-        super(52, 65);
-        setHardness(5F).setStepSound(soundMetalFootstep).setBlockName("mobSpawner").disableStats();
+        super(52);
+        setHardness(5F).setStepSound(soundMetalFootstep).setUnlocalizedName("mobSpawner").disableStats();
     }
     
     public void onBlockAdded(World map, int x, int y, int z) {
@@ -14,7 +14,7 @@ public final class ZBM extends BlockMobSpawner {
         String mob = ZMod.mobTypeHandle();
         if(mob == null) return;
         TileEntityMobSpawner spawner = (TileEntityMobSpawner)(map.getBlockTileEntity(x,y,z));
-        spawner.setMobID(mob);
+        spawner.func_98049_a().func_98272_a(mob);
     }
 
     public int idDropped(int meta, Random random, int zero) {
