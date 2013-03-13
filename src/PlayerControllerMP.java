@@ -25,9 +25,6 @@ public class PlayerControllerMP
     /** Current block damage (MP) */
     private float curBlockDamageMP = 0.0F;
 
-    /** Previous block damage (MP) */
-    private float prevBlockDamageMP = 0.0F;
-
     /**
      * Tick counter, when it hits 4 it resets back to 0 and plays the step sound
      */
@@ -74,7 +71,13 @@ public class PlayerControllerMP
         this.currentGameType.configurePlayerCapabilities(par1EntityPlayer.capabilities);
     }
 
-    public boolean func_78747_a()
+    /**
+     * If modified to return true, the player spins around slowly around (0, 68.5, 0). The GUI is disabled, the view is
+     * set to first person, and both chat and menu are disabled. Unless the server is modified to ignore illegal
+     * stances, attempting to enter a world at all will result in an immediate kick due to an illegal stance. Appears to
+     * be left-over debug, or demo code.
+     */
+    public boolean enableEverythingIsScrewedUpMode()
     {
         return false;
     }
@@ -123,7 +126,7 @@ public class PlayerControllerMP
             {
                 var5.playAuxSFX(2001, par1, par2, par3, var6.blockID + (var5.getBlockMetadata(par1, par2, par3) << 12));
                 int var7 = var5.getBlockMetadata(par1, par2, par3);
-                boolean var8 = var5.setBlockWithNotify(par1, par2, par3, 0);
+                boolean var8 = var5.func_94571_i(par1, par2, par3);
 
                 if (var8)
                 {
@@ -201,7 +204,6 @@ public class PlayerControllerMP
                     this.currentblockZ = par3;
                     this.field_85183_f = this.mc.thePlayer.getHeldItem();
                     this.curBlockDamageMP = 0.0F;
-                    this.prevBlockDamageMP = 0.0F;
                     this.stepSoundTickCounter = 0.0F;
                     this.mc.theWorld.destroyBlockInWorldPartially(this.mc.thePlayer.entityId, this.currentBlockX, this.currentBlockY, this.currentblockZ, (int)(this.curBlockDamageMP * 10.0F) - 1);
                 }
@@ -290,7 +292,6 @@ public class PlayerControllerMP
                     this.netClientHandler.addToSendQueue(new Packet14BlockDig(2, par1, par2, par3, par4));
                     this.onPlayerDestroyBlock(par1, par2, par3, par4);
                     this.curBlockDamageMP = 0.0F;
-                    this.prevBlockDamageMP = 0.0F;
                     this.stepSoundTickCounter = 0.0F;
                     this.blockHitDelay = ZMod.blockHitDelay(); //-ZMod-clickmining
                     //-ZMod-Dig-sync------------------------------------------
@@ -318,13 +319,20 @@ public class PlayerControllerMP
     public void updateController()
     {
         this.syncCurrentPlayItem();
-        this.prevBlockDamageMP = this.curBlockDamageMP;
         this.mc.sndManager.playRandomMusicIfReady();
     }
 
     private boolean func_85182_a(int par1, int par2, int par3)
     {
-        return par1 == this.currentBlockX && par2 == this.currentBlockY && par3 == this.currentblockZ && this.field_85183_f == this.mc.thePlayer.getHeldItem();
+        ItemStack var4 = this.mc.thePlayer.getHeldItem();
+        boolean var5 = this.field_85183_f == null && var4 == null;
+
+        if (this.field_85183_f != null && var4 != null)
+        {
+            var5 = var4.itemID == this.field_85183_f.itemID && ItemStack.areItemStackTagsEqual(var4, this.field_85183_f) && (var4.isItemStackDamageable() || var4.getItemDamage() == this.field_85183_f.getItemDamage());
+        }
+
+        return par1 == this.currentBlockX && par2 == this.currentBlockY && par3 == this.currentblockZ && var5;
     }
 
     /**

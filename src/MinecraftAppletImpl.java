@@ -34,9 +34,9 @@ public class MinecraftAppletImpl extends Minecraft
         this.mcDataDir = getMinecraftDir();
         this.gameSettings = new GameSettings(this, this.mcDataDir);
 
-        if (this.gameSettings.field_92119_C > 0 && this.gameSettings.field_92118_B > 0 && this.mainFrame.getParent() != null && this.mainFrame.getParent().getParent() != null)
+        if (this.gameSettings.overrideHeight > 0 && this.gameSettings.overrideWidth > 0 && this.mainFrame.getParent() != null && this.mainFrame.getParent().getParent() != null)
         {
-            this.mainFrame.getParent().getParent().setSize(this.gameSettings.field_92118_B, this.gameSettings.field_92119_C);
+            this.mainFrame.getParent().getParent().setSize(this.gameSettings.overrideWidth, this.gameSettings.overrideHeight);
         }
 
         super.startGame();

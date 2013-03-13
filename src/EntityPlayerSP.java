@@ -106,7 +106,7 @@ public class EntityPlayerSP extends EntityPlayer
             --this.sprintToggleTimer;
         }
 
-        if (this.mc.playerController.func_78747_a())
+        if (this.mc.playerController.enableEverythingIsScrewedUpMode())
         {
             this.posX = this.posZ = 0.5D;
             this.posX = 0.0D;
@@ -283,7 +283,7 @@ public class EntityPlayerSP extends EntityPlayer
 
         var1 *= (this.landMovementFactor * this.getSpeedModifier() / this.speedOnGround + 1.0F) / 2.0F;
 
-        if (this.isUsingItem() && this.getItemInUse().itemID == Item.bow.shiftedIndex)
+        if (this.isUsingItem() && this.getItemInUse().itemID == Item.bow.itemID)
         {
             int var2 = this.getItemInUseDuration();
             float var3 = (float)var2 / 20.0F;
@@ -305,8 +305,7 @@ public class EntityPlayerSP extends EntityPlayer
 
     public void updateCloak()
     {
-        this.playerCloakUrl = "http://skins.minecraft.net/MinecraftCloaks/" + StringUtils.stripControlCodes(this.username) + ".png";
-        this.cloakUrl = this.playerCloakUrl;
+        this.cloakUrl = "http://skins.minecraft.net/MinecraftCloaks/" + StringUtils.stripControlCodes(this.username) + ".png";
     }
 
     /**
@@ -358,6 +357,16 @@ public class EntityPlayerSP extends EntityPlayer
         this.mc.displayGuiScreen(new GuiChest(this.inventory, par1IInventory));
     }
 
+    public void func_94064_a(TileEntityHopper par1TileEntityHopper)
+    {
+        this.mc.displayGuiScreen(new GuiHopper(this.inventory, par1TileEntityHopper));
+    }
+
+    public void func_96125_a(EntityMinecartHopper par1EntityMinecartHopper)
+    {
+        this.mc.displayGuiScreen(new GuiHopper(this.inventory, par1EntityMinecartHopper));
+    }
+
     /**
      * Displays the crafting GUI for a workbench.
      */
@@ -366,9 +375,9 @@ public class EntityPlayerSP extends EntityPlayer
         this.mc.displayGuiScreen(new GuiCrafting(this.inventory, this.worldObj, par1, par2, par3));
     }
 
-    public void displayGUIEnchantment(int par1, int par2, int par3)
+    public void displayGUIEnchantment(int par1, int par2, int par3, String par4Str)
     {
-        this.mc.displayGuiScreen(new GuiEnchantment(this.inventory, this.worldObj, par1, par2, par3));
+        this.mc.displayGuiScreen(new GuiEnchantment(this.inventory, this.worldObj, par1, par2, par3, par4Str));
     }
 
     /**
@@ -411,9 +420,9 @@ public class EntityPlayerSP extends EntityPlayer
         this.mc.displayGuiScreen(new GuiDispenser(this.inventory, par1TileEntityDispenser));
     }
 
-    public void displayGUIMerchant(IMerchant par1IMerchant)
+    public void displayGUIMerchant(IMerchant par1IMerchant, String par2Str)
     {
-        this.mc.displayGuiScreen(new GuiMerchant(this.inventory, par1IMerchant, this.worldObj));
+        this.mc.displayGuiScreen(new GuiMerchant(this.inventory, par1IMerchant, this.worldObj, par2Str));
     }
 
     /**
@@ -620,7 +629,7 @@ public class EntityPlayerSP extends EntityPlayer
     }
 
     /**
-     * Return the coordinates for this player as ChunkCoordinates.
+     * Return the position for this command sender.
      */
     public ChunkCoordinates getPlayerCoordinates()
     {
@@ -635,7 +644,7 @@ public class EntityPlayerSP extends EntityPlayer
         return this.inventory.getCurrentItem();
     }
 
-    public void func_85030_a(String par1Str, float par2, float par3)
+    public void playSound(String par1Str, float par2, float par3)
     {
         this.worldObj.playSound(this.posX, this.posY - (double)this.yOffset, this.posZ, par1Str, par2, par3, false);
     }

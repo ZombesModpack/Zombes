@@ -40,7 +40,7 @@ public abstract class WorldProvider
     {
         this.worldObj = par1World;
         this.terrainType = par1World.getWorldInfo().getTerrainType();
-        this.field_82913_c = par1World.getWorldInfo().func_82571_y();
+        this.field_82913_c = par1World.getWorldInfo().getGeneratorOptions();
         this.registerWorldChunkManager();
         this.generateLightBrightnessTable();
     }
@@ -66,7 +66,7 @@ public abstract class WorldProvider
     {
         if (this.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
         {
-            FlatGeneratorInfo var1 = FlatGeneratorInfo.createFlatGeneratorFromString(this.worldObj.getWorldInfo().func_82571_y());
+            FlatGeneratorInfo var1 = FlatGeneratorInfo.createFlatGeneratorFromString(this.worldObj.getWorldInfo().getGeneratorOptions());
             this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.biomeList[var1.getBiome()], 0.5F, 0.5F);
         }
         else
@@ -121,7 +121,7 @@ public abstract class WorldProvider
         return f;
     }
 
-    public int getMoonPhase(long par1, float par3)
+    public int getMoonPhase(long par1)
     {
         return (int)(par1 / 24000L) % 8;
     }
