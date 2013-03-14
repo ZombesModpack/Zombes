@@ -510,6 +510,7 @@ public final class ZMod {
             log("info: init render");
             overloadRenderGlobal();
             overloadEntityRender();
+            refreshTextures();
         } catch(Exception error) { err("error: overrides failed", error); }
     }
     
@@ -5061,6 +5062,7 @@ public final class ZMod {
     private static boolean rayTrace(double dist, float f) { return (rayHit = minecraft.renderViewEntity.rayTrace(dist, f)) != null; }
     private static void overloadRenderGlobal() { minecraft.renderGlobal = render = new ZRG(minecraft, minecraft.renderEngine); }
     private static void overloadEntityRender() { minecraft.entityRenderer = new ZER(minecraft, minecraft.entityRenderer); }
+    private static void refreshTextures() { minecraft.renderEngine.refreshTextures(); }
     private static Field fAchivement = getField(GuiAchievement.class, "ga_theAchievement");
     private static void killAchievement() { setValue(fAchivement, minecraft.guiAchievement, null); }
     private static EntityClientPlayerMP getPlayer() { return minecraft.thePlayer; }
