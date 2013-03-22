@@ -126,7 +126,7 @@ public class PlayerControllerMP
             {
                 var5.playAuxSFX(2001, par1, par2, par3, var6.blockID + (var5.getBlockMetadata(par1, par2, par3) << 12));
                 int var7 = var5.getBlockMetadata(par1, par2, par3);
-                boolean var8 = var5.func_94571_i(par1, par2, par3);
+                boolean var8 = var5.setBlockToAir(par1, par2, par3);
 
                 if (var8)
                 {

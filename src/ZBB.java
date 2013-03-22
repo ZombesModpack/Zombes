@@ -6,7 +6,7 @@ public final class ZBB extends BlockBookshelf {
 
     public ZBB() {
         super(47);
-        setHardness(1.5F).setStepSound(soundWoodFootstep).setUnlocalizedName("bookshelf");
+        setHardness(1.5F).setStepSound(soundWoodFootstep).getIndirectPowerOutput("bookshelf");
     }
 
     public int quantityDroppedWithBonus(int zero, Random random) {

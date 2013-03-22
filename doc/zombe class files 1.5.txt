@@ -13,15 +13,15 @@ Resize  - RenderLiving
 
 2) Optional mods classes
 File/ Class Name               / Used by
-aad - EnumGameType             - Fly
-ach - WorldProvider            - Sun
-bde - NetClienthandler         - Fly
-bdl - PlayerControllerMP       - Dig, Cheat (bhd)
-bfc - MovementInputFromOptions - Fly
-bfd - EntityPlayerSP           - Fly
+aaj - EnumGameType             - Fly
+acn - WorldProvider            - Sun
+bdl - NetClienthandler         - Fly
+bds - PlayerControllerMP       - Dig, Cheat (bhd)
+bfj - MovementInputFromOptions - Fly
+bfk - EntityPlayerSP           - Fly
 jc  - EntityPlayerMP           - Death
 jh  - NetServerHandler         - Fly (noclip), Dig (reach)
-sk  - EntityPlayer             - Fly core, Cheat
+sq  - EntityPlayer             - Fly core, Cheat
 
 2 bis) Class files absent from the package for now
     - Explosion                - Boom
@@ -31,16 +31,16 @@ sk  - EntityPlayer             - Fly core, Cheat
 
 3) All included files
 File/ Class Name               / Used by
-aad - EnumGameType             - Fly
-ach - WorldProvider            - Sun
-avp - MinecraftAppletImpl      - core
-bde - NetClienthandler         - Fly
-bdl - PlayerControllerMP       - Dig, Cheat (bhd)
-bfc - MovementInputFromOptions - Fly
-bfd - EntityPlayerSP           - Fly
+aaj - EnumGameType             - Fly
+acn - WorldProvider            - Sun
+avv - MinecraftAppletImpl      - core
+bdl - NetClienthandler         - Fly
+bds - PlayerControllerMP       - Dig, Cheat (bhd)
+bfj - MovementInputFromOptions - Fly
+bfk - EntityPlayerSP           - Fly
 jc  - EntityPlayerMP           - Death
 jh  - NetServerHandler         - Fly (noclip), Dig (reach)
-sk  - EntityPlayer             - Fly core, Cheat
+sq  - EntityPlayer             - Fly core, Cheat
 Z** - Zombe's Modpack files    - core
 
 *.java -   source code files   - devs.

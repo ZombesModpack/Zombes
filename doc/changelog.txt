@@ -1,5 +1,8 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v7.1.0 for MC 1.5.1
+- compatibility: updated for Minecraft 1.5.1
+
 v7.0.0 for MC 1.5
 - fixed a crash triggering when rendering damaged blocks
 

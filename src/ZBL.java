@@ -7,7 +7,7 @@ public final class ZBL extends BlockLeaves {
 
     public ZBL() {
         super(18);
-        setHardness(0.2F).setLightOpacity(1).setStepSound(soundGrassFootstep).setUnlocalizedName("leaves");
+        setHardness(0.2F).setLightOpacity(1).setStepSound(soundGrassFootstep).getIndirectPowerOutput("leaves");
     }
 
     public int quantityDroppedWithBonus(int zero, Random random) {

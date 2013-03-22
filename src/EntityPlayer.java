@@ -2053,7 +2053,7 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
         return true;
     }
 
-    public boolean func_98052_bS()
+    public boolean canPickUpLoot()
     {
         return false;
     }
@@ -2189,7 +2189,7 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 
     public Scoreboard func_96123_co()
     {
-        return this.worldObj.func_96441_U();
+        return this.worldObj.getScoreboard();
     }
 
     public ScorePlayerTeam func_96124_cp()

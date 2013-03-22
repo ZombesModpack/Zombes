@@ -6,7 +6,7 @@ public final class ZBI extends BlockIce {
 
     public ZBI() {
         super(79);
-        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setUnlocalizedName("ice");
+        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).getIndirectPowerOutput("ice");
     }
     
     public int quantityDroppedWithBonus(int zero, Random random) {
@@ -41,7 +41,7 @@ public final class ZBI extends BlockIce {
 
         if (material.isLiquid())
         {
-            par1World.func_94575_c(par3, par4, par5, Block.waterMoving.blockID);
+            par1World.setBlock(par3, par4, par5, Block.waterMoving.blockID);
         }
     }
 
