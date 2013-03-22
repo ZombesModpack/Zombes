@@ -50,8 +50,8 @@ public final class ZMod {
         // GuiNewChat
         "gnc_ChatLines",       "chatLines",          "c",  // ; [a-z]+\.size\(\) > 100;
         // Block
-        "b_blockHardness",          "blockHardness",            "cn", // 1.0F / [a-zA-Z]+ / 100F;
-        "b_blockResistance",        "blockResistance",          "co", // return [a-zA-Z]+ / 5F;
+        "b_blockHardness",          "blockHardness",            "cA", // 1.0F / [a-zA-Z]+ / 100F;
+        "b_blockResistance",        "blockResistance",          "cB", // return [a-zA-Z]+ / 5F;
         // BlockFire
         "bf_chanceToEncourageFire", "chanceToEncourageFire",    "a",  // , 15, 100\); * arrays in class, no idea what is what - assume ordering
         "bf_abilityToCatchFire",    "abilityToCatchFire",       "b"
