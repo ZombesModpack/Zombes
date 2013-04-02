@@ -26,7 +26,7 @@ public final class ZMod {
         // TileEntityChest
         "tec_chestContents",        "chestContents",            "i",  // [^a-z][a-z] = new [a-z]+\[36\]; * smaller file (~5KB)
         // TileEntityDispenser
-        "ted_dispenserContents",    "dispenserContents",        "a",  // [^a-z][a-z] = new [a-z]+\[9\]; * bigger file (~3KB)
+        "ted_dispenserContents",    "dispenserContents",        "b",  // [^a-z][a-z] = new [a-z]+\[9\]; * bigger file (~3KB)
         // CraftingManager
         "cm_recipes",               "recipes",                  "b",  // ###
         // ShapedRecipes
