@@ -22,7 +22,7 @@ public final class ZMod {
         // EntityEnderman
         "ee_canCarryBlocks",        "carriableBlocks",          "d",  // [a-z]+\[[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+\] = true;
         // TileEntityFurnace
-        "tef_furnaceItemStacks",    "furnaceItemStacks",        "d",  // "CookTime"
+        "tef_furnaceItemStacks",    "furnaceItemStacks",        "g",  // "CookTime"
         // TileEntityChest
         "tec_chestContents",        "chestContents",            "i",  // [^a-z][a-z] = new [a-z]+\[36\]; * smaller file (~5KB)
         // TileEntityDispenser
