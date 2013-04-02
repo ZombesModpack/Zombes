@@ -382,6 +382,25 @@ pumpkinPie 400  pie 400             // pumpkin pie
 fireworkRocket 401  rocket 401      // firework rocket
 fireworkStar 402  firework 402      // firework star
 
+// added in 1.5
+
+chestTrap 146                       // trapped chest
+plateG 147   plateI 148             // weighted pressure plates
+comparatorBlock 149 comparatorBlockLit 150 // comparator block
+sensor 151  daylightSensor 151      // daylight sensor
+blockR 152                          // redstone block
+oreQ 153    quartzOre 153           // nether quartz ore
+hopper 154                          // hopper
+blockQ 155  quartzBlock 155         // quartz block
+stairQ 156  quartzStairs 156        // quartz stairs
+halfQ 44/7  fullQ 43/7            // quartz slab
+railActivator 157                   // activator rail
+dropper 158                         // dropper
+comparator 404                      // comparator item
+netherB 405                         // one brick of nether stonebrick
+quartz 406   Q 406                  // nether quartz
+tntCart 407                         // cart with TNT
+hopCart 408                         // cart with hopper
 
 
 // Names for critters - teleport mod uses thous. Can not be used in recipes, obviously.

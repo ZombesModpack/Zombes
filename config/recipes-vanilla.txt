@@ -284,4 +284,23 @@ firework 1 2 2 gun Gn dye 0
 firework 1 2 2 gun feather dye 0
 firework 1 2 2 gun head dye 0
 
+// added in 1.5
+
+railActivator 6 3 3 I / I I torchR I I / I
+blockR 1 3 3 R R R R R R R R R
+R 9 1 1 blockR
+sensor 1 3 3 glass glass glass Q Q Q stepW stepW stepW
+dropper 1 3 3 S S S S 0 S S R S
+hopper 1 3 3 I 0 I I chest I 0 I 0
+hopCart 1 1 2 hopper cart
+tntCart 1 1 2 tnt cart
+comparator 1 3 3 0 torchR 0 torchR Q torchR smooth smooth smooth
+chestTrap 1 2 1 wirehook chest
+plateG 1 2 1 G G
+plateI 1 2 1 I I
+brickN 1 2 2 netherB netherB netherB netherB
+blockQ 1 2 2 Q Q Q Q
+stairQ 4 3 3 blockQ 0 0 blockQ blockQ 0 blockQ blockQ blockQ
+halfQ 6 3 1 blockQ blockQ blockQ
+snowcap 6 3 1 snow snow snow
 
