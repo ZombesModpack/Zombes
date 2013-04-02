@@ -17,14 +17,6 @@ public final class ZMod {
     private static final String MCPnames[] = {
         // GuiAchievement
         "ga_theAchievement",        "theAchievement",           "f",  // [a-z]+\.[a-z]+, [a-z0-9]+ \+ 8, [a-z0-9]+ \+ 8\);  * starts with theAchivement
-        // Entity
-        "e_isImmuneToFire",         "isImmuneToFire",           "af", // find "ghast" and guess
-        // EntityLiving
-        "el_health",                "health",                   "aQ", // "Health" * the one with 3 results
-        // EntityPlayerSP
-        "eps_sprintToggleTimer",    "sprintToggleTimer",        "d",  // [a-zA-Z]+ = 7; * class has exacty two matches of "* = 7;"
-        // EntityPlayer
-        "ep_flyToggleTimer",        "flyToggleTimer",           "bO", // ... the second result
         // EntityMinecart
         "em_fuel",                  "fuel",                     "e",  // "Fuel"
         // EntityEnderman
@@ -34,7 +26,7 @@ public final class ZMod {
         // TileEntityChest
         "tec_chestContents",        "chestContents",            "i",  // [^a-z][a-z] = new [a-z]+\[36\]; * smaller file (~5KB)
         // TileEntityDispenser
-        "ted_dispenserContents",    "dispenserContents",        "a",  // [^a-z][a-z] = new [a-z]+\[9\]; * bigger file (~3KB)
+        "ted_dispenserContents",    "dispenserContents",        "b",  // [^a-z][a-z] = new [a-z]+\[9\]; * bigger file (~3KB)
         // CraftingManager
         "cm_recipes",               "recipes",                  "b",  // ###
         // ShapedRecipes
@@ -5083,7 +5075,6 @@ public final class ZMod {
     }
 
     //-ZMod-Wrapper-Entity----------------------------------------------------
-    private static Field fFireImmune = getField(Entity.class, "e_isImmuneToFire");
     private static void setNoClip(boolean val) {
         if (player.noClip != val) {
             if (isMultiplayer) {
@@ -5130,8 +5121,7 @@ public final class ZMod {
     private static void setFall(Entity ent, float val) { ent.fallDistance = val; }
     private static int getEntityAge(Entity ent) { return ent.ticksExisted; }
     private static void setEntityAge(Entity ent, int val) { ent.ticksExisted = val; }
-    private static void setEntityFireImmune(Entity ent, boolean immune) { 
-        //setValue(fFireImmune, ent, immune);
+    private static void setEntityFireImmune(Entity ent, boolean immune) {
         ent.isImmuneToFire = immune;
     }
     private static int getEntityType(Entity ent) {
@@ -5180,13 +5170,10 @@ public final class ZMod {
     //-ZMod-Wrapper-EntityLiving----------------------------------------------
     private static EntityLiving getView() { return minecraft.renderViewEntity; }
     private static void setView(EntityLiving ent) { minecraft.renderViewEntity = ent; }
-    private static Field fHealth = getField(EntityLiving.class, "el_health");
     private static void setHealth(EntityLiving ent, int val) {
-        //setValue(fHealth, ent, val);
         ent.setEntityHealth(val);
     }
     private static int getHealth(EntityLiving ent) {
-        //return (Integer)getValue(fHealth, ent);
         return ent.getHealth();
     }
     private static int getMaxHealth(EntityLiving ent) {
