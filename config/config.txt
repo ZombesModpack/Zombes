@@ -373,8 +373,11 @@ optRecipeShowId       = yes
 # Show what recipes could be used with the items on crafting grid.
 optRecipeShowHelp     = yes
 
-# Option to preserve the vanilla recipeset for SMP.
-optRecipeVanillaMP    = no
+# Wether to use custom recipeset for singleplayer or not.
+optRecipeCustomSP     = no
+
+# Wether to use custom recipeset for multiplayer or not.
+optRecipeCustomMP     = no
 
 # Dumps all recipes to log file after loading recipes.txt - debug tool mostly.
 optRecipeDump         = no
