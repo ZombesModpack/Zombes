@@ -2635,24 +2635,27 @@ public final class ZMod {
     
     //=ZMod=Recipe============================================================
     private static boolean modRecipeEnabled, modRecipeActive;
-    private static boolean optRecipeShowId, optRecipeDump, optRecipeVanillaMP, optRecipeShowHelp;
-    private static List recipesSP, recipesMP;
+    private static boolean optRecipeShowId, optRecipeDump, optRecipeCustomSP, optRecipeCustomMP, optRecipeShowHelp;
+    private static List recipesOriginal = null, recipesCustom = null;
     private static int recipesMobType;
     private static IRecipe selRecipe;
     
     private static boolean initModRecipe() {
         if (!checkStatus(MOD_RECIPE, "recipe")) return false;
-        log("info: loading config for \"recipe\" - deferred");
+        log("info: loading config for \"recipe\"");
+        recipeGetOriginal();
+        recipeGetCustom();
         optRecipeDump = getBool("optRecipeDump", false);
-        optRecipeVanillaMP = getBool("optRecipeVanillaMP", false);
-        if (optRecipeVanillaMP) recipesMP = (List)((ArrayList)getValue(fCMRecipes, getCManager())).clone(); // separate copy for MP
-        else recipesMP = (List)getValue(fCMRecipes, getCManager()); // no separate copy - use the same for both (default to support server recipes).
         return modRecipeActive = true;
     }
     
     private static void quitModRecipe() {
         if (!modRecipeActive) return;
         modRecipeActive = false;
+        if (getCMRecipes() != recipeGetOriginal())
+            setCMRecipes(recipesOriginal);
+        recipesOriginal = null;
+        recipesCustom = null;
     }
     
     private static void optionsModRecipe() {
@@ -2662,22 +2665,20 @@ public final class ZMod {
             if (modRecipeEnabled && !modRecipeActive) initModRecipe(); 
             if (!modRecipeEnabled && modRecipeActive) quitModRecipe();
         }
+        optRecipeCustomSP = getSetBool(optRecipeCustomSP, "optRecipeCustomSP", false, "Use custom recipes in SinglePlayer");
+        optRecipeCustomMP = getSetBool(optRecipeCustomMP, "optRecipeCustomMP", false, "Use custom recipes in MultiPlayer");
         optRecipeShowId = getSetBool(optRecipeShowId, "optRecipeShowId", true, "Show selected item id");
         optRecipeShowHelp = getSetBool(optRecipeShowHelp, "optRecipeShowHelp", true, "Show recipe helper");
     }
     
     private static void deferredModRecipe() {
-        if (!modRecipeActive || recipesSP != null) return;
-        log("info: continuing to load \"recipes\"");
-        recipesSP = (List)getValue(fCMRecipes, getCManager());
-        log("info: "+recipesSP.size()+" SP recipes before loading mod");
-        parse(recipesSP, "recipes.txt",    RECIPES); sortRecipes(recipesSP);
-        log("info: "+recipesSP.size()+" SP recipes after loading mod");
+        if (!modRecipeActive) return;
         if (optRecipeDump) {
+            optRecipeDump = false;
             log("==== recipe dump ====");
             String res;
-            for (int recipeNr=0;recipeNr<recipesSP.size();recipeNr++) {
-                Object obj = recipesSP.get(recipeNr);
+            for (int recipeNr=0;recipeNr<recipeGetCustom().size();recipeNr++) {
+                Object obj = recipeGetCustom().get(recipeNr);
                 if (obj instanceof ShapedRecipes) {
                     ItemStack items = (ItemStack)getValue(fRResA, obj);
                     int itemId = getItemsId(items), meta = getItemsInfo(items);
@@ -2712,7 +2713,7 @@ public final class ZMod {
     
     private static void updateModRecipe() {
         if (!modRecipeActive) return;
-        setValue(fCMRecipes, getCManager(), isMultiplayer ? recipesMP : recipesSP);
+        setCMRecipes((isMultiplayer && optRecipeCustomMP || !isMultiplayer && optRecipeCustomSP) ? recipesCustom : recipesOriginal);
     }
 
     private static void updateModRecipeShared() { // update mob-type for spawner block
@@ -2751,7 +2752,7 @@ public final class ZMod {
                 int row = (scrW - sizeX - 4) / (2 * 16);
                 int nr;
                 // search the recipe list for matches
-                List search = (List)getValue(fCMRecipes, getCManager());
+                List search = getCMRecipes();
                 Iterator it = search.iterator();
                 // check every recipe
                 while (it.hasNext()) {
@@ -2911,6 +2912,31 @@ public final class ZMod {
             txt += "id:" + (getItemHasSubTypes(getItem(id)) ? id + "/" + getItemsInfo(items) : id ) + " ";
         }
         return txt;
+    }
+    
+    private static List recipeGetOriginal() {
+        if (recipesOriginal == null) {
+            recipesOriginal = getCMRecipes();
+        }
+        return recipesOriginal;
+    }
+    
+    private static List recipeGetCustom() {
+        if (recipesCustom == null) {
+            List original = recipeGetOriginal();
+            if (original != null && original instanceof ArrayList) {
+                log("info: loading recipes for \"recipe\" - deferred");
+                recipesCustom = (List) ((ArrayList) original).clone();
+                log("info: "+recipesCustom.size()+" vanilla recipes");
+                try {
+                    parse(recipesCustom, "recipes.txt",    RECIPES); sortRecipes(recipesCustom);
+                    log("info: "+recipesCustom.size()+" custom recipes");
+                } catch (Exception e) {
+                    log("error: while loading custom recipes:\n"+e.toString());
+                }
+            }
+        }
+        return recipesCustom;
     }
     
     //=ZMod=Safe==============================================================
@@ -5256,6 +5282,12 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- CraftingManager
     private static Field fCMRecipes = getField(CraftingManager.class, "cm_recipes");
     private static CraftingManager getCManager() { return CraftingManager.getInstance(); }
+    private static List getCMRecipes() {
+        return getCManager().getRecipeList();
+    }
+    private static void setCMRecipes(List recipes) {
+        setValue(fCMRecipes, getCManager(), recipes);
+    }
     // ---------------------------------------------------------------------------------------------------------------- ShapedRecipes
     private static Field fRWidth = getField(ShapedRecipes.class, "sr_recipeWidth"), fRHeight = getField(ShapedRecipes.class, "sr_recipeHeight"), fRMap = getField(ShapedRecipes.class, "sr_recipeItems"), fRResA = getField(ShapedRecipes.class, "sr_recipeOutput");
     private static ShapedRecipes newRecipeNormal(int id, int count, int width, int height, ItemStack ingredients[]) { return new ShapedRecipes(width, height, ingredients, newItemsE(id, count)); }
