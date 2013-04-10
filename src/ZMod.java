@@ -2733,183 +2733,177 @@ public final class ZMod {
             if (meta >= 0 && meta < MAXTYPE && meta != PLAYER && meta != LIVING) recipesMobType = meta;
         }
     }
+    
     private static void drawGuiModRecipe() {
-        // draw "recipe"
-        if (modRecipeActive && optRecipeShowHelp && isMenu && !isTMIEnabled()) {
-            ArrayList recipes = new ArrayList();
-            ArrayList make = new ArrayList();
-            ItemStack items[] = new ItemStack[9], unique[] = new ItemStack[9];
-            IRecipe showRecipe = null, defaultRecipe = null;
-            boolean match[] = new boolean[9];
-            // build list from the shit on crafting grid
-            int last = 0, count, uniques = 0;
-            Next: for (int i=0;i<9;i++) {
-                ItemStack obj = getGridItem(i);
-                if (obj != null) {
-                    items[last++] = obj;
-                    for (int j=0;j<uniques;j++) if (isItemsMatch(items[last-1], unique[j])) continue Next;
-                    unique[uniques++] = obj;
+        if (!modRecipeActive || !optRecipeShowHelp || !isMenu || isTMIEnabled()) {
+            selRecipe = null;
+            return;
+        }
+        
+        ArrayList recipes = new ArrayList();
+        ArrayList make = new ArrayList();
+        ItemStack items[] = new ItemStack[9], unique[] = new ItemStack[9];
+        IRecipe showRecipe = null, defaultRecipe = null;
+        boolean match[] = new boolean[9];
+        // build list from the shit on crafting grid
+        int last = 0, count, uniques = 0;
+        Next: for (int i=0;i<9;i++) {
+            ItemStack obj = getGridItem(i);
+            if (obj != null) {
+                items[last++] = obj;
+                for (int j=0;j<uniques;j++) if (isItemsMatch(items[last-1], unique[j])) continue Next;
+                unique[uniques++] = obj;
+            }
+        }
+        // is there at least something on the table
+        if (last > 0) {
+            // dimensions / sizes
+            int sizeX = 176, sizeY = 166; // hardcoded inv screen size => assuming it does not change
+            int scrW = getScrWidthS(), scrH = getScrHeightS();
+            int ofs = 2, ofsX = ofs + sizeX + (scrW - sizeX) / 2, ofsY = 2 + (scrH - sizeY) / 2, ofsY2 = ofsY + 24;
+            int row = (scrW - sizeX - 4) / (2 * 16);
+            int nr;
+            // search the recipe list for matches
+            List search = getCMRecipes();
+            // check every recipe
+            for (IRecipe recipe : (List<IRecipe>) search) {
+                count = last;
+                for (int i=0;i<last;i++) match[i] = false;
+                // does this recipe make the first item on grid?
+                ItemStack result = null;
+                // for normal recipe
+                if (recipe instanceof ShapedRecipes) {
+                    ItemStack obj[] = (ItemStack[])getValue(fRMap, recipe);
+                    result = (ItemStack)getValue(fRResA, recipe);
+                    // for every recipe item
+                    for (int i=0;i<obj.length;i++) if (obj[i] != null) {
+                        // check every item on table for match
+                        for (int j=0;j<last;j++) if (!match[j] && isItemsMatch(items[j], obj[i])) {
+                            match[j] = true;
+                            count--;
+                            break;
+                        }
+                    }
+                // for shapeless recipe
+                } else if (recipe instanceof ShapelessRecipes) {
+                    List objs = (List)getValue(fRList, recipe);
+                    result = (ItemStack)getValue(fRResB, recipe);
+                    // for every recipe item
+                    for (ItemStack obj : (List<ItemStack>) objs) {
+                        // check every item on table for match
+                        for (int j=0;j<last;j++) if (!match[j] && isItemsMatch(items[j], obj)) {
+                            match[j] = true;
+                            count--;
+                            break;
+                        }
+                    }
+                } else continue;
+                if (count == 0) recipes.add(recipe); // everything on table is present in recipe (ignoring placement)
+                for (int i=0;i<uniques;i++) {
+                    int id = getItemsId(unique[i]);
+                    ItemStack uniqueX = getItemHasSubTypes(getItem(id)) ? unique[i] : newItems(id, 1); // remove damage
+                    if (isItemsMatch(uniqueX, result)) make.add(recipe); // found how it is made
                 }
             }
-            // is there at least something on the table
-            if (last > 0) {
-                // dimensions / sizes
-                int sizeX = 176, sizeY = 166; // hardcoded inv screen size => assuming it does not change
-                int scrW = getScrWidthS(), scrH = getScrHeightS();
-                int ofs = 2, ofsX = ofs + sizeX + (scrW - sizeX) / 2, ofsY = 2 + (scrH - sizeY) / 2, ofsY2 = ofsY + 24;
-                int row = (scrW - sizeX - 4) / (2 * 16);
-                int nr;
-                // search the recipe list for matches
-                List search = getCMRecipes();
-                Iterator it = search.iterator();
-                // check every recipe
-                while (it.hasNext()) {
-                    IRecipe recipe = (IRecipe)it.next();
-                    count = last;
-                    for (int i=0;i<last;i++) match[i] = false;
-                    // does this recipe make the first item on grid?
-                    ItemStack result = null;
-                    // for normal recipe
-                    if (recipe instanceof ShapedRecipes) {
-                        ItemStack obj[] = (ItemStack[])getValue(fRMap, recipe);
-                        result = (ItemStack)getValue(fRResA, recipe);
-                        // for every recipe item
-                        for (int i=0;i<obj.length;i++) if (obj[i] != null) {
-                            // check every item on table for match
-                            for (int j=0;j<last;j++) if (!match[j] && isItemsMatch(items[j], obj[i])) {
-                                match[j] = true;
-                                count--;
-                                break;
-                            }
-                        }
-                    // for shapeless recipe
-                    } else if (recipe instanceof ShapelessRecipes) {
-                        List objs = (List)getValue(fRList, recipe);
-                        result = (ItemStack)getValue(fRResB, recipe);
-                        // for every recipe item
-                        Iterator itIng = objs.iterator();
-                        while (itIng.hasNext()) {
-                            ItemStack obj = (ItemStack)itIng.next();
-                            // check every item on table for match
-                            for (int j=0;j<last;j++) if (!match[j] && isItemsMatch(items[j], obj)) {
-                                match[j] = true;
-                                count--;
-                                break;
-                            }
-                        }
-                    } else continue;
-                    if (count == 0) recipes.add(recipe); // everything on table is present in recipe (ignoring placement)
-                    for (int i=0;i<uniques;i++) {
-                        int id = getItemsId(unique[i]);
-                        ItemStack uniqueX = getItemHasSubTypes(getItem(id)) ? unique[i] : newItems(id, 1); // remove damage
-                        if (isItemsMatch(uniqueX, result)) make.add(recipe); // found how it is made
-                    }
-                }
-                // did we get any results
-                if (recipes.size() > 0) {
-                    if (recipes.size() == 1) {
-                        showText("1 recipe needs", ofs, ofsY, 0xeeeeee);
-                        showText("" + (last > 1 ? "those items" : "that item") + " :D", ofs, ofsY + 10, 0xeeeeee);
-                    } else {
-                        showText("" + recipes.size() + " recipes need", ofs, ofsY, 0xdddddd);
-                        showText("" + (last > 1 ? "those items" : "that item") + " :)", ofs, ofsY + 10, 0xdddddd);
-                    }
+            // did we get any results
+            if (recipes.size() > 0) {
+                if (recipes.size() == 1) {
+                    showText("1 recipe needs", ofs, ofsY, 0xeeeeee);
+                    showText("" + (last > 1 ? "those items" : "that item") + " :D", ofs, ofsY + 10, 0xeeeeee);
                 } else {
-                    showText("Can not craft anything", ofs, ofsY, 0x882222);
-                    showText("with " + (last > 1 ? "those items :/" : "that item :("), ofs, ofsY + 10, 0x882222);
+                    showText("" + recipes.size() + " recipes need", ofs, ofsY, 0xdddddd);
+                    showText("" + (last > 1 ? "those items" : "that item") + " :)", ofs, ofsY + 10, 0xdddddd);
                 }
-                ofsY2 = 40 + ofsY + ((recipes.size() + row - 1) / row) * 16;
-                if (make.size() > 0) showText("Recipes for:", ofs, ofsY2 - 10, 0xeeeeee);
-                // SET DRAWING STATE:
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glPushMatrix(); GL11.glRotatef(120F, 1.0F, 0.0F, 0.0F); // light reorientation (why the hell is the light not placed in the right place to start with !?)
-                setXItemLighting();
-                GL11.glPopMatrix();
-                GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                // draw found recipe candidates
-                if (recipes.size() > 0) {
-                    it = recipes.iterator();
-                    nr = 0;
-                    // show all potential results
-                    while (it.hasNext()) {
-                        IRecipe recipe = (IRecipe)it.next();
-                        if (defaultRecipe == null) defaultRecipe = recipe;
-                        ItemStack obj = null;
-                        if (recipe instanceof ShapedRecipes) obj = (ItemStack)getValue(fRResA, recipe);
-                        else if (recipe instanceof ShapelessRecipes) obj = (ItemStack)getValue(fRResB, recipe);
-                        else continue; // ugh!? this is unlikely to ever happen
-                        int x = ofs + (nr % row) * 16, y = 20 + ofsY + (nr / row) * 16;
-                        if (mouseX>=x && mouseY>=y && mouseX<x+16 && mouseY<y+16) {
-                            showRecipe = recipe;
-                            if (Mouse.isButtonDown(0)) selRecipe = recipe;
-                        }
-                        drawItem(obj, x, y);
-                        nr++;
+            } else {
+                showText("Can not craft anything", ofs, ofsY, 0x882222);
+                showText("with " + (last > 1 ? "those items :/" : "that item :("), ofs, ofsY + 10, 0x882222);
+            }
+            ofsY2 = 40 + ofsY + ((recipes.size() + row - 1) / row) * 16;
+            if (make.size() > 0) showText("Recipes for:", ofs, ofsY2 - 10, 0xeeeeee);
+            // SET DRAWING STATE:
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glPushMatrix(); GL11.glRotatef(120F, 1.0F, 0.0F, 0.0F); // light reorientation (why the hell is the light not placed in the right place to start with !?)
+            setXItemLighting();
+            GL11.glPopMatrix();
+            GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            // draw found recipe candidates
+            if (recipes.size() > 0) {
+                nr = 0;
+                // show all potential results
+                for (IRecipe recipe : (List<IRecipe>) recipes) {
+                    if (defaultRecipe == null) defaultRecipe = recipe;
+                    ItemStack obj = null;
+                    if (recipe instanceof ShapedRecipes) obj = (ItemStack)getValue(fRResA, recipe);
+                    else if (recipe instanceof ShapelessRecipes) obj = (ItemStack)getValue(fRResB, recipe);
+                    else continue; // ugh!? this is unlikely to ever happen
+                    int x = ofs + (nr % row) * 16, y = 20 + ofsY + (nr / row) * 16;
+                    if (mouseX>=x && mouseY>=y && mouseX<x+16 && mouseY<y+16) {
+                        showRecipe = recipe;
+                        if (Mouse.isButtonDown(0)) selRecipe = recipe;
                     }
-                }
-                // draw ingredient recipes
-                if (make.size() > 0) {
-                    it = make.iterator();
-                    nr = 0;
-                    while (it.hasNext()) {
-                        IRecipe recipe = (IRecipe)it.next();
-                        if (defaultRecipe == null) defaultRecipe = recipe;
-                        ItemStack obj = null;
-                        if (recipe instanceof ShapedRecipes) obj = (ItemStack)getValue(fRResA, recipe);
-                        else if (recipe instanceof ShapelessRecipes) obj = (ItemStack)getValue(fRResB, recipe);
-                        else continue; // ugh!? this is unlikely to ever happen
-                        int x = ofs + (nr % row) * 16, y = ofsY2 + (nr / row) * 16;
-                        if (mouseX>=x && mouseY>=y && mouseX<x+16 && mouseY<y+16) {
-                            showRecipe = recipe;
-                            if (Mouse.isButtonDown(0)) selRecipe = recipe;
-                        }
-                        drawItem(obj, x, y);
-                        nr++;
-                    }
-                }
-                // show the selected recipe
-                String txtCount = null, txtRecipeType = null;
-                if (showRecipe == null) showRecipe = selRecipe;
-                if (showRecipe == null) showRecipe = defaultRecipe;
-                if (showRecipe != null) {
-                    // show selected / only recipe
-                    if (showRecipe instanceof ShapedRecipes) {
-                        ItemStack obj[] = (ItemStack[])getValue(fRMap, showRecipe), res = (ItemStack)getValue(fRResA, showRecipe);
-                        int w = (Integer)getValue(fRWidth, showRecipe), h = (Integer)getValue(fRHeight, showRecipe);
-                        for (int y=0;y<h;y++) for (int x=0;x<w;x++) {
-                            int at = y*w + x;
-                            if (at >= obj.length || obj[at] == null) continue;
-                            drawItem(obj[at], ofsX + x * 16, 28 + ofsY + y * 16);
-                        }
-                        drawItem(res, ofsX, ofsY);
-                        txtCount = "     x "+getItemsCount(res);
-                        txtRecipeType = "Shaped recipe:";
-                    } else if (showRecipe instanceof ShapelessRecipes) {
-                        List objs = (List)getValue(fRList, showRecipe);
-                        ItemStack res = (ItemStack)getValue(fRResB, showRecipe);
-                        it = objs.iterator();
-                        int x = 0, y = 0;
-                        while (it.hasNext()) {
-                            drawItem((ItemStack)it.next(), ofsX + x * 16, 28 + ofsY + y * 16);
-                            x++;
-                            if (x > 3) { x = 0; y++; }
-                        }
-                        drawItem(res, ofsX, ofsY);
-                        txtCount = "     x "+getItemsCount(res);
-                        txtRecipeType = "Shapeless recipe:";
-                    }
-                }
-                // restore state
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-                // show some more text
-                if (txtCount != null) {
-                    showText(txtCount, ofsX, ofsY + 6, 0xeeeeee);
-                    showText(txtRecipeType, ofsX, ofsY + 18, 0xeeeeee);
+                    drawItem(obj, x, y);
+                    nr++;
                 }
             }
-        } else selRecipe = null;
+            // draw ingredient recipes
+            if (make.size() > 0) {
+                nr = 0;
+                for (IRecipe recipe : (List<IRecipe>) make) {
+                    if (defaultRecipe == null) defaultRecipe = recipe;
+                    ItemStack obj = null;
+                    if (recipe instanceof ShapedRecipes) obj = (ItemStack)getValue(fRResA, recipe);
+                    else if (recipe instanceof ShapelessRecipes) obj = (ItemStack)getValue(fRResB, recipe);
+                    else continue; // ugh!? this is unlikely to ever happen
+                    int x = ofs + (nr % row) * 16, y = ofsY2 + (nr / row) * 16;
+                    if (mouseX>=x && mouseY>=y && mouseX<x+16 && mouseY<y+16) {
+                        showRecipe = recipe;
+                        if (Mouse.isButtonDown(0)) selRecipe = recipe;
+                    }
+                    drawItem(obj, x, y);
+                    nr++;
+                }
+            }
+            // show the selected recipe
+            String txtCount = null, txtRecipeType = null;
+            if (showRecipe == null) showRecipe = selRecipe;
+            if (showRecipe == null) showRecipe = defaultRecipe;
+            if (showRecipe != null) {
+                // show selected / only recipe
+                if (showRecipe instanceof ShapedRecipes) {
+                    ItemStack obj[] = (ItemStack[])getValue(fRMap, showRecipe), res = (ItemStack)getValue(fRResA, showRecipe);
+                    int w = (Integer)getValue(fRWidth, showRecipe), h = (Integer)getValue(fRHeight, showRecipe);
+                    for (int y=0;y<h;y++) for (int x=0;x<w;x++) {
+                        int at = y*w + x;
+                        if (at >= obj.length || obj[at] == null) continue;
+                        drawItem(obj[at], ofsX + x * 16, 28 + ofsY + y * 16);
+                    }
+                    drawItem(res, ofsX, ofsY);
+                    txtCount = "     x "+getItemsCount(res);
+                    txtRecipeType = "Shaped recipe:";
+                } else if (showRecipe instanceof ShapelessRecipes) {
+                    List objs = (List)getValue(fRList, showRecipe);
+                    ItemStack res = (ItemStack)getValue(fRResB, showRecipe);
+                    int x = 0, y = 0;
+                    for (ItemStack obj : (List<ItemStack>) objs) {
+                        drawItem(obj, ofsX + x * 16, 28 + ofsY + y * 16);
+                        x++;
+                        if (x > 3) { x = 0; y++; }
+                    }
+                    drawItem(res, ofsX, ofsY);
+                    txtCount = "     x "+getItemsCount(res);
+                    txtRecipeType = "Shapeless recipe:";
+                }
+            }
+            // restore state
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+            // show some more text
+            if (txtCount != null) {
+                showText(txtCount, ofsX, ofsY + 6, 0xeeeeee);
+                showText(txtRecipeType, ofsX, ofsY + 18, 0xeeeeee);
+            }
+        }
     }
     
     private static String textModRecipe(String txt) {
@@ -4713,7 +4707,7 @@ public final class ZMod {
             Mark mark = new Mark();
             Item item;
             item = getItem(id); mark.setMaxStack(getItemMax(item)); mark.setMaxDamage(getItemDmgCap(item));
-            if (id >= 256) return mark;
+            if (id >= 4096) return mark;
             mark.setLightEmission(getBlockLight(id)); mark.setLightReduction(getBlockOpacity(id));
             Block block = getBlock(id); mark.setStrength(getBlockStrength(block)); mark.setResistance(getBlockResist(block)); mark.setSlipperiness(getBlockSlip(block));
             mark.setFireBurn(getFireBurn(id)); mark.setFireSpread(getFireSpread(id));
@@ -4731,7 +4725,7 @@ public final class ZMod {
         public void activate(int id) {
             Item item;
             item = getItem(id); setItemMax(item, r); setItemDmgCap(item, max);
-            if (id >= 256) return;
+            if (id >= 4096) return;
             setBlockLight(id, g); setBlockOpacity(id, min);
             Block block = getBlock(id); setBlockStrength(block, x); setBlockResist(block, y); setBlockSlip(block, z);
             ZMod.setFireSpread(id, a); ZMod.setFireBurn(id, b);
@@ -5592,9 +5586,9 @@ public final class ZMod {
         val = val.replaceAll("[\t\r\n]+", " ").trim();
         int id = parseUnsigned(val);
         if (names.containsKey(val)) id = (Integer)names.get(val);
-        if ((id & 65535) > 255) err("error: config.txt @ "+name+" - non-block name or id out of block id range \""+val+"\"");
+        if ((id & 65535) > 4095) err("error: config.txt @ "+name+" - non-block name or id out of block id range \""+val+"\"");
         else if ((id>>16) != 9999 && (id>>16) != 0) err("error: config.txt @ "+name+" - block has metadata (ex: colored wool) \""+val+"\".");
-        else return id & 255;
+        else return id & 4095;
         return init;
     }
     
