@@ -6,7 +6,7 @@ public final class ZBM extends BlockMobSpawner {
 
     public ZBM() {
         super(52);
-        setHardness(5F).setStepSound(soundMetalFootstep).getIndirectPowerOutput("mobSpawner").disableStats();
+        setHardness(5F).setStepSound(soundMetalFootstep).setUnlocalizedName("mobSpawner").disableStats();
     }
     
     public void onBlockAdded(World map, int x, int y, int z) {

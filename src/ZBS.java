@@ -6,7 +6,7 @@ public final class ZBS extends BlockSponge {
 
     public ZBS() {
         super(19);
-        setHardness(0.6F).setStepSound(soundGrassFootstep).getIndirectPowerOutput("sponge");
+        setHardness(0.6F).setStepSound(soundGrassFootstep).setUnlocalizedName("sponge");
     }
     
     public void onBlockAdded(World map, int x, int y, int z) {

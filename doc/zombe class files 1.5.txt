@@ -15,10 +15,10 @@ Resize  - RenderLiving
 File/ Class Name               / Used by
 aaj - EnumGameType             - Fly
 acn - WorldProvider            - Sun
-bdl - NetClienthandler         - Fly
-bds - PlayerControllerMP       - Dig, Cheat (bhd)
-bfj - MovementInputFromOptions - Fly
-bfk - EntityPlayerSP           - Fly
+bdk - NetClienthandler         - Fly
+bdr - PlayerControllerMP       - Dig, Cheat (bhd)
+bfi - MovementInputFromOptions - Fly
+bfj - EntityPlayerSP           - Fly
 jc  - EntityPlayerMP           - Death
 jh  - NetServerHandler         - Fly (noclip), Dig (reach)
 sq  - EntityPlayer             - Fly core, Cheat
@@ -34,10 +34,10 @@ File/ Class Name               / Used by
 aaj - EnumGameType             - Fly
 acn - WorldProvider            - Sun
 avv - MinecraftAppletImpl      - core
-bdl - NetClienthandler         - Fly
-bds - PlayerControllerMP       - Dig, Cheat (bhd)
-bfj - MovementInputFromOptions - Fly
-bfk - EntityPlayerSP           - Fly
+bdk - NetClienthandler         - Fly
+bdr - PlayerControllerMP       - Dig, Cheat (bhd)
+bfi - MovementInputFromOptions - Fly
+bfj - EntityPlayerSP           - Fly
 jc  - EntityPlayerMP           - Death
 jh  - NetServerHandler         - Fly (noclip), Dig (reach)
 sq  - EntityPlayer             - Fly core, Cheat

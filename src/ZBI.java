@@ -6,7 +6,7 @@ public final class ZBI extends BlockIce {
 
     public ZBI() {
         super(79);
-        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).getIndirectPowerOutput("ice");
+        setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setUnlocalizedName("ice");
     }
     
     public int quantityDroppedWithBonus(int zero, Random random) {

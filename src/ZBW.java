@@ -7,8 +7,8 @@ public final class ZBW extends BlockFlowing {
 
     public ZBW(boolean water) {
         super(water ? 8 : 10, water ? Material.water : Material.lava);
-        if(water) setHardness(100F).setLightOpacity(3).getIndirectPowerOutput("water").disableStats();
-        else setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).getIndirectPowerOutput("lava").disableStats();
+        if(water) setHardness(100F).setLightOpacity(3).setUnlocalizedName("water").disableStats();
+        else setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).setUnlocalizedName("lava").disableStats();
     }
 // -------------------------------------------------------------------------------------------------------------------------------
 
@@ -329,7 +329,7 @@ public final class ZBW extends BlockFlowing {
     {
         int i = par1World.getBlockId(par2, par3, par4);
 
-        if (i == Block.doorWood.blockID || i == Block.doorSteel.blockID || i == Block.signPost.blockID || i == Block.ladder.blockID || i == Block.reed.blockID)
+        if (i == Block.doorWood.blockID || i == Block.doorIron.blockID || i == Block.signPost.blockID || i == Block.ladder.blockID || i == Block.reed.blockID)
         {
             return true;
         }

@@ -12,7 +12,7 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "7.1.0 for MC 1.5.1";
+    public static final String version = "7.2.0 for MC 1.5.2";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -3033,7 +3033,7 @@ public final class ZMod {
         //double r = 0.35, h = 0.5; // cave spider size
         double r = 0.3, h = 0.5; // hybrid size
         AxisAlignedBB aabb = new AxisAlignedBB(x - r, y, z - r, x + r, y + h, z + r);
-        return map.getAllCollidingBoundingBoxes(aabb).isEmpty() && !map.isAnyLiquid(aabb);
+        return map.getCollidingBlockBounds(aabb).isEmpty() && !map.isAnyLiquid(aabb);
     }
     
     private static boolean couldSpawnHere(int x, int y, int z) {
