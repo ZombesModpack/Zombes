@@ -18,7 +18,7 @@ public final class ZMod {
         // GuiAchievement
         "ga_theAchievement",        "theAchievement",           "f",  // [a-z]+\.[a-z]+, [a-z0-9]+ \+ 8, [a-z0-9]+ \+ 8\);  * starts with theAchivement
         // EntityMinecart
-        "em_fuel",                  "fuel",                     "e",  // "Fuel"
+        "em_fuel",                  "fuel",                     "c",  // "Fuel"
         // EntityEnderman
         "ee_canCarryBlocks",        "carriableBlocks",          "d",  // [a-z]+\[[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+\] = true;
         // TileEntityFurnace
