@@ -14,7 +14,7 @@ public final class ZBM extends BlockMobSpawner {
         String mob = ZMod.mobTypeHandle();
         if(mob == null) return;
         TileEntityMobSpawner spawner = (TileEntityMobSpawner)(map.getBlockTileEntity(x,y,z));
-        spawner.func_98049_a().func_98272_a(mob);
+        spawner.func_98049_a().setMobID(mob);
     }
 
     public int idDropped(int meta, Random random, int zero) {

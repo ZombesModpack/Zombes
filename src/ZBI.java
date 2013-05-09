@@ -41,7 +41,7 @@ public final class ZBI extends BlockIce {
 
         if (material.isLiquid())
         {
-            par1World.func_94575_c(par3, par4, par5, Block.waterMoving.blockID);
+            par1World.setBlock(par3, par4, par5, Block.waterMoving.blockID);
         }
     }
 

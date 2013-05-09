@@ -3021,7 +3021,7 @@ public final class ZMod {
         //double r = 0.35, h = 0.5; // cave spider size
         double r = 0.3, h = 0.5; // hybrid size
         AxisAlignedBB aabb = new AxisAlignedBB(x - r, y, z - r, x + r, y + h, z + r);
-        return map.getAllCollidingBoundingBoxes(aabb).isEmpty() && !map.isAnyLiquid(aabb);
+        return map.getCollidingBlockBounds(aabb).isEmpty() && !map.isAnyLiquid(aabb);
     }
     
     private static boolean couldSpawnHere(int x, int y, int z) {
@@ -5052,7 +5052,7 @@ public final class ZMod {
     private static String getPath() { String res = ""; try { res = Minecraft.getMinecraftDir().getCanonicalPath(); } catch(Exception whatever) { res = ""; } return res; }
     //private static int getTexture(String name) { return minecraft.renderEngine.getTexture(name); }
     private static void bindTexture(String name) {
-        minecraft.renderEngine.func_98187_b(name);
+        minecraft.renderEngine.bindTexture(name);
     }
     private static List getChat() { return (List)getValue(fChat, minecraft.ingameGUI.getChatGUI()); }
     private static boolean getIsMenu() { return minecraft.currentScreen != null; }
@@ -5314,9 +5314,9 @@ public final class ZMod {
     private static int getWorldId(World world, int x, int y, int z) { return world.getBlockId(x,y,z); }
     private static int getWorldMeta(World world, int x, int y, int z) { return world.getBlockMetadata(x,y,z); }
     private static TileEntity getWorldTileEntity(World world, int x, int y, int z) { return world.getBlockTileEntity(x,y,z); }
-    private static void setWorldIdWithNotify(World world, int x, int y, int z, int id) { world.func_94575_c(x,y,z, id); }
-    private static void setWorldIdMetaWithNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta, 1); }
-    private static void setWorldIdMetaWithoutNotify(World world, int x, int y, int z, int id, int meta) { world.setBlockAndMetadataWithNotify(x,y,z, id, meta, 0); }
+    private static void setWorldIdWithNotify(World world, int x, int y, int z, int id) { world.setBlock(x,y,z, id); }
+    private static void setWorldIdMetaWithNotify(World world, int x, int y, int z, int id, int meta) { world.setBlock(x,y,z, id, meta, 1); }
+    private static void setWorldIdMetaWithoutNotify(World world, int x, int y, int z, int id, int meta) { world.setBlock(x,y,z, id, meta, 0); }
     private static void markWorldNeedsUpdate(World world, int x, int y, int z) {
         world.notifyBlockChange(x,y,z, getWorldId(world, x,y,z));
         world.markBlockForUpdate(x,y,z);
