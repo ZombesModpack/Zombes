@@ -2315,12 +2315,12 @@ public final class ZMod {
     //=ZMod=Fly===============================================================
     private static boolean modFlyEnabled, modFlyActive, modFlyAllowed, modNoClipAllowed;
     private static String tagFly, tagFlyNoClip;
-    private static int keyFlyOn, keyFlyOff, keyFlyUp, keyFlyDown, keyFlySpeed, keyFlyToggle, keyFlyRun, keyFlyNoClip;
-    private static double optFlySpeedVertical, optFlySpeedMulNormal, optFlySpeedMulModifier, optFlyRunSpeedMul, optFlyRunSpeedVMul;
+    private static int keyFlyOn, keyFlyOff, keyFlyUp, keyFlyDown, keyFlyForward, keyFlySpeed, keyFlyToggle, keyFlyRun, keyFlyNoClip;
+    private static double optFlySpeedVertical, optFlySpeedForward, optFlySpeedMulNormal, optFlySpeedMulModifier, optFlyRunSpeedMul, optFlyRunSpeedVMul;
     private static double optFlyJump, optFlyJumpHigh;
     private static boolean optFlySpeedIsToggle, optFlyRunSpeedIsToggle, optFlyNoClip, optFlyVanillaFly, optFlyVanillaSprint;
-    private static boolean fly, flySpeed, flyRun, flyNoClip, flyUp, flyDown;
-    private static boolean flyProjection, flySpeedProjection, flyRunProjection, flyNoClipProjection, flyUpProjection, flyDownProjection;
+    private static boolean fly, flySpeed, flyRun, flyNoClip, flyUp, flyDown, flyForward;
+    private static boolean flyProjection, flySpeedProjection, flyRunProjection, flyNoClipProjection, flyUpProjection, flyDownProjection, flyForwardProjection;
     private static boolean playerClassActive;
     private static boolean flew = false, moveOnGround;
 
@@ -2351,7 +2351,9 @@ public final class ZMod {
         optFlySpeedMulNormal    = getSetLog((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 100.0f , "Flying speed");
         keyFlyUp                = getSetBind(keyFlyUp,                       "keyFlyUp",     Keyboard.KEY_E           , "Fly up");
         keyFlyDown              = getSetBind(keyFlyDown,                     "keyFlyDown",   Keyboard.KEY_Q           , "Fly down");
+        keyFlyForward           = getSetBind(keyFlyForward,                     "keyFlyForward",   0           , "Fly toward cursor");
         optFlySpeedVertical     = getSetLog((float)optFlySpeedVertical,    "optFlySpeedVertical"     , 0.2f, 0.1f, 10.0f  , "Vertical flying speed");
+        optFlySpeedForward      = getSetLog((float)optFlySpeedForward,    "optFlySpeedForward"     , 1f, 0.1f, 10.0f  , "Flying speed toward cursor");
         keyFlySpeed             = getSetBind(keyFlySpeed,                    "keyFlySpeed",  Keyboard.KEY_LSHIFT      , "Fly speed modifier");
         optFlySpeedIsToggle     = getSetBool(optFlySpeedIsToggle,            "optFlySpeedIsToggle"   , false, "Fly speed modifier is toggle");
         optFlySpeedMulModifier  = getSetLog((float)optFlySpeedMulModifier, "optFlySpeedMulModifier"  , 2.0f, 1.0f, 100.0f , "Flying speed with speed modifier");
@@ -2389,11 +2391,13 @@ public final class ZMod {
             else if (keyPress(keyFlyRun)) flyRunProjection = !flyRunProjection;
             flyUpProjection = keyDown(keyFlyUp);
             flyDownProjection = keyDown(keyFlyDown);
+            flyForwardProjection = keyDown(keyFlyForward);
         } else {
             if (!optFlySpeedIsToggle) flySpeedProjection = false;
             if (!optFlyRunSpeedIsToggle) flyRunProjection = false;
             flyUpProjection = false;
             flyDownProjection = false;
+            flyForwardProjection = false;
         }
         if (isControllingPlayer()) {
             boolean flyPrev = fly;
@@ -2416,11 +2420,13 @@ public final class ZMod {
             else if (keyPress(keyFlyRun)) flyRun = !flyRun;
             flyUp = keyDown(keyFlyUp);
             flyDown = keyDown(keyFlyDown);
+            flyForward = keyDown(keyFlyForward);
         } else {
             if (!optFlySpeedIsToggle) flySpeed = false;
             if (!optFlyRunSpeedIsToggle) flyRun = false;
             flyUp = false;
             flyDown = false;
+            flyForward = false;
         }
     }
 
@@ -2474,6 +2480,14 @@ public final class ZMod {
                     if (!isMenu) {
                         if (flyUp) my += optFlySpeedVertical;
                         if (flyDown) my -= optFlySpeedVertical;
+                        if (flyForward) {
+                            float move = (float) optFlySpeedForward;
+                            float movef = -move * MathHelper.cos(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            float movev = -move * MathHelper.sin(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            mx += movef * MathHelper.sin(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            mz += -movef * MathHelper.cos(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            my += movev;
+                        }
                         double mul = flySpeed ? optFlySpeedMulModifier : optFlySpeedMulNormal;
                         mx*=mul; my*=mul; mz*=mul;
                         setFall(ent, 0f); setEntityMotionY(ent, 0f); flew = true;
@@ -2495,6 +2509,14 @@ public final class ZMod {
                     if (!isMenu) {
                         if (flyUpProjection) my += optFlySpeedVertical;
                         if (flyDownProjection) my -= optFlySpeedVertical;
+                        if (flyForwardProjection) {
+                            float move = (float) optFlySpeedForward;
+                            float movef = -move * MathHelper.cos(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            float movev = -move * MathHelper.sin(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            mx += movef * MathHelper.sin(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            mz += -movef * MathHelper.cos(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            my += movev;
+                        }
                         double mul = flySpeedProjection ? optFlySpeedMulModifier : optFlySpeedMulNormal;
                         mx*=mul; my*=mul; mz*=mul;
                         setFall(ent, 0f); setEntityMotionY(ent, 0f);
