@@ -222,7 +222,8 @@ public final class ZMod {
         HOOK_BEGIN                     = CLASS_END,
         HOOK_CLIENTTICK                = HOOK_BEGIN+0,
         HOOK_SERVERTICK                = HOOK_BEGIN+1,
-        HOOK_END                       = HOOK_BEGIN+2,
+        HOOK_SERVERDEATH               = HOOK_BEGIN+2,
+        HOOK_END                       = HOOK_BEGIN+3,
         MOD_BEGIN                      = HOOK_END,
         MOD_BOOM                       = MOD_BEGIN+0,
         MOD_BUILD                      = MOD_BEGIN+1,
@@ -296,6 +297,7 @@ public final class ZMod {
         status[HOOK_CLIENTTICK] = status[CLASS_ENTITYPLAYER];
         status[HOOK_SERVERTICK] = status[CLASS_ENTITYPLAYER]
                                 & status[CLASS_NETSERVERHANDLER];
+        status[HOOK_SERVERDEATH] = status[CLASS_ENTITYPLAYERMP];
         
         status[MOD_BOOM]     = STATUS_BROKEN
                              | status[CLASS_EXPLOSION];
@@ -308,8 +310,7 @@ public final class ZMod {
         status[MOD_COMPASS]  = STATUS_AVAILABLE;
         status[MOD_CRAFT]    = STATUS_BROKEN
                              | status[CLASS_GUICONTAINER];
-        status[MOD_DEATH]    = status[CLASS_ENTITYPLAYER]
-                             | status[CLASS_ENTITYPLAYERMP];
+        status[MOD_DEATH]    = status[CLASS_ENTITYPLAYER];
         status[MOD_DIG]      = status[CLASS_PLAYERCONTROLLERMP];
         status[MOD_FLY]      = status[CLASS_ENTITYPLAYER];
         status[MOD_FURNACE]  = STATUS_BROKEN
@@ -984,6 +985,7 @@ public final class ZMod {
     private static boolean modDeathEnabled, modDeathActive;
     private static boolean optDeathDropInv, optDeathLoseExp;
     private static int optDeathHPPenalty;
+    private static boolean deathJustDied;
     private static boolean deathHaveInv, deathHaveExp;
     private static ItemStack deathInv[];
     private static ItemStack deathArmor[];
@@ -1017,20 +1019,36 @@ public final class ZMod {
         
     }
     
-    private static void deathOnServerPlayerDeath(EntityPlayer ent) {
-        if (!modDeathActive || isMultiplayer) return;
+    private static void deathVoid(EntityPlayer ent) {
+        if (!optDeathDropInv) {
+            InventoryPlayer inv = ent.inventory;
+            for (int i = 0; i < deathInv.length; ++i) { 
+                inv.mainInventory[i] = null;
+            }
+            for (int i = 0; i < deathArmor.length; ++i) {
+                inv.armorInventory[i] = null;
+            }
+        }
+        if (!optDeathLoseExp) {
+            ent.experienceTotal = 0;
+            ent.experience      = 0;
+            ent.experienceLevel = 0;
+        }
+    }
+    
+    private static void deathSave(EntityPlayer ent) {
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
             InventoryPlayer inv = ent.inventory;
             deathInv = new ItemStack[inv.mainInventory.length];
             deathArmor = new ItemStack[inv.armorInventory.length];
             for (int i = 0; i < deathInv.length; ++i) { 
-                deathInv[i]   = inv.mainInventory[i];
-                inv.mainInventory[i] = null;
+                ItemStack is = inv.mainInventory[i];
+                deathInv[i] = (is == null) ? is : is.copy();
             }
             for (int i = 0; i < deathArmor.length; ++i) {
-                deathArmor[i] = inv.armorInventory[i];
-                inv.armorInventory[i] = null;
+                ItemStack is = inv.armorInventory[i];
+                deathArmor[i] = (is == null) ? is : is.copy();
             }
         }
         if (!optDeathLoseExp) {
@@ -1040,23 +1058,44 @@ public final class ZMod {
             deathXpLevel = ent.experienceLevel;
         }
     }
+    
+    private static void deathLoad(EntityPlayer ent) {
+        if (!optDeathDropInv && deathHaveInv) { // load inventory
+            InventoryPlayer inv = ent.inventory;
+            for (int i = 0; i < deathInv.length; ++i) { 
+                ItemStack is = deathInv[i];
+                inv.mainInventory[i] = (is == null) ? is : is.copy();
+            }
+            for (int i = 0; i < deathArmor.length; ++i) {
+                ItemStack is = deathArmor[i];
+                inv.armorInventory[i] = (is == null) ? is : is.copy();
+            }
+        }
+        if (!optDeathLoseExp && deathHaveExp) {
+            ent.experienceTotal = deathXpTotal;
+            ent.experience      = deathXpP;
+            ent.experienceLevel = deathXpLevel;
+        }
+    }
+    
+    private static void deathOnServerPlayerDeath(EntityPlayer ent) {
+        if (!modDeathActive || isMultiplayer) return;
+        deathSave(ent);
+        deathVoid(ent);
+        deathJustDied = true;
+    }
 
     private static void deathOnServerPlayerUpdate(EntityPlayer ent) {
         if (!modDeathActive || isMultiplayer) return;
-        if (ent.isDead || getHealth(ent) <= 0) return;
-        if (!optDeathDropInv && deathHaveInv) {
-            deathHaveInv = false;
-            InventoryPlayer inv = ent.inventory;
-            for (int i = 0; i < deathInv.length;   ++i) inv.mainInventory[i]  = inv.mainInventory[i]  == null ? deathInv[i]   : inv.mainInventory[i];
-            for (int i = 0; i < deathArmor.length; ++i) inv.armorInventory[i] = inv.armorInventory[i] == null ? deathArmor[i] : inv.armorInventory[i];
-        }
-        if (!optDeathLoseExp && deathHaveExp) {
-            deathHaveExp = false;
-            if (ent.experienceTotal == 0) {
-                ent.experienceTotal = deathXpTotal;
-                ent.experience      = deathXpP;
-                ent.experienceLevel = deathXpLevel;
+        if (!ent.isDead && getHealth(ent) > 0) {
+            if (deathJustDied) {
+                deathLoad(ent);
+                deathJustDied = false;
+            } else if (!checkStatus(HOOK_SERVERDEATH)) {
+                deathSave(ent);
             }
+        } else if (!checkStatus(HOOK_SERVERDEATH)) {
+            deathJustDied = true;
         }
     }
 
