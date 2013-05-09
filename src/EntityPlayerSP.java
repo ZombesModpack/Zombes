@@ -33,13 +33,22 @@ public class EntityPlayerSP extends EntityPlayer
     //-ZMod-------------------------------------------------------------------
     protected static boolean zmodmarker2 = true;
     //-ZMod-Cheat-projection--------------------------------------------------
-    public void setAngles(float par1, float par2) {
-        if (ZMod.onSetAngles(par1,par2)) super.setAngles(par1,par2);
+    public void setAngles(float par1, float par2)
+    {
+        if (ZMod.onSetAngles(par1, par2))
+        {
+            super.setAngles(par1, par2);
+        }
     }
     //-ZMod-Dig-check-secondary-detail----------------------------------------
-    public boolean canCurrentToolHarvestBlock(int x, int y, int z) {
-        if (!ZMod.digCheckReachDig(x,y,z)) return false;
-        return super.canCurrentToolHarvestBlock(x,y,z);
+    public boolean canCurrentToolHarvestBlock(int x, int y, int z)
+    {
+        if (!ZMod.digCheckReachDig(x, y, z))
+        {
+            return false;
+        }
+
+        return super.canCurrentToolHarvestBlock(x, y, z);
     }
     //------------------------------------------------------------------------
 
@@ -195,21 +204,22 @@ public class EntityPlayerSP extends EntityPlayer
             this.pushOutOfBlocks(this.posX + (double)this.width * 0.35D, this.boundingBox.minY + 0.5D, this.posZ + (double)this.width * 0.35D);
             boolean var4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
 
-    	    //-ZMod-Fly-------------------------------------------------------
+            //-ZMod-Fly-------------------------------------------------------
             if (ZMod.allowVanillaSprint())
-            //----------------------------------------------------------------
-            if (this.onGround && !var3 && this.movementInput.moveForward >= var2 && !this.isSprinting() && var4 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness))
-            {
-                if (this.sprintToggleTimer == 0)
+
+                //----------------------------------------------------------------
+                if (this.onGround && !var3 && this.movementInput.moveForward >= var2 && !this.isSprinting() && var4 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness))
                 {
-                    this.sprintToggleTimer = 7;
+                    if (this.sprintToggleTimer == 0)
+                    {
+                        this.sprintToggleTimer = 7;
+                    }
+                    else
+                    {
+                        this.setSprinting(true);
+                        this.sprintToggleTimer = 0;
+                    }
                 }
-                else
-                {
-                    this.setSprinting(true);
-                    this.sprintToggleTimer = 0;
-                }
-            }
 
             if (this.isSneaking())
             {
@@ -221,44 +231,46 @@ public class EntityPlayerSP extends EntityPlayer
                 this.setSprinting(false);
             }
 
-    	    //-ZMod-Fly-------------------------------------------------------
+            //-ZMod-Fly-------------------------------------------------------
             if (ZMod.allowVanillaFly())
-            //----------------------------------------------------------------
-            if (this.capabilities.allowFlying && !var1 && this.movementInput.jump)
-            {
-                if (this.flyToggleTimer == 0)
+
+                //----------------------------------------------------------------
+                if (this.capabilities.allowFlying && !var1 && this.movementInput.jump)
                 {
-                    this.flyToggleTimer = 7;
+                    if (this.flyToggleTimer == 0)
+                    {
+                        this.flyToggleTimer = 7;
+                    }
+                    else
+                    {
+                        this.capabilities.isFlying = !this.capabilities.isFlying;
+                        this.sendPlayerAbilities();
+                        this.flyToggleTimer = 0;
+                    }
                 }
-                else
-                {
-                    this.capabilities.isFlying = !this.capabilities.isFlying;
-                    this.sendPlayerAbilities();
-                    this.flyToggleTimer = 0;
-                }
-            }
 
             //-Zmod-Fly-------------------------------------------------------
             if (!ZMod.isFly())
-            //----------------------------------------------------------------
-            if (this.capabilities.isFlying)
-            {
-                if (this.movementInput.sneak)
-                {
-                    this.motionY -= 0.15D;
-                }
 
-                if (this.movementInput.jump)
+                //----------------------------------------------------------------
+                if (this.capabilities.isFlying)
                 {
-                    this.motionY += 0.15D;
+                    if (this.movementInput.sneak)
+                    {
+                        this.motionY -= 0.15D;
+                    }
+
+                    if (this.movementInput.jump)
+                    {
+                        this.motionY += 0.15D;
+                    }
                 }
-            }
 
             super.onLivingUpdate();
 
             //-Zmod-Fly-------------------------------------------------------
             if (ZMod.playerOnGround() && this.capabilities.isFlying && !ZMod.isFly())
-            //----------------------------------------------------------------
+                //----------------------------------------------------------------
             {
                 this.capabilities.isFlying = false;
                 this.sendPlayerAbilities();
@@ -275,11 +287,12 @@ public class EntityPlayerSP extends EntityPlayer
 
         //-Zmod-Fly-------------------------------------------------------
         if (!ZMod.isFly())
-        //----------------------------------------------------------------
-        if (this.capabilities.isFlying)
-        {
-            var1 *= 1.1F;
-        }
+
+            //----------------------------------------------------------------
+            if (this.capabilities.isFlying)
+            {
+                var1 *= 1.1F;
+            }
 
         var1 *= (this.landMovementFactor * this.getSpeedModifier() / this.speedOnGround + 1.0F) / 2.0F;
 
@@ -528,9 +541,12 @@ public class EntityPlayerSP extends EntityPlayer
     protected boolean pushOutOfBlocks(double par1, double par3, double par5)
     {
         //-Zmod-Fly-noclip------------------------------------------------
-        if (this.noClip) return false;
-        //----------------------------------------------------------------
+        if (this.noClip)
+        {
+            return false;
+        }
 
+        //----------------------------------------------------------------
         int var7 = MathHelper.floor_double(par1);
         int var8 = MathHelper.floor_double(par3);
         int var9 = MathHelper.floor_double(par5);

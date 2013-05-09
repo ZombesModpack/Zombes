@@ -3,12 +3,20 @@ package net.minecraft.src;
 import java.util.Random;
 
 // -------------------------------------------------------------------------------------------------------------------------------
-public final class ZBW extends BlockFlowing {
-
-    public ZBW(boolean water) {
+public final class ZBW extends BlockFlowing
+{
+    public ZBW(boolean water)
+    {
         super(water ? 8 : 10, water ? Material.water : Material.lava);
-        if(water) setHardness(100F).setLightOpacity(3).setUnlocalizedName("water").disableStats();
-        else setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).setUnlocalizedName("lava").disableStats();
+
+        if (water)
+        {
+            setHardness(100F).setLightOpacity(3).setUnlocalizedName("water").disableStats();
+        }
+        else
+        {
+            setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).setUnlocalizedName("lava").disableStats();
+        }
     }
 // -------------------------------------------------------------------------------------------------------------------------------
 
@@ -71,9 +79,13 @@ public final class ZBW extends BlockFlowing {
                     k = i1 + 8;
                 }
             }
-            
+
 // -------------------------------------------------------------------------------------------------------------------------------
-            if (numAdjacentSources >= 2) k = 0;
+            if (numAdjacentSources >= 2)
+            {
+                k = 0;
+            }
+
 // -------------------------------------------------------------------------------------------------------------------------------
 
             if (blockMaterial == Material.lava && i < 8 && k < 8 && k > i && par5Random.nextInt(4) != 0)
@@ -397,5 +409,4 @@ public final class ZBW extends BlockFlowing {
             return !blockBlocksFlow(par1World, par2, par3, par4);
         }
     }
-
 }

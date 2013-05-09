@@ -2,18 +2,21 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-public final class ZBI extends BlockIce {
-
-    public ZBI() {
+public final class ZBI extends BlockIce
+{
+    public ZBI()
+    {
         super(79);
         setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setUnlocalizedName("ice");
     }
-    
-    public int quantityDroppedWithBonus(int zero, Random random) {
+
+    public int quantityDroppedWithBonus(int zero, Random random)
+    {
         return 1;
     }
 
-    public int idDropped(int meta, Random random, int zero) {
+    public int idDropped(int meta, Random random, int zero)
+    {
         return 79;
     }
 
@@ -36,6 +39,7 @@ public final class ZBI extends BlockIce {
             int i = EnchantmentHelper.getFortuneModifier(par2EntityPlayer.attackingPlayer);
             dropBlockAsItem(par1World, par3, par4, par5, par6, i);
         }
+
         // original fn ... just without the "isSolid/blocksMovement ||" part
         Material material = par1World.getBlockMaterial(par3, par4 - 1, par5);
 
@@ -44,5 +48,4 @@ public final class ZBI extends BlockIce {
             par1World.setBlock(par3, par4, par5, Block.waterMoving.blockID);
         }
     }
-
 }
