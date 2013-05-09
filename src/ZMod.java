@@ -4956,7 +4956,7 @@ public final class ZMod {
     private static void drawItem(ItemStack obj, int x, int y) {
         int id = getItemsId(obj), meta = getItemsInfo(obj), tmp = meta;
         boolean any = false; // unused atm :/
-        if (tmp == -1) { tmp = 0; any = true; }
+        if (tmp == 32767) { tmp = 0; any = true; }
         setItemsInfo(obj, tmp); // meta fix
         renderItemGUI(x, y, obj);
         setItemsInfo(obj, meta); // restore meta
@@ -5276,7 +5276,7 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- ItemStack
     private static Icon getItemsIcon(ItemStack items) { return items.getIconIndex(); }
     private static ItemStack newItemsE(int id, int count) { return newItems(id & 0xffff, count, id >> 16); }
-    private static ItemStack newItems(int id, int count, int param) { return new ItemStack(id, count, param == 9999 ? -1 : param); }
+    private static ItemStack newItems(int id, int count, int param) { return new ItemStack(id, count, param == 9999 ? 32767 : param); }
     private static ItemStack newItems(int id, int count) { return newItems(id, count, 0); }
     private static int getItemsId(ItemStack items) { return items.itemID; }
     private static int getItemsCount(ItemStack items) { return items.stackSize; }
@@ -5284,7 +5284,7 @@ public final class ZMod {
     private static int getItemsInfo(ItemStack items) { return items.getItemDamage(); }
     private static void setItemsInfo(ItemStack items, int val) { items.setItemDamage(val); }
     private static boolean isItemsMatch(ItemStack items, int val) { return ( getItemsId(items) | ((val >> 16) == 9999 ? 0x270f0000 : (getItemsInfo(items) << 16)) ) == val; }
-    private static boolean isItemsMatch(ItemStack items, ItemStack match) { return getItemsId(items) == getItemsId(match) && (getItemsInfo(match) < 0 || getItemsInfo(match) == getItemsInfo(items)); }
+    private static boolean isItemsMatch(ItemStack items, ItemStack match) { return getItemsId(items) == getItemsId(match) && (getItemsInfo(match) == 32767 || getItemsInfo(match) == getItemsInfo(items)); }
     // ---------------------------------------------------------------------------------------------------------------- CraftingManager
     private static Field fCMRecipes = getField(CraftingManager.class, "cm_recipes");
     private static CraftingManager getCManager() { return CraftingManager.getInstance(); }
