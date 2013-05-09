@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 public abstract class WorldProvider
 {
     protected static final boolean zmodmarker = true;
-    
+
     /** world object being used */
     public World worldObj;
     public WorldType terrainType;
@@ -15,12 +15,14 @@ public abstract class WorldProvider
     public WorldChunkManager worldChunkMgr;
 
     /**
-     * States whether the Hell world provider is used(true) or if the normal world provider is used(false)
+     * States whether the Hell world provider is used(true) or if the normal
+     * world provider is used(false)
      */
     public boolean isHellWorld = false;
 
     /**
-     * A boolean that tells if a world does not have a sky. Used in calculating weather and skylight
+     * A boolean that tells if a world does not have a sky. Used in calculating
+     * weather and skylight
      */
     public boolean hasNoSky = false;
 
@@ -34,7 +36,8 @@ public abstract class WorldProvider
     private float[] colorsSunriseSunset = new float[4];
 
     /**
-     * associate an existing world with a World provider, and setup its lightbrightness table
+     * associate an existing world with a World provider, and setup its
+     * lightbrightness table
      */
     public final void registerWorld(World par1World)
     {
@@ -54,8 +57,9 @@ public abstract class WorldProvider
 
         for (int var2 = 0; var2 <= 15; ++var2)
         {
-            float var3 = 1.0F - (float)var2 / 15.0F;
-            this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
+            float var3 = 1.0F - (float) var2 / 15.0F;
+            this.lightBrightnessTable[var2] = (1.0F - var3)
+                    / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
         }
     }
 
@@ -66,8 +70,11 @@ public abstract class WorldProvider
     {
         if (this.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
         {
-            FlatGeneratorInfo var1 = FlatGeneratorInfo.createFlatGeneratorFromString(this.worldObj.getWorldInfo().getGeneratorOptions());
-            this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.biomeList[var1.getBiome()], 0.5F, 0.5F);
+            FlatGeneratorInfo var1 = FlatGeneratorInfo
+                    .createFlatGeneratorFromString(this.worldObj.getWorldInfo()
+                            .getGeneratorOptions());
+            this.worldChunkMgr = new WorldChunkManagerHell(
+                    BiomeGenBase.biomeList[var1.getBiome()], 0.5F, 0.5F);
         }
         else
         {
@@ -80,11 +87,17 @@ public abstract class WorldProvider
      */
     public IChunkProvider createChunkGenerator()
     {
-        return (IChunkProvider)(this.terrainType == WorldType.FLAT ? new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c) : new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
+        return (IChunkProvider)(this.terrainType == WorldType.FLAT ? new ChunkProviderFlat(
+                this.worldObj, this.worldObj.getSeed(), this.worldObj
+                .getWorldInfo().isMapFeaturesEnabled(),
+                this.field_82913_c) : new ChunkProviderGenerate(this.worldObj,
+                        this.worldObj.getSeed(), this.worldObj.getWorldInfo()
+                        .isMapFeaturesEnabled()));
     }
 
     /**
-     * Will check if the x, z position specified is alright to be set as the map spawn point
+     * Will check if the x, z position specified is alright to be set as the map
+     * spawn point
      */
     public boolean canCoordinateBeSpawn(int par1, int par2)
     {
@@ -93,17 +106,23 @@ public abstract class WorldProvider
     }
 
     /**
-     * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+     * Calculates the angle of sun and moon in the sky relative to a specified
+     * time (usually worldTime)
      */
     public float calculateCelestialAngle(long par1, float par3)
     {
         // -----------------------------------------------------------------------------------------------------------------------
         long ofs = ZMod.sunOffsetHandle();
-        if(ofs != 0) par3 = 0f;
+
+        if (ofs != 0)
+        {
+            par3 = 0f;
+        }
+
         par1 += ofs;
         // -----------------------------------------------------------------------------------------------------------------------
         int i = (int)(par1 % 24000L);
-        float f = ((float)i + par3) / 24000F - 0.25F;
+        float f = ((float) i + par3) / 24000F - 0.25F;
 
         if (f < 0.0F)
         {
@@ -116,8 +135,8 @@ public abstract class WorldProvider
         }
 
         float f1 = f;
-        f = 1.0F - (float)((Math.cos((double)f * Math.PI) + 1.0D) / 2D);
-        f = f1 + (f - f1) / 3F;
+        f = 1.0F - (float)((Math.cos((double) f * Math.PI) + 1.0D) / 2.0D);
+        f = f1 + (f - f1) / 3.0F;
         return f;
     }
 
@@ -127,7 +146,8 @@ public abstract class WorldProvider
     }
 
     /**
-     * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
+     * Returns 'true' if in the "main surface world", but 'false' if in the
+     * Nether or End dimensions.
      */
     public boolean isSurfaceWorld()
     {
@@ -140,13 +160,13 @@ public abstract class WorldProvider
     public float[] calcSunriseSunsetColors(float par1, float par2)
     {
         float var3 = 0.4F;
-        float var4 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) - 0.0F;
+        float var4 = MathHelper.cos(par1 * (float) Math.PI * 2.0F) - 0.0F;
         float var5 = -0.0F;
 
         if (var4 >= var5 - var3 && var4 <= var5 + var3)
         {
             float var6 = (var4 - var5) / var3 * 0.5F + 0.5F;
-            float var7 = 1.0F - (1.0F - MathHelper.sin(var6 * (float)Math.PI)) * 0.99F;
+            float var7 = 1.0F - (1.0F - MathHelper.sin(var6 * (float) Math.PI)) * 0.99F;
             var7 *= var7;
             this.colorsSunriseSunset[0] = var6 * 0.3F + 0.7F;
             this.colorsSunriseSunset[1] = var6 * var6 * 0.7F + 0.2F;
@@ -165,7 +185,7 @@ public abstract class WorldProvider
      */
     public Vec3 getFogColor(float par1, float par2)
     {
-        float var3 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+        float var3 = MathHelper.cos(par1 * (float) Math.PI * 2.0F) * 2.0F + 0.5F;
 
         if (var3 < 0.0F)
         {
@@ -183,11 +203,13 @@ public abstract class WorldProvider
         var4 *= var3 * 0.94F + 0.06F;
         var5 *= var3 * 0.94F + 0.06F;
         var6 *= var3 * 0.91F + 0.09F;
-        return this.worldObj.getWorldVec3Pool().getVecFromPool((double)var4, (double)var5, (double)var6);
+        return this.worldObj.getWorldVec3Pool().getVecFromPool((double) var4,
+                (double) var5, (double) var6);
     }
 
     /**
-     * True if the player can respawn in this dimension (true = overworld, false = nether).
+     * True if the player can respawn in this dimension (true = overworld, false
+     * = nether).
      */
     public boolean canRespawnHere()
     {
@@ -196,7 +218,9 @@ public abstract class WorldProvider
 
     public static WorldProvider getProviderForDimension(int par0)
     {
-        return (WorldProvider)(par0 == -1 ? new WorldProviderHell() : (par0 == 0 ? new WorldProviderSurface() : (par0 == 1 ? new WorldProviderEnd() : null)));
+        return (WorldProvider)(par0 == -1 ? new WorldProviderHell()
+                : (par0 == 0 ? new WorldProviderSurface()
+                        : (par0 == 1 ? new WorldProviderEnd() : null)));
     }
 
     /**
@@ -226,8 +250,8 @@ public abstract class WorldProvider
     }
 
     /**
-     * returns true if this dimension is supposed to display void particles and pull in the far plane based on the
-     * user's Y offset.
+     * returns true if this dimension is supposed to display void particles and
+     * pull in the far plane based on the user's Y offset.
      */
     public boolean getWorldHasVoidParticles()
     {
@@ -235,9 +259,10 @@ public abstract class WorldProvider
     }
 
     /**
-     * Returns a double value representing the Y value relative to the top of the map at which void fog is at its
-     * maximum. The default factor of 0.03125 relative to 256, for example, means the void fog will be at its maximum at
-     * (256*0.03125), or 8.
+     * Returns a double value representing the Y value relative to the top of
+     * the map at which void fog is at its maximum. The default factor of
+     * 0.03125 relative to 256, for example, means the void fog will be at its
+     * maximum at (256*0.03125), or 8.
      */
     public double getVoidFogYFactor()
     {
