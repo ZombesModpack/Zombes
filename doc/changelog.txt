@@ -1,5 +1,11 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v6.8.4 for MC 1.4.6
+- added support for mouse buttons for keybindings
+- added an option to the Fly mod allowing to fly toward the cursor
+- improved death mod : no longer requires class EntityPlayerMP
+- fixed a bug related to item damage values causing glitches in many mods
+
 v7.0.0 for MC 1.5
 - fixed a crash triggering when rendering damaged blocks
 

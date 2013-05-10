@@ -12,7 +12,7 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "7.0.0 for MC 1.5";
+    public static final String version = "7.0.1 for MC 1.5";
     
     private static final String MCPnames[] = {
         // GuiAchievement
