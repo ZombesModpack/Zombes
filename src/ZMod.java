@@ -352,7 +352,7 @@ public final class ZMod {
     private static Properties conf; // configuration
     private static boolean exceptionReported; // used to show only one reflection error
     private static boolean keys[] = new boolean[Keyboard.KEYBOARD_SIZE]; // used to detect key presses
-    private static boolean keysM[] = new boolean[3];
+    private static boolean keysM[] = new boolean[256];
     private static HashMap names;
     private static boolean chatWelcomed; // servers welcome message has passed
     private static boolean initialized; // true if config has been parsed
@@ -4867,7 +4867,7 @@ public final class ZMod {
             opt.drawRect(x-1, y-1, x+w+1, y+11, 0x99000000);
             showText(statusmsg, x, y, 0xcc9999);
         }
-        return hover && mousePress(0);
+        return hover && !selected && mousePress(0);
     }
     
     private static final int SCALE_DISCRETE = 1,
@@ -4977,11 +4977,16 @@ public final class ZMod {
         if (drawBtn(22, optionNr - optionOfs, 20, optionSel == optionNr ? "..." : keyName(current), help, optionSel == optionNr, true, true, false, status[feature])) optionSel = optionNr;
         else if (optionSel != optionNr) return current;
         // try to rebind
-        for (int key = 1; key<255; key++) if (keyDown(key)) {
+        for (int key = 1; key<255; key++) if (keyPress(key)) {
             optionSel = -1; // unselect
             if (key == Keyboard.KEY_ESCAPE) key = Keyboard.KEY_NONE;
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key)));
             return key;
+        }
+        for (int key = 0; key<Mouse.getButtonCount() && key<keysM.length; key++) if (mousePress(key)) {
+            optionSel = -1; // unselect
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key | KEY_MOUSE)));
+            return key | KEY_MOUSE;
         }
         // no keys pressed - until next time then
         return current;
@@ -5553,7 +5558,28 @@ public final class ZMod {
         val = val.replaceAll("[\t\r\n]+", " ").trim();
         if (val.equals("")) return Keyboard.KEY_NONE;
         int i = Keyboard.getKeyIndex(val.toUpperCase());
-        if (i == Keyboard.KEY_NONE) { err("error: config.txt @ "+name+" - invalid key name \""+val+"\""); return init; }
+        if (i == Keyboard.KEY_NONE) {
+            i = Mouse.getButtonIndex(val.toUpperCase());
+            if (i == -1) {
+                String param = null;
+                if (val.toUpperCase().startsWith("MOUSE"))
+                    param = val.substring(5);
+                if (val.toUpperCase().startsWith("BUTTON"))
+                    param = val.substring(6);
+                if (param != null) {
+                    try {
+                        int j = Integer.parseInt(param);
+                        if (j >= 0 && j < keysM.length) i = j;
+                    } catch (Exception e) {
+                        
+                    }
+                }
+            }
+            if (i == -1) { 
+                err("error: config.txt @ "+name+" - invalid key name \""+val+"\"");
+                return init; 
+            } else i |= KEY_MOUSE;
+        }
         return i;
     }
 
@@ -5729,9 +5755,23 @@ public final class ZMod {
     private static void setMsg(int rank, String msg) { setMsg(rank, msg, 0xffffff, 2+rank*2, 2+rank*12); }
     private static void setMsg(int rank, String msg, int color) { texts[rank] = new Text(msg, 2+rank*2, 2+rank*12, color); }
     private static void setMsg(int rank, String msg, int color, int x, int y) { texts[rank] = new Text(msg, x, y, color); }
-    private static boolean keyPress(int key) { boolean res = !keys[key]; return (keys[key] = keyDown(key)) && res; }
-    private static boolean keyDown(int key) { return key != 0 && Keyboard.isKeyDown(key); }
-    private static String keyName(int key) { if (key == 0) {return "";} else {String res = Keyboard.getKeyName(key); return res != null ? res : (""+key); }}
+    private static final int KEY_MOUSE = 0x10000;
+    private static boolean keyPress(int key) {
+        if ((key & KEY_MOUSE) != 0) return mousePress(key ^ KEY_MOUSE);
+        boolean res = !keys[key]; return (keys[key] = keyDown(key)) && res;
+    }
+    private static boolean keyDown(int key) {
+        if ((key & KEY_MOUSE) != 0) return Mouse.isButtonDown(key ^ KEY_MOUSE);
+        return key != 0 && Keyboard.isKeyDown(key);
+    }
+    private static String keyName(int key) {
+        if ((key & KEY_MOUSE) != 0) {
+            String res = Mouse.getButtonName(key ^ KEY_MOUSE);
+            return res != null ? res : "MOUSE"+(key ^ KEY_MOUSE);
+        }
+        if (key == 0) {return "";}
+        else {String res = Keyboard.getKeyName(key); return res != null ? res : (""+key); }
+    }
     private static boolean mousePress(int nr) { boolean res = !keysM[nr]; return (keysM[nr] = Mouse.isButtonDown(nr)) && res; }
     private static float sgn(float f) { return f<0f ? -1f : (f>0f ? 1f : 0f); }
     private static FloatBuffer makeBuffer(int length) { return ByteBuffer.allocateDirect(length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer(); }
