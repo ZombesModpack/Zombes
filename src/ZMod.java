@@ -222,7 +222,8 @@ public final class ZMod {
         HOOK_BEGIN                     = CLASS_END,
         HOOK_CLIENTTICK                = HOOK_BEGIN+0,
         HOOK_SERVERTICK                = HOOK_BEGIN+1,
-        HOOK_END                       = HOOK_BEGIN+2,
+        HOOK_SERVERDEATH               = HOOK_BEGIN+2,
+        HOOK_END                       = HOOK_BEGIN+3,
         MOD_BEGIN                      = HOOK_END,
         MOD_BOOM                       = MOD_BEGIN+0,
         MOD_BUILD                      = MOD_BEGIN+1,
@@ -296,6 +297,7 @@ public final class ZMod {
         status[HOOK_CLIENTTICK] = status[CLASS_ENTITYPLAYER];
         status[HOOK_SERVERTICK] = status[CLASS_ENTITYPLAYER]
                                 & status[CLASS_NETSERVERHANDLER];
+        status[HOOK_SERVERDEATH] = status[CLASS_ENTITYPLAYERMP];
         
         status[MOD_BOOM]     = STATUS_BROKEN
                              | status[CLASS_EXPLOSION];
@@ -308,8 +310,7 @@ public final class ZMod {
         status[MOD_COMPASS]  = STATUS_AVAILABLE;
         status[MOD_CRAFT]    = STATUS_BROKEN
                              | status[CLASS_GUICONTAINER];
-        status[MOD_DEATH]    = status[CLASS_ENTITYPLAYER]
-                             | status[CLASS_ENTITYPLAYERMP];
+        status[MOD_DEATH]    = status[CLASS_ENTITYPLAYER];
         status[MOD_DIG]      = status[CLASS_PLAYERCONTROLLERMP];
         status[MOD_FLY]      = status[CLASS_ENTITYPLAYER];
         status[MOD_FURNACE]  = STATUS_BROKEN
@@ -351,7 +352,7 @@ public final class ZMod {
     private static Properties conf; // configuration
     private static boolean exceptionReported; // used to show only one reflection error
     private static boolean keys[] = new boolean[Keyboard.KEYBOARD_SIZE]; // used to detect key presses
-    private static boolean keysM[] = new boolean[3];
+    private static boolean keysM[] = new boolean[256];
     private static HashMap names;
     private static boolean chatWelcomed; // servers welcome message has passed
     private static boolean initialized; // true if config has been parsed
@@ -985,6 +986,7 @@ public final class ZMod {
     private static boolean modDeathEnabled, modDeathActive;
     private static boolean optDeathDropInv, optDeathLoseExp;
     private static int optDeathHPPenalty;
+    private static boolean deathJustDied;
     private static boolean deathHaveInv, deathHaveExp;
     private static ItemStack deathInv[];
     private static ItemStack deathArmor[];
@@ -1018,20 +1020,36 @@ public final class ZMod {
         
     }
     
-    private static void deathOnServerPlayerDeath(EntityPlayer ent) {
-        if (!modDeathActive || isMultiplayer) return;
+    private static void deathVoid(EntityPlayer ent) {
+        if (!optDeathDropInv) {
+            InventoryPlayer inv = ent.inventory;
+            for (int i = 0; i < deathInv.length; ++i) { 
+                inv.mainInventory[i] = null;
+            }
+            for (int i = 0; i < deathArmor.length; ++i) {
+                inv.armorInventory[i] = null;
+            }
+        }
+        if (!optDeathLoseExp) {
+            ent.experienceTotal = 0;
+            ent.experience      = 0;
+            ent.experienceLevel = 0;
+        }
+    }
+    
+    private static void deathSave(EntityPlayer ent) {
         if (!optDeathDropInv) { // save inventory
             deathHaveInv = true;
             InventoryPlayer inv = ent.inventory;
             deathInv = new ItemStack[inv.mainInventory.length];
             deathArmor = new ItemStack[inv.armorInventory.length];
             for (int i = 0; i < deathInv.length; ++i) { 
-                deathInv[i]   = inv.mainInventory[i];
-                inv.mainInventory[i] = null;
+                ItemStack is = inv.mainInventory[i];
+                deathInv[i] = (is == null) ? is : is.copy();
             }
             for (int i = 0; i < deathArmor.length; ++i) {
-                deathArmor[i] = inv.armorInventory[i];
-                inv.armorInventory[i] = null;
+                ItemStack is = inv.armorInventory[i];
+                deathArmor[i] = (is == null) ? is : is.copy();
             }
         }
         if (!optDeathLoseExp) {
@@ -1041,23 +1059,44 @@ public final class ZMod {
             deathXpLevel = ent.experienceLevel;
         }
     }
+    
+    private static void deathLoad(EntityPlayer ent) {
+        if (!optDeathDropInv && deathHaveInv) { // load inventory
+            InventoryPlayer inv = ent.inventory;
+            for (int i = 0; i < deathInv.length; ++i) { 
+                ItemStack is = deathInv[i];
+                inv.mainInventory[i] = (is == null) ? is : is.copy();
+            }
+            for (int i = 0; i < deathArmor.length; ++i) {
+                ItemStack is = deathArmor[i];
+                inv.armorInventory[i] = (is == null) ? is : is.copy();
+            }
+        }
+        if (!optDeathLoseExp && deathHaveExp) {
+            ent.experienceTotal = deathXpTotal;
+            ent.experience      = deathXpP;
+            ent.experienceLevel = deathXpLevel;
+        }
+    }
+    
+    private static void deathOnServerPlayerDeath(EntityPlayer ent) {
+        if (!modDeathActive || isMultiplayer) return;
+        deathSave(ent);
+        deathVoid(ent);
+        deathJustDied = true;
+    }
 
     private static void deathOnServerPlayerUpdate(EntityPlayer ent) {
         if (!modDeathActive || isMultiplayer) return;
-        if (ent.isDead || getHealth(ent) <= 0) return;
-        if (!optDeathDropInv && deathHaveInv) {
-            deathHaveInv = false;
-            InventoryPlayer inv = ent.inventory;
-            for (int i = 0; i < deathInv.length;   ++i) inv.mainInventory[i]  = inv.mainInventory[i]  == null ? deathInv[i]   : inv.mainInventory[i];
-            for (int i = 0; i < deathArmor.length; ++i) inv.armorInventory[i] = inv.armorInventory[i] == null ? deathArmor[i] : inv.armorInventory[i];
-        }
-        if (!optDeathLoseExp && deathHaveExp) {
-            deathHaveExp = false;
-            if (ent.experienceTotal == 0) {
-                ent.experienceTotal = deathXpTotal;
-                ent.experience      = deathXpP;
-                ent.experienceLevel = deathXpLevel;
+        if (!ent.isDead && getHealth(ent) > 0) {
+            if (deathJustDied) {
+                deathLoad(ent);
+                deathJustDied = false;
+            } else if (!checkStatus(HOOK_SERVERDEATH)) {
+                deathSave(ent);
             }
+        } else if (!checkStatus(HOOK_SERVERDEATH)) {
+            deathJustDied = true;
         }
     }
 
@@ -2284,12 +2323,12 @@ public final class ZMod {
     //=ZMod=Fly===============================================================
     private static boolean modFlyEnabled, modFlyActive, modFlyAllowed, modNoClipAllowed;
     private static String tagFly, tagFlyNoClip;
-    private static int keyFlyOn, keyFlyOff, keyFlyUp, keyFlyDown, keyFlySpeed, keyFlyToggle, keyFlyRun, keyFlyNoClip;
-    private static double optFlySpeedVertical, optFlySpeedMulNormal, optFlySpeedMulModifier, optFlyRunSpeedMul, optFlyRunSpeedVMul;
+    private static int keyFlyOn, keyFlyOff, keyFlyUp, keyFlyDown, keyFlyForward, keyFlySpeed, keyFlyToggle, keyFlyRun, keyFlyNoClip;
+    private static double optFlySpeedVertical, optFlySpeedForward, optFlySpeedMulNormal, optFlySpeedMulModifier, optFlyRunSpeedMul, optFlyRunSpeedVMul;
     private static double optFlyJump, optFlyJumpHigh;
     private static boolean optFlySpeedIsToggle, optFlyRunSpeedIsToggle, optFlyNoClip, optFlyVanillaFly, optFlyVanillaSprint;
-    private static boolean fly, flySpeed, flyRun, flyNoClip, flyUp, flyDown;
-    private static boolean flyProjection, flySpeedProjection, flyRunProjection, flyNoClipProjection, flyUpProjection, flyDownProjection;
+    private static boolean fly, flySpeed, flyRun, flyNoClip, flyUp, flyDown, flyForward;
+    private static boolean flyProjection, flySpeedProjection, flyRunProjection, flyNoClipProjection, flyUpProjection, flyDownProjection, flyForwardProjection;
     private static boolean playerClassActive;
     private static boolean flew = false, moveOnGround;
 
@@ -2320,7 +2359,9 @@ public final class ZMod {
         optFlySpeedMulNormal    = getSetLog((float)optFlySpeedMulNormal,   "optFlySpeedMulNormal"    , 1.0f, 0.1f, 100.0f , "Flying speed");
         keyFlyUp                = getSetBind(keyFlyUp,                       "keyFlyUp",     Keyboard.KEY_E           , "Fly up");
         keyFlyDown              = getSetBind(keyFlyDown,                     "keyFlyDown",   Keyboard.KEY_Q           , "Fly down");
+        keyFlyForward           = getSetBind(keyFlyForward,                     "keyFlyForward",   0           , "Fly toward cursor");
         optFlySpeedVertical     = getSetLog((float)optFlySpeedVertical,    "optFlySpeedVertical"     , 0.2f, 0.1f, 10.0f  , "Vertical flying speed");
+        optFlySpeedForward      = getSetLog((float)optFlySpeedForward,    "optFlySpeedForward"     , 1f, 0.1f, 10.0f  , "Flying speed toward cursor");
         keyFlySpeed             = getSetBind(keyFlySpeed,                    "keyFlySpeed",  Keyboard.KEY_LSHIFT      , "Fly speed modifier");
         optFlySpeedIsToggle     = getSetBool(optFlySpeedIsToggle,            "optFlySpeedIsToggle"   , false, "Fly speed modifier is toggle");
         optFlySpeedMulModifier  = getSetLog((float)optFlySpeedMulModifier, "optFlySpeedMulModifier"  , 2.0f, 1.0f, 100.0f , "Flying speed with speed modifier");
@@ -2358,11 +2399,13 @@ public final class ZMod {
             else if (keyPress(keyFlyRun)) flyRunProjection = !flyRunProjection;
             flyUpProjection = keyDown(keyFlyUp);
             flyDownProjection = keyDown(keyFlyDown);
+            flyForwardProjection = keyDown(keyFlyForward);
         } else {
             if (!optFlySpeedIsToggle) flySpeedProjection = false;
             if (!optFlyRunSpeedIsToggle) flyRunProjection = false;
             flyUpProjection = false;
             flyDownProjection = false;
+            flyForwardProjection = false;
         }
         if (isControllingPlayer()) {
             boolean flyPrev = fly;
@@ -2385,11 +2428,13 @@ public final class ZMod {
             else if (keyPress(keyFlyRun)) flyRun = !flyRun;
             flyUp = keyDown(keyFlyUp);
             flyDown = keyDown(keyFlyDown);
+            flyForward = keyDown(keyFlyForward);
         } else {
             if (!optFlySpeedIsToggle) flySpeed = false;
             if (!optFlyRunSpeedIsToggle) flyRun = false;
             flyUp = false;
             flyDown = false;
+            flyForward = false;
         }
     }
 
@@ -2443,6 +2488,14 @@ public final class ZMod {
                     if (!isMenu) {
                         if (flyUp) my += optFlySpeedVertical;
                         if (flyDown) my -= optFlySpeedVertical;
+                        if (flyForward) {
+                            float move = (float) optFlySpeedForward;
+                            float movef = -move * MathHelper.cos(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            float movev = -move * MathHelper.sin(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            mx += movef * MathHelper.sin(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            mz += -movef * MathHelper.cos(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            my += movev;
+                        }
                         double mul = flySpeed ? optFlySpeedMulModifier : optFlySpeedMulNormal;
                         mx*=mul; my*=mul; mz*=mul;
                         setFall(ent, 0f); setEntityMotionY(ent, 0f); flew = true;
@@ -2464,6 +2517,14 @@ public final class ZMod {
                     if (!isMenu) {
                         if (flyUpProjection) my += optFlySpeedVertical;
                         if (flyDownProjection) my -= optFlySpeedVertical;
+                        if (flyForwardProjection) {
+                            float move = (float) optFlySpeedForward;
+                            float movef = -move * MathHelper.cos(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            float movev = -move * MathHelper.sin(ent.rotationPitch * (float)Math.PI / 180.0f);
+                            mx += movef * MathHelper.sin(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            mz += -movef * MathHelper.cos(ent.rotationYaw * (float)Math.PI / 180.0f);
+                            my += movev;
+                        }
                         double mul = flySpeedProjection ? optFlySpeedMulModifier : optFlySpeedMulNormal;
                         mx*=mul; my*=mul; mz*=mul;
                         setFall(ent, 0f); setEntityMotionY(ent, 0f);
@@ -4814,7 +4875,7 @@ public final class ZMod {
             opt.drawRect(x-1, y-1, x+w+1, y+11, 0x99000000);
             showText(statusmsg, x, y, 0xcc9999);
         }
-        return hover && mousePress(0);
+        return hover && !selected && mousePress(0);
     }
     
     private static final int SCALE_DISCRETE = 1,
@@ -4924,11 +4985,16 @@ public final class ZMod {
         if (drawBtn(22, optionNr - optionOfs, 20, optionSel == optionNr ? "..." : keyName(current), help, optionSel == optionNr, true, true, false, status[feature])) optionSel = optionNr;
         else if (optionSel != optionNr) return current;
         // try to rebind
-        for (int key = 1; key<255; key++) if (keyDown(key)) {
+        for (int key = 1; key<255; key++) if (keyPress(key)) {
             optionSel = -1; // unselect
             if (key == Keyboard.KEY_ESCAPE) key = Keyboard.KEY_NONE;
             updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key)));
             return key;
+        }
+        for (int key = 0; key<Mouse.getButtonCount() && key<keysM.length; key++) if (mousePress(key)) {
+            optionSel = -1; // unselect
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key | KEY_MOUSE)));
+            return key | KEY_MOUSE;
         }
         // no keys pressed - until next time then
         return current;
@@ -5513,7 +5579,28 @@ public final class ZMod {
         val = val.replaceAll("[\t\r\n]+", " ").trim();
         if (val.equals("")) return Keyboard.KEY_NONE;
         int i = Keyboard.getKeyIndex(val.toUpperCase());
-        if (i == Keyboard.KEY_NONE) { err("error: config.txt @ "+name+" - invalid key name \""+val+"\""); return init; }
+        if (i == Keyboard.KEY_NONE) {
+            i = Mouse.getButtonIndex(val.toUpperCase());
+            if (i == -1) {
+                String param = null;
+                if (val.toUpperCase().startsWith("MOUSE"))
+                    param = val.substring(5);
+                if (val.toUpperCase().startsWith("BUTTON"))
+                    param = val.substring(6);
+                if (param != null) {
+                    try {
+                        int j = Integer.parseInt(param);
+                        if (j >= 0 && j < keysM.length) i = j;
+                    } catch (Exception e) {
+                        
+                    }
+                }
+            }
+            if (i == -1) { 
+                err("error: config.txt @ "+name+" - invalid key name \""+val+"\"");
+                return init; 
+            } else i |= KEY_MOUSE;
+        }
         return i;
     }
 
@@ -5689,9 +5776,23 @@ public final class ZMod {
     private static void setMsg(int rank, String msg) { setMsg(rank, msg, 0xffffff, 2+rank*2, 2+rank*12); }
     private static void setMsg(int rank, String msg, int color) { texts[rank] = new Text(msg, 2+rank*2, 2+rank*12, color); }
     private static void setMsg(int rank, String msg, int color, int x, int y) { texts[rank] = new Text(msg, x, y, color); }
-    private static boolean keyPress(int key) { boolean res = !keys[key]; return (keys[key] = keyDown(key)) && res; }
-    private static boolean keyDown(int key) { return key != 0 && Keyboard.isKeyDown(key); }
-    private static String keyName(int key) { if (key == 0) {return "";} else {String res = Keyboard.getKeyName(key); return res != null ? res : (""+key); }}
+    private static final int KEY_MOUSE = 0x10000;
+    private static boolean keyPress(int key) {
+        if ((key & KEY_MOUSE) != 0) return mousePress(key ^ KEY_MOUSE);
+        boolean res = !keys[key]; return (keys[key] = keyDown(key)) && res;
+    }
+    private static boolean keyDown(int key) {
+        if ((key & KEY_MOUSE) != 0) return Mouse.isButtonDown(key ^ KEY_MOUSE);
+        return key != 0 && Keyboard.isKeyDown(key);
+    }
+    private static String keyName(int key) {
+        if ((key & KEY_MOUSE) != 0) {
+            String res = Mouse.getButtonName(key ^ KEY_MOUSE);
+            return res != null ? res : "MOUSE"+(key ^ KEY_MOUSE);
+        }
+        if (key == 0) {return "";}
+        else {String res = Keyboard.getKeyName(key); return res != null ? res : (""+key); }
+    }
     private static boolean mousePress(int nr) { boolean res = !keysM[nr]; return (keysM[nr] = Mouse.isButtonDown(nr)) && res; }
     private static float sgn(float f) { return f<0f ? -1f : (f>0f ? 1f : 0f); }
     private static FloatBuffer makeBuffer(int length) { return ByteBuffer.allocateDirect(length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer(); }

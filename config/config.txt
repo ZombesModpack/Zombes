@@ -207,6 +207,9 @@ keyFlyUp              = E
 # Fly down.
 keyFlyDown            = Q
 
+# Fly toward the cursor
+keyFlyForward         = 
+
 # Flying speed modifier key.
 keyFlySpeed           = LSHIFT
 
@@ -236,6 +239,9 @@ optFlyRunSpeedVMul    = 1.5
 
 # Vertical movement speed. [0.1 .. 1.0]
 optFlySpeedVertical   = 0.2
+
+# Movement speed when flying toward cursor
+optFlySpeedForward    = 1.0
 
 # Movement speed multiplier. [0.1 .. 10.0]
 optFlySpeedMulNormal  = 1.0
