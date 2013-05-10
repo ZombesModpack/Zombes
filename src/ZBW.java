@@ -3,12 +3,20 @@ package net.minecraft.src;
 import java.util.Random;
 
 // -------------------------------------------------------------------------------------------------------------------------------
-public final class ZBW extends BlockFlowing {
-
-    public ZBW(boolean water) {
+public final class ZBW extends BlockFlowing
+{
+    public ZBW(boolean water)
+    {
         super(water ? 8 : 10, water ? Material.water : Material.lava);
-        if(water) setHardness(100F).setLightOpacity(3).setUnlocalizedName("water").disableStats();
-        else setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).setUnlocalizedName("lava").disableStats();
+
+        if (water)
+        {
+            setHardness(100F).setLightOpacity(3).setUnlocalizedName("water").disableStats();
+        }
+        else
+        {
+            setHardness(0.0F).setLightValue(1.0F).setLightOpacity(255).setUnlocalizedName("lava").disableStats();
+        }
     }
 // -------------------------------------------------------------------------------------------------------------------------------
 
@@ -18,7 +26,7 @@ public final class ZBW extends BlockFlowing {
     private void updateFlow(World par1World, int par2, int par3, int par4)
     {
         int i = par1World.getBlockMetadata(par2, par3, par4);
-        par1World.setBlockAndMetadataWithNotify(par2, par3, par4, blockID + 1, i, 0);
+        par1World.setBlock(par2, par3, par4, blockID + 1, i, 0);
         par1World.markBlockRangeForRenderUpdate(par2, par3, par4, par2, par3, par4);
         par1World.markBlockForUpdate(par2, par3, par4);
     }
@@ -71,9 +79,13 @@ public final class ZBW extends BlockFlowing {
                     k = i1 + 8;
                 }
             }
-            
+
 // -------------------------------------------------------------------------------------------------------------------------------
-            if (numAdjacentSources >= 2) k = 0;
+            if (numAdjacentSources >= 2)
+            {
+                k = 0;
+            }
+
 // -------------------------------------------------------------------------------------------------------------------------------
 
             if (blockMaterial == Material.lava && i < 8 && k < 8 && k > i && par5Random.nextInt(4) != 0)
@@ -88,7 +100,7 @@ public final class ZBW extends BlockFlowing {
 
                 if (i < 0)
                 {
-                    par1World.func_94575_c(par2, par3, par4, 0);
+                    par1World.setBlock(par2, par3, par4, 0);
                 }
                 else
                 {
@@ -111,18 +123,18 @@ public final class ZBW extends BlockFlowing {
         {
             if (blockMaterial == Material.lava && par1World.getBlockMaterial(par2, par3 - 1, par4) == Material.water)
             {
-                par1World.func_94575_c(par2, par3 - 1, par4, Block.stone.blockID);
+                par1World.setBlock(par2, par3 - 1, par4, Block.stone.blockID);
                 triggerLavaMixEffects(par1World, par2, par3 - 1, par4);
                 return;
             }
 
             if (i >= 8)
             {
-                par1World.setBlockAndMetadataWithNotify(par2, par3 - 1, par4, blockID, i, 1);
+                par1World.setBlock(par2, par3 - 1, par4, blockID, i, 1);
             }
             else
             {
-                par1World.setBlockAndMetadataWithNotify(par2, par3 - 1, par4, blockID, i + 8, 1);
+                par1World.setBlock(par2, par3 - 1, par4, blockID, i + 8, 1);
             }
         }
         else if (i >= 0 && (i == 0 || blockBlocksFlow(par1World, par2, par3 - 1, par4)))
@@ -184,7 +196,7 @@ public final class ZBW extends BlockFlowing {
                 }
             }
 
-            par1World.setBlockAndMetadataWithNotify(par2, par3, par4, blockID, par5, 1);
+            par1World.setBlock(par2, par3, par4, blockID, par5, 1);
         }
     }
 
@@ -328,7 +340,7 @@ public final class ZBW extends BlockFlowing {
     {
         int i = par1World.getBlockId(par2, par3, par4);
 
-        if (i == Block.doorWood.blockID || i == Block.doorSteel.blockID || i == Block.signPost.blockID || i == Block.ladder.blockID || i == Block.reed.blockID)
+        if (i == Block.doorWood.blockID || i == Block.doorIron.blockID || i == Block.signPost.blockID || i == Block.ladder.blockID || i == Block.reed.blockID)
         {
             return true;
         }
@@ -397,5 +409,4 @@ public final class ZBW extends BlockFlowing {
             return !blockBlocksFlow(par1World, par2, par3, par4);
         }
     }
-
 }

@@ -2,10 +2,8 @@ package net.minecraft.src;
 
 public enum EnumGameType
 {
-    NOT_SET(-1, ""),
-    SURVIVAL(0, "survival"),
-    CREATIVE(1, "creative"),
-    ADVENTURE(2, "adventure");
+    NOT_SET(-1, ""), SURVIVAL(0, "survival"), CREATIVE(1, "creative"), ADVENTURE(
+            2, "adventure");
     int id;
     String name;
 
@@ -34,7 +32,8 @@ public enum EnumGameType
     /**
      * Configures the player capabilities based on the game type
      */
-    public void configurePlayerCapabilities(PlayerCapabilities par1PlayerCapabilities)
+    public void configurePlayerCapabilities(
+            PlayerCapabilities par1PlayerCapabilities)
     {
         if (this == CREATIVE)
         {
@@ -49,7 +48,7 @@ public enum EnumGameType
             par1PlayerCapabilities.disableDamage = false;
             par1PlayerCapabilities.isFlying = false;
         }
-        
+
         if (this == SURVIVAL && ZMod.isFly())
         {
             par1PlayerCapabilities.isFlying = true;
@@ -83,7 +82,8 @@ public enum EnumGameType
     }
 
     /**
-     * Returns the game type with the specified ID, or SURVIVAL if none found. Args: id
+     * Returns the game type with the specified ID, or SURVIVAL if none found.
+     * Args: id
      */
     public static EnumGameType getByID(int par0)
     {
@@ -104,7 +104,8 @@ public enum EnumGameType
     }
 
     /**
-     * Returns the game type with the specified name, or SURVIVAL if none found. This is case sensitive. Args: name
+     * Returns the game type with the specified name, or SURVIVAL if none found.
+     * This is case sensitive. Args: name
      */
     public static EnumGameType getByName(String par0Str)
     {

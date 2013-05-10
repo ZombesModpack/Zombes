@@ -39,8 +39,8 @@ public class MovementInputFromOptions extends MovementInput
 
         if (this.sneak && !ZMod.isFly())
         {
-            this.moveStrafe = (float)((double)this.moveStrafe * 0.3D);
-            this.moveForward = (float)((double)this.moveForward * 0.3D);
+            this.moveStrafe = (float)((double) this.moveStrafe * 0.3D);
+            this.moveForward = (float)((double) this.moveForward * 0.3D);
         }
     }
 }
