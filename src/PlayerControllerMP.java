@@ -106,7 +106,7 @@ public class PlayerControllerMP
      */
     public boolean onPlayerDestroyBlock(int par1, int par2, int par3, int par4)
     {
-        if (this.currentGameType.isAdventure() && !this.mc.thePlayer.canCurrentToolHarvestBlock(par1, par2, par3))
+        if (this.currentGameType.isAdventure() && !this.mc.thePlayer.isCurrentToolAdventureModeExempt(par1, par2, par3))
         {
             return false;
         }
@@ -164,7 +164,7 @@ public class PlayerControllerMP
         //-ZMod-Dig-check-----------------------------------------------------
         if (!ZMod.digCheckReachDig(par1,par2,par3)) return;
         //--------------------------------------------------------------------
-        if (!this.currentGameType.isAdventure() || this.mc.thePlayer.canCurrentToolHarvestBlock(par1, par2, par3))
+        if (!this.currentGameType.isAdventure() || this.mc.thePlayer.isCurrentToolAdventureModeExempt(par1, par2, par3))
         {
             if (this.currentGameType.isCreative())
             {

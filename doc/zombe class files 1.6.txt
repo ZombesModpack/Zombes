@@ -13,15 +13,15 @@ Resize  - RenderLiving
 
 2) Optional mods classes
 File/ Class Name               / Used by
-abz - EnumGameType             - Fly
-aed - WorldProvider            - Sun
-bcn - NetClienthandler         - Fly
-bct - PlayerControllerMP       - Dig, Cheat (bhd)
-bel - MovementInputFromOptions - Fly
-bem - EntityPlayerSP           - Fly
-js  - EntityPlayerMP           - Death
-jx  - NetServerHandler         - Fly (noclip), Dig (reach)
-ua  - EntityPlayer             - Fly core, Cheat
+acd - EnumGameType             - Fly
+aeh - WorldProvider            - Sun
+bct - NetClienthandler         - Fly
+bcz - PlayerControllerMP       - Dig, Cheat (bhd)
+bet - MovementInputFromOptions - Fly
+beu - EntityPlayerSP           - Fly
+ju  - EntityPlayerMP           - Death
+jz  - NetServerHandler         - Fly (noclip), Dig (reach)
+ue  - EntityPlayer             - Fly core, Cheat
 
 2 bis) Class files absent from the package for now
     - Explosion                - Boom
@@ -31,16 +31,16 @@ ua  - EntityPlayer             - Fly core, Cheat
 
 3) All included files
 File/ Class Name               / Used by
-abz - EnumGameType             - Fly
-aed - WorldProvider            - Sun
-atn - Minecraft                - core
-bcn - NetClienthandler         - Fly
-bct - PlayerControllerMP       - Dig, Cheat (bhd)
-bel - MovementInputFromOptions - Fly
-bem - EntityPlayerSP           - Fly
-js  - EntityPlayerMP           - Death
-jx  - NetServerHandler         - Fly (noclip), Dig (reach)
-ua  - EntityPlayer             - Fly core, Cheat
+acd - EnumGameType             - Fly
+aeh - WorldProvider            - Sun
+ats - Minecraft                - core
+bct - NetClienthandler         - Fly
+bcz - PlayerControllerMP       - Dig, Cheat (bhd)
+bet - MovementInputFromOptions - Fly
+beu - EntityPlayerSP           - Fly
+ju  - EntityPlayerMP           - Death
+jz  - NetServerHandler         - Fly (noclip), Dig (reach)
+ue  - EntityPlayer             - Fly core, Cheat
 Z** - Zombe's Modpack files    - core
 
 *.java -   source code files   - devs.

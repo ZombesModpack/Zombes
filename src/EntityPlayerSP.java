@@ -37,9 +37,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (ZMod.onSetAngles(par1,par2)) super.setAngles(par1,par2);
     }
     //-ZMod-Dig-check-secondary-detail----------------------------------------
-    public boolean canCurrentToolHarvestBlock(int x, int y, int z) {
+    public boolean isCurrentToolAdventureModeExempt(int x, int y, int z) {
         if (!ZMod.digCheckReachDig(x,y,z)) return false;
-        return super.canCurrentToolHarvestBlock(x,y,z);
+        return super.isCurrentToolAdventureModeExempt(x,y,z);
     }
     //------------------------------------------------------------------------
 
@@ -634,7 +634,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         this.experienceLevel = par3;
     }
 
-    public void func_110122_a(ChatMessageComponent par1ChatMessageComponent)
+    public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent)
     {
         this.mc.ingameGUI.getChatGUI().printChatMessage(par1ChatMessageComponent.func_111068_a(true));
     }

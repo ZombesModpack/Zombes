@@ -11,7 +11,7 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "8.1.1 for MC 1.6.1";
+    public static final String version = "8.2.1 for MC 1.6.2";
     
     private static final String MCPnames[] = {
         // GuiAchievement
@@ -4240,7 +4240,7 @@ public final class ZMod {
         
         public boolean isClientWorld() { return true; }
         protected boolean isPVPEnabled() { return false; }
-        public void func_110122_a(ChatMessageComponent var1) {}
+        public void sendChatToPlayer(ChatMessageComponent var1) {}
         public boolean canCommandSenderUseCommand(int par1, String par2Str) { return false; }
         public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) { return false; }
         protected int applyPotionDamageCalculations(DamageSource par1DamageSource, int par2) { return 0; }
@@ -5536,7 +5536,7 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- RenderItem
     private static void renderItemGUI(int x, int y, ItemStack items) {
         if (itemRenderer == null) itemRenderer = new RenderItem();
-        itemRenderer.func_110795_a(minecraft.fontRenderer, minecraft.func_110434_K(), items, x, y);
+        itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.func_110434_K(), items, x, y);
     }
     // ----------------------------------------------------------------------------------------------------------------
     private static void setXItemLighting() { RenderHelper.enableStandardItemLighting(); }

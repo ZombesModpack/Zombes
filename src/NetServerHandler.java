@@ -106,7 +106,7 @@ public class NetServerHandler extends NetHandler
             this.playerEntity.mountEntityAndWakeUp();
             this.sendPacketToPlayer(new Packet255KickDisconnect(par1Str));
             this.netManager.serverShutdown();
-            this.mcServer.getConfigurationManager().func_110460_a(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
+            this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
             this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
             this.connectionClosed = true;
         }
@@ -141,7 +141,6 @@ public class NetServerHandler extends NetHandler
                 double var5;
                 double var7;
                 double var9;
-                double var13;
 
                 if (this.playerEntity.ridingEntity != null)
                 {
@@ -151,8 +150,6 @@ public class NetServerHandler extends NetHandler
                     var5 = this.playerEntity.posX;
                     var7 = this.playerEntity.posY;
                     var9 = this.playerEntity.posZ;
-                    double var35 = 0.0D;
-                    var13 = 0.0D;
 
                     if (par1Packet10Flying.rotating)
                     {
@@ -160,30 +157,10 @@ public class NetServerHandler extends NetHandler
                         var4 = par1Packet10Flying.pitch;
                     }
 
-                    if (par1Packet10Flying.moving && par1Packet10Flying.yPosition == -999.0D && par1Packet10Flying.stance == -999.0D)
-                    {
-                        if (Math.abs(par1Packet10Flying.xPosition) > 1.0D || Math.abs(par1Packet10Flying.zPosition) > 1.0D)
-                        {
-                            System.err.println(this.playerEntity.getCommandSenderName() + " was caught trying to crash the server with an invalid position.");
-                            this.kickPlayerFromServer("Nope!");
-                            return;
-                        }
-
-                        var35 = par1Packet10Flying.xPosition;
-                        var13 = par1Packet10Flying.zPosition;
-                    }
-
                     this.playerEntity.onGround = par1Packet10Flying.onGround;
                     this.playerEntity.onUpdateEntity();
-                    this.playerEntity.moveEntity(var35, 0.0D, var13);
+                    this.playerEntity.ySize = 0.0F;
                     this.playerEntity.setPositionAndRotation(var5, var7, var9, var34, var4);
-                    this.playerEntity.motionX = var35;
-                    this.playerEntity.motionZ = var13;
-
-                    if (this.playerEntity.ridingEntity != null)
-                    {
-                        var2.uncheckedUpdateEntity(this.playerEntity.ridingEntity, true);
-                    }
 
                     if (this.playerEntity.ridingEntity != null)
                     {
@@ -225,6 +202,8 @@ public class NetServerHandler extends NetHandler
                 {
                     par1Packet10Flying.moving = false;
                 }
+
+                double var13;
 
                 if (par1Packet10Flying.moving)
                 {
@@ -550,7 +529,7 @@ public class NetServerHandler extends NetHandler
     public void handleErrorMessage(String par1Str, Object[] par2ArrayOfObj)
     {
         this.mcServer.getLogAgent().logInfo(this.playerEntity.getCommandSenderName() + " lost connection: " + par1Str);
-        this.mcServer.getConfigurationManager().func_110460_a(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
+        this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
         this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
         this.connectionClosed = true;
 
@@ -762,6 +741,13 @@ public class NetServerHandler extends NetHandler
                 }
                 else if (par1Packet7UseEntity.isLeftClick == 1)
                 {
+                    if (var3 instanceof EntityItem || var3 instanceof EntityXPOrb || var3 instanceof EntityArrow || var3 == this.playerEntity)
+                    {
+                        this.kickPlayerFromServer("Attempting to attack an invalid entity");
+                        this.mcServer.logWarning("Player " + this.playerEntity.getCommandSenderName() + " tried to attack an invalid entity");
+                        return;
+                    }
+
                     this.playerEntity.attackTargetEntityWithCurrentItem(var3);
                 }
             }
@@ -820,7 +806,7 @@ public class NetServerHandler extends NetHandler
 
     public void handleCloseWindow(Packet101CloseWindow par1Packet101CloseWindow)
     {
-        this.playerEntity.closeInventory();
+        this.playerEntity.closeContainer();
     }
 
     public void handleWindowClick(Packet102WindowClick par1Packet102WindowClick)
@@ -927,7 +913,7 @@ public class NetServerHandler extends NetHandler
             {
                 TileEntitySign var4 = (TileEntitySign)var3;
 
-                if (!var4.isEditable())
+                if (!var4.isEditable() || var4.func_142009_b() != this.playerEntity)
                 {
                     this.mcServer.logWarning("Player " + this.playerEntity.getCommandSenderName() + " just tried to change non-editable sign");
                     return;
@@ -1113,7 +1099,7 @@ public class NetServerHandler extends NetHandler
                 {
                     if (!this.mcServer.isCommandBlockEnabled())
                     {
-                        this.playerEntity.func_110122_a(ChatMessageComponent.func_111077_e("advMode.notEnabled"));
+                        this.playerEntity.sendChatToPlayer(ChatMessageComponent.func_111077_e("advMode.notEnabled"));
                     }
                     else if (this.playerEntity.canCommandSenderUseCommand(2, "") && this.playerEntity.capabilities.isCreativeMode)
                     {
@@ -1130,7 +1116,7 @@ public class NetServerHandler extends NetHandler
                             {
                                 ((TileEntityCommandBlock)var7).setCommand(var6);
                                 this.playerEntity.worldObj.markBlockForUpdate(var14, var18, var5);
-                                this.playerEntity.func_110122_a(ChatMessageComponent.func_111082_b("advMode.setCommand.success", new Object[] {var6}));
+                                this.playerEntity.sendChatToPlayer(ChatMessageComponent.func_111082_b("advMode.setCommand.success", new Object[] {var6}));
                             }
                         }
                         catch (Exception var9)
@@ -1140,7 +1126,7 @@ public class NetServerHandler extends NetHandler
                     }
                     else
                     {
-                        this.playerEntity.func_110122_a(ChatMessageComponent.func_111077_e("advMode.notAllowed"));
+                        this.playerEntity.sendChatToPlayer(ChatMessageComponent.func_111077_e("advMode.notAllowed"));
                     }
                 }
                 else if ("MC|Beacon".equals(par1Packet250CustomPayload.channel))
@@ -1190,5 +1176,10 @@ public class NetServerHandler extends NetHandler
                 }
             }
         }
+    }
+
+    public boolean func_142032_c()
+    {
+        return this.connectionClosed;
     }
 }

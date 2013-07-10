@@ -975,11 +975,6 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
                         var3 = ((EntityArrow)var3).shootingEntity;
                     }
 
-                    if (var3 instanceof EntityLivingBase)
-                    {
-                        this.alertWolves((EntityLivingBase)var3, false);
-                    }
-
                     this.addStat(StatList.damageTakenStat, Math.round(par2 * 10.0F));
                     return super.attackEntityFrom(par1DamageSource, par2);
                 }
@@ -989,49 +984,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
     public boolean func_96122_a(EntityPlayer par1EntityPlayer)
     {
-        ScorePlayerTeam var2 = this.getTeam();
-        ScorePlayerTeam var3 = par1EntityPlayer.getTeam();
-        return var2 != var3 ? true : (var2 != null ? var2.func_96665_g() : true);
-    }
-
-    /**
-     * Called when the player attack or gets attacked, it's alert all wolves in the area that are owned by the player to
-     * join the attack or defend the player.
-     */
-    protected void alertWolves(EntityLivingBase par1EntityLivingBase, boolean par2)
-    {
-        if (!(par1EntityLivingBase instanceof EntityCreeper) && !(par1EntityLivingBase instanceof EntityGhast))
-        {
-            if (par1EntityLivingBase instanceof EntityWolf)
-            {
-                EntityWolf var3 = (EntityWolf)par1EntityLivingBase;
-
-                if (var3.isTamed() && this.username.equals(var3.getOwnerName()))
-                {
-                    return;
-                }
-            }
-
-            if (!(par1EntityLivingBase instanceof EntityPlayer) || this.func_96122_a((EntityPlayer)par1EntityLivingBase))
-            {
-                if (!(par1EntityLivingBase instanceof EntityHorse) || !((EntityHorse)par1EntityLivingBase).func_110248_bS())
-                {
-                    List var6 = this.worldObj.getEntitiesWithinAABB(EntityWolf.class, AxisAlignedBB.getAABBPool().getAABB(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D).expand(16.0D, 4.0D, 16.0D));
-                    Iterator var4 = var6.iterator();
-
-                    while (var4.hasNext())
-                    {
-                        EntityWolf var5 = (EntityWolf)var4.next();
-
-                        if (var5.isTamed() && var5.getEntityToAttack() == null && this.username.equals(var5.getOwnerName()) && (!par2 || !var5.isSitting()))
-                        {
-                            var5.setSitting(false);
-                            var5.setTarget(par1EntityLivingBase);
-                        }
-                    }
-                }
-            }
-        }
+        Team var2 = this.getTeam();
+        Team var3 = par1EntityPlayer.getTeam();
+        return var2 == null ? true : (!var2.func_142054_a(var3) ? true : var2.func_96665_g());
     }
 
     protected void damageArmor(float par1)
@@ -1300,11 +1255,6 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
                     if (par1Entity instanceof EntityLivingBase)
                     {
-                        if (par1Entity.isEntityAlive())
-                        {
-                            this.alertWolves((EntityLivingBase)par1Entity, true);
-                        }
-
                         this.addStat(StatList.damageDealtStat, Math.round(var2 * 10.0F));
 
                         if (var7 > 0 && var8)
@@ -1338,11 +1288,11 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
     public void setDead()
     {
         super.setDead();
-        this.inventoryContainer.onCraftGuiClosed(this);
+        this.inventoryContainer.onContainerClosed(this);
 
         if (this.openContainer != null)
         {
-            this.openContainer.onCraftGuiClosed(this);
+            this.openContainer.onContainerClosed(this);
         }
     }
 
@@ -2017,9 +1967,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
     }
 
     /**
-     * Returns true if the item the player is holding can harvest the block at the given coords. Args: x, y, z.
+     * Returns true if the given block can be mined with the current tool in adventure mode.
      */
-    public boolean canCurrentToolHarvestBlock(int par1, int par2, int par3)
+    public boolean isCurrentToolAdventureModeExempt(int par1, int par2, int par3)
     {
         if (this.capabilities.allowEdit)
         {
@@ -2033,7 +1983,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
             {
                 Block var5 = Block.blocksList[var4];
 
-                if (var5.blockMaterial.isAlwaysHarvested())
+                if (var5.blockMaterial.isAdventureModeExempt())
                 {
                     return true;
                 }
@@ -2055,7 +2005,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
     public boolean canPlayerEdit(int par1, int par2, int par3, int par4, ItemStack par5ItemStack)
     {
-        return this.capabilities.allowEdit ? true : (par5ItemStack != null ? par5ItemStack.func_82835_x() : false);
+        return this.capabilities.allowEdit ? true : (par5ItemStack != null ? par5ItemStack.canEditBlocks() : false);
     }
 
     /**
@@ -2090,7 +2040,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
         return this.username;
     }
 
-    public boolean func_94059_bO()
+    public boolean getAlwaysRenderNameTagForRender()
     {
         return true;
     }
@@ -2196,7 +2146,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
         }
         else
         {
-            ScorePlayerTeam var2 = this.getTeam();
+            Team var2 = this.getTeam();
             return var2 == null || par1EntityPlayer == null || par1EntityPlayer.getTeam() != var2 || !var2.func_98297_h();
         }
     }
@@ -2221,7 +2171,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
         return this.worldObj.getScoreboard();
     }
 
-    public ScorePlayerTeam getTeam()
+    public Team getTeam()
     {
         return this.getWorldScoreboard().getPlayersTeam(this.username);
     }
@@ -2231,7 +2181,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
      */
     public String getTranslatedEntityName()
     {
-        return ScorePlayerTeam.func_96667_a(this.getTeam(), this.username);
+        return ScorePlayerTeam.formatPlayerName(this.getTeam(), this.username);
     }
 
     public void func_110149_m(float par1)

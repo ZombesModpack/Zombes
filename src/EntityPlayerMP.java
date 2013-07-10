@@ -304,7 +304,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         ZMod.onPlayerDeath(this);
         //--------------------------------------------------------------------
         
-        this.mcServer.getConfigurationManager().func_110460_a(this.func_110142_aN().func_111182_b());
+        this.mcServer.getConfigurationManager().sendChatMsg(this.func_110142_aN().func_94546_b());
 
         if (!this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
         {
@@ -501,6 +501,18 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     public void updateFlyingState(double par1, boolean par3)
     {
         super.updateFallState(par1, par3);
+    }
+
+    /**
+     * Displays the GUI for editing a sign. Args: tileEntitySign
+     */
+    public void displayGUIEditSign(TileEntity par1TileEntity)
+    {
+        if (par1TileEntity instanceof TileEntitySign)
+        {
+            ((TileEntitySign)par1TileEntity).func_142010_a(this);
+            this.playerNetServerHandler.sendPacketToPlayer(new Packet133TileEditorOpen(0, par1TileEntity.xCoord, par1TileEntity.yCoord, par1TileEntity.zCoord));
+        }
     }
 
     private void incrementWindowID()
@@ -707,7 +719,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     public void closeScreen()
     {
         this.playerNetServerHandler.sendPacketToPlayer(new Packet101CloseWindow(this.openContainer.windowId));
-        this.closeInventory();
+        this.closeContainer();
     }
 
     /**
@@ -721,9 +733,12 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         }
     }
 
-    public void closeInventory()
+    /**
+     * Closes the container the player currently has open.
+     */
+    public void closeContainer()
     {
-        this.openContainer.onCraftGuiClosed(this);
+        this.openContainer.onContainerClosed(this);
         this.openContainer = this.inventoryContainer;
     }
 
@@ -831,9 +846,9 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         this.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(this.entityId, par1PotionEffect));
     }
 
-    protected void onChangedPotionEffect(PotionEffect par1PotionEffect)
+    protected void onChangedPotionEffect(PotionEffect par1PotionEffect, boolean par2)
     {
-        super.onChangedPotionEffect(par1PotionEffect);
+        super.onChangedPotionEffect(par1PotionEffect, par2);
         this.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(this.entityId, par1PotionEffect));
     }
 
@@ -889,7 +904,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         this.playerNetServerHandler.sendPacketToPlayer(new Packet70GameEvent(3, par1EnumGameType.getID()));
     }
 
-    public void func_110122_a(ChatMessageComponent par1ChatMessageComponent)
+    public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent)
     {
         this.playerNetServerHandler.sendPacketToPlayer(new Packet3Chat(par1ChatMessageComponent));
     }
