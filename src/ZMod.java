@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
@@ -12,15 +11,15 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "7.2.1 for MC 1.5.2";
+    public static final String version = "8.1.1 for MC 1.6.1";
     
     private static final String MCPnames[] = {
         // GuiAchievement
-        "ga_theAchievement",        "theAchievement",           "f",  // [a-z]+\.[a-z]+, [a-z0-9]+ \+ 8, [a-z0-9]+ \+ 8\);  * starts with theAchivement
+        "ga_theAchievement",        "theAchievement",           "g",  // [a-z]+\.[a-z]+, [a-z0-9]+ \+ 8, [a-z0-9]+ \+ 8\);  * starts with theAchivement
         // EntityMinecart
         "em_fuel",                  "fuel",                     "c",  // "Fuel"
         // EntityEnderman
-        "ee_canCarryBlocks",        "carriableBlocks",          "d",  // [a-z]+\[[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+\] = true;
+        "ee_canCarryBlocks",        "carriableBlocks",          "br",  // [a-z]+\[[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+\] = true;
         // TileEntityFurnace
         "tef_furnaceItemStacks",    "furnaceItemStacks",        "g",  // "CookTime"
         // TileEntityChest
@@ -42,8 +41,8 @@ public final class ZMod {
         // GuiNewChat
         "gnc_ChatLines",       "chatLines",          "c",  // ; [a-z]+\.size\(\) > 100;
         // Block
-        "b_blockHardness",          "blockHardness",            "cA", // 1.0F / [a-zA-Z]+ / 100F;
-        "b_blockResistance",        "blockResistance",          "cB", // return [a-zA-Z]+ / 5F;
+        "b_blockHardness",          "blockHardness",            "cG", // 1.0F / [a-zA-Z]+ / 100F;
+        "b_blockResistance",        "blockResistance",          "cH", // return [a-zA-Z]+ / 5F;
         // BlockFire
         "bf_chanceToEncourageFire", "chanceToEncourageFire",    "a",  // , 15, 100\); * arrays in class, no idea what is what - assume ordering
         "bf_abilityToCatchFire",    "abilityToCatchFire",       "b"
@@ -210,7 +209,7 @@ public final class ZMod {
         CLASS_ENUMGAMETYPE             = 4,
         CLASS_EXPLOSION                = 5,
         CLASS_GUICONTAINER             = 6,
-        CLASS_MINECRAFTAPPLETIMPL      = 7,
+        CLASS_MINECRAFT                = 7,
         CLASS_MOVEMENTINPUTFROMOPTIONS = 8,
         CLASS_NETCLIENTHANDLER         = 9,
         CLASS_NETSERVERHANDLER         = 10,
@@ -285,7 +284,7 @@ public final class ZMod {
         status[CLASS_ENUMGAMETYPE]             = classStatus(EnumGameType.class);
         status[CLASS_EXPLOSION]                = classStatus(Explosion.class);
         status[CLASS_GUICONTAINER]             = classStatus(GuiContainer.class);
-        status[CLASS_MINECRAFTAPPLETIMPL]      = classStatus(MinecraftAppletImpl.class);
+        status[CLASS_MINECRAFT]                = classStatus(Minecraft.class);
         status[CLASS_MOVEMENTINPUTFROMOPTIONS] = classStatus(MovementInputFromOptions.class);
         status[CLASS_NETCLIENTHANDLER]         = classStatus(NetClientHandler.class);
         status[CLASS_NETSERVERHANDLER]         = classStatus(NetServerHandler.class);
@@ -680,7 +679,7 @@ public final class ZMod {
         } catch(Exception error) { err("error: see-through setup failed", error); }
     }
     
-    public static int onSortAndRender(EntityLiving view, int pass, double delta) {
+    public static int onSortAndRender(EntityLivingBase view, int pass, double delta) {
         ZMod.startCheatRender();
         int ret = render.forwardSortAndRender(view, pass, delta);
         return ret;
@@ -899,16 +898,16 @@ public final class ZMod {
                 if (itemId < 256) {
                     Block block = getBlock(itemId);
                     if (block==null) continue;
-                    log(String.format(Locale.ENGLISH, "%-14s %4d %2d %3d %5.1f %5.1f %4.1f %2d %3d", getNameForId(itemId), getItemMax(getItem(itemId)),
+                    log(String.format(java.util.Locale.ENGLISH, "%-14s %4d %2d %3d %5.1f %5.1f %4.1f %2d %3d", getNameForId(itemId), getItemMax(getItem(itemId)),
                         getBlockLight(itemId), getBlockOpacity(itemId), getBlockStrength(block), getBlockResist(block), getBlockSlip(block),
                         getFireSpread(itemId), getFireBurn(itemId)));
                 } else {
                     Item item = getItem(itemId);
                     if (item==null) continue;
                     // itemName stack
-                    if (getItemHasSubTypes(item) || getItemDmgCap(item)==0) log(String.format(Locale.ENGLISH, "%-14s %4d", getNameForId(itemId), getItemMax(item)));
+                    if (getItemHasSubTypes(item) || getItemDmgCap(item)==0) log(String.format(java.util.Locale.ENGLISH, "%-14s %4d", getNameForId(itemId), getItemMax(item)));
                     // itemName stack maxDamage
-                    else log(String.format(Locale.ENGLISH, "%-14s %4d %2d", getNameForId(itemId), getItemMax(item), getItemDmgCap(item)));
+                    else log(String.format(java.util.Locale.ENGLISH, "%-14s %4d %2d", getNameForId(itemId), getItemMax(item), getItemDmgCap(item)));
                 }
             }
         }
@@ -1103,7 +1102,7 @@ public final class ZMod {
     private static void respawnDeathMod() {
         EntityPlayerSP ent = getPlayer();
         if (optDeathHPPenalty != 0) {
-            int hp = getHealth(ent) - optDeathHPPenalty;
+            float hp = getHealth(ent) - optDeathHPPenalty;
             if (hp < 1) hp = 1;
             setHealth(ent, hp);
         }
@@ -3548,8 +3547,8 @@ public final class ZMod {
     private static int cheatCur = 0;
     private static float cheatRefresh;
     private static FloatBuffer cheatAmbItems, cheatAmbGeom;
-    private static EntityLiving cheatView;
-    private static EntityLiving cheatPossession;
+    private static EntityLivingBase cheatView;
+    private static EntityLivingBase cheatPossession;
     private static EntityPlayerGhost cheatProjection;
     private static boolean cheatProjectionLock = false, cheatUnspoof = false;
     private static float cheatGamma, cheatYaw, cheatPitch;
@@ -3742,7 +3741,7 @@ public final class ZMod {
                     cheatView = null;
                     setView(player);
                 } else {
-                    EntityLiving eye = getView();
+                    EntityLivingBase eye = getView();
                     // hold on to your hats - math follows
                     float x1, x2, x3, xt, y1, y2, y3, yt, z1, z2, z3, zt, yaw, pitch, u, distS, factor;
                     x1 = (float) getEntityPosX(eye); y1 = (float) getEntityPosY(eye); z1 = (float) getEntityPosZ(eye);
@@ -3751,13 +3750,13 @@ public final class ZMod {
                     x2 = x1 + 100f * ( -(float)Math.sin(yaw) * (float)Math.abs(Math.cos(pitch)) );
                     y2 = y1 + 100f * ( -(float)Math.sin(pitch) );
                     z2 = z1 + 100f * ( (float)Math.cos(yaw) * (float)Math.abs(Math.cos(pitch)) );
-                    EntityLiving best = null;
+                    EntityLivingBase best = null;
                     float bestDS = 1000000000f;
                     Iterator it = list.iterator();
                     while (it.hasNext()) {
                         Object obj = it.next();
-                        if (!(obj instanceof EntityLiving) || obj == eye) continue;
-                        EntityLiving ent = (EntityLiving)obj;
+                        if (!(obj instanceof EntityLivingBase) || obj == eye) continue;
+                        EntityLivingBase ent = (EntityLivingBase)obj;
                         if (!(ent instanceof EntityPlayer)) continue; /* GOD-DAMN-IT ... can not view from other mobs */
                         x3 = (float)getEntityPosX(ent);  y3 = (float)getEntityPosY(ent);  z3 = (float)getEntityPosZ(ent);
                         if ((x2-x1)*(x3-x1) + (y2-y1)*(y3-y1) + (z2-z1)*(z3-z1) < 0f) continue;
@@ -3885,7 +3884,7 @@ public final class ZMod {
                 Object obj = it.next();
                 if (!(obj instanceof EntityLiving) || obj == player) continue;
                 EntityLiving ent = (EntityLiving)obj;
-                int health = getHealth(ent);
+                float health = getHealth(ent);
                 mx = (float)getEntityPrevPosX(ent); my = (float)getEntityPrevPosY(ent) + 0.4f; mz = (float)getEntityPrevPosZ(ent);
                 my += getEntityHeight(ent);
                 dx = mz - pz;
@@ -4070,14 +4069,10 @@ public final class ZMod {
         protected Minecraft mc;
 
         public EntityPlayerGhost(World par1World, EntityPlayer entityPlayer) {
-            super(par1World);
+            super(par1World, entityPlayer == null ? "ghost" : entityPlayer.username + "'s projection");
             this.mc = minecraft;
             this.playerBody = entityPlayer;
             this.movementInput = new MovementInput();
-            if (entityPlayer != null) {
-                this.username = entityPlayer.username + "'s projection";
-                this.skinUrl = entityPlayer.skinUrl;
-            }
         }
         
         public void onUpdate() {
@@ -4118,7 +4113,8 @@ public final class ZMod {
          * Gets the player's field of view multiplier. (ex. when flying)
          */
         public float getFOVMultiplier() {
-            float var1 = (this.landMovementFactor * this.getSpeedModifier() / this.speedOnGround + 1.0F) / 2.0F;
+            AttributeInstance var2 = this.func_110148_a(SharedMonsterAttributes.field_111263_d);
+            float var1 = (float) (((var2.func_111126_e() / this.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
             return var1;
         }
         
@@ -4242,9 +4238,9 @@ public final class ZMod {
                                         MathHelper.floor_double(this.posZ + 0.5D));
         }
         
-        protected boolean isClientWorld() { return true; }
+        public boolean isClientWorld() { return true; }
         protected boolean isPVPEnabled() { return false; }
-        public void sendChatToPlayer(String par1Str) {}
+        public void func_110122_a(ChatMessageComponent var1) {}
         public boolean canCommandSenderUseCommand(int par1, String par2Str) { return false; }
         public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) { return false; }
         protected int applyPotionDamageCalculations(DamageSource par1DamageSource, int par2) { return 0; }
@@ -4300,23 +4296,23 @@ public final class ZMod {
             if (getEntityAge(obj)!=1) continue; // not new entity
             int type = getEntityType(obj);
             if (type==0 || type==LIVING) continue; // bad entity type
-            EntityLiving ent = (EntityLiving)obj;
-            int max = ent.getMaxHealth(), health = getHealth(ent);
+            EntityLivingBase ent = (EntityLivingBase)obj;
+            float max = getMaxHealth(ent), health = getHealth(ent);
             float height = ent.height;
             if (resizeSize[type] < 0.01f) resizeSize[type] = getEntityHeight(ent); // store original size
             if (max == health) {
                 chance = rnd.nextInt(100);
-                if (resizeChanceSmall[type]>chance) { health >>= 1; height = resizeSize[type] * 0.5f; }
-                else if (resizeChanceBig[type]<chance) { health <<= 1; height = resizeSize[type] * 1.5f; }
+                if (resizeChanceSmall[type]>chance) { health /= 2; height = resizeSize[type] * 0.5f; }
+                else if (resizeChanceBig[type]<chance) { health *= 2; height = resizeSize[type] * 1.5f; }
             }
-            else if ((max<<1) == health) height = resizeSize[type] * 0.5f;
-            else if ((max>>1) == health) height = resizeSize[type] * 1.5f;
+            else if ((max * 2) == health) height = resizeSize[type] * 0.5f;
+            else if ((max / 2) == health) height = resizeSize[type] * 1.5f;
             else continue;
             setEntitySize(ent, height, health);
         }
     }
     
-    public static void resizeHandle(EntityLiving ent) {
+    public static void resizeHandle(EntityLivingBase ent) {
         if (!modResizeActive || isMultiplayer || resizeSize==null) return;
         float resize = resizeSize[getEntityType(ent)];
         if (resize<=0.000001f) return;
@@ -4935,7 +4931,7 @@ public final class ZMod {
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
         int res = (int)drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_DISCRETE, status[feature]);
         if (res != current) {
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %d", name, res));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %d", name, res));
             return res;
         }
         return current;
@@ -4951,7 +4947,7 @@ public final class ZMod {
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
         float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LINEAR, status[feature]);
         if (res != current) {
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %6.2f", name, res));
             return res;
         }
         return current;
@@ -4967,7 +4963,7 @@ public final class ZMod {
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
         float res = drawBar(22, optionNr - optionOfs, 20, current, min, max, help, SCALE_LOG, status[feature]);
         if (res != current) {
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %6.2f", name, res));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %6.2f", name, res));
             return res;
         }
         return current;
@@ -4988,12 +4984,12 @@ public final class ZMod {
         for (int key = 1; key<255; key++) if (keyPress(key)) {
             optionSel = -1; // unselect
             if (key == Keyboard.KEY_ESCAPE) key = Keyboard.KEY_NONE;
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key)));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %s", name, keyName(key)));
             return key;
         }
         for (int key = 0; key<Mouse.getButtonCount() && key<keysM.length; key++) if (mousePress(key)) {
             optionSel = -1; // unselect
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, keyName(key | KEY_MOUSE)));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %s", name, keyName(key | KEY_MOUSE)));
             return key | KEY_MOUSE;
         }
         // no keys pressed - until next time then
@@ -5009,7 +5005,7 @@ public final class ZMod {
         optionNr++; // new GUI element
         int ofs = optionOfs != 0 ? optionOfs + 1 : 0; if (optionNr <= ofs || optionOfs + optionsPage < optionNr) return current;
         if (drawBtn(22, optionNr - optionOfs, 20, current ? "yes" : "no", help, false, current, true, false, status[feature])) {
-            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(Locale.ENGLISH, "%-22s= %s", name, current ? "no" : "yes"));
+            updateConfigFile("(?m)^"+name+"\\W.*$", String.format(java.util.Locale.ENGLISH, "%-22s= %s", name, current ? "no" : "yes"));
             return !current;
         }
         // no change
@@ -5127,10 +5123,18 @@ public final class ZMod {
 
     //#ZMod#Wrappers##########################################################
     //-ZMod-Wrapper-Minecraft-------------------------------------------------
-    private static String getPath() { String res = ""; try { res = Minecraft.getMinecraftDir().getCanonicalPath(); } catch(Exception whatever) { res = ""; } return res; }
+    private static String getPath() {
+        String res = ""; 
+        try {
+            res = Minecraft.getMinecraft().mcDataDir.getCanonicalPath(); 
+        } catch(Exception whatever) {
+            res = "";
+        }
+        return res; 
+    }
     //private static int getTexture(String name) { return minecraft.renderEngine.getTexture(name); }
     private static void bindTexture(String name) {
-        minecraft.renderEngine.bindTexture(name);
+        minecraft.func_110434_K().func_110577_a(new ResourceLocation("textures"+name));
     }
     private static List getChat() { return (List)getValue(fChat, minecraft.ingameGUI.getChatGUI()); }
     private static boolean getIsMenu() { return minecraft.currentScreen != null; }
@@ -5138,9 +5142,9 @@ public final class ZMod {
     private static boolean getIsMultiplayer() { return !minecraft.isSingleplayer(); }
     private static PlayerControllerMP getPlayerController() { return minecraft.playerController; } // used to detect world change - do not actually care about the object itself
     private static boolean rayTrace(double dist, float f) { return (rayHit = minecraft.renderViewEntity.rayTrace(dist, f)) != null; }
-    private static void overloadRenderGlobal() { minecraft.renderGlobal = render = new ZRG(minecraft, minecraft.renderEngine); }
+    private static void overloadRenderGlobal() { minecraft.renderGlobal = render = new ZRG(minecraft); }
     private static void overloadEntityRender() { minecraft.entityRenderer = new ZER(minecraft, minecraft.entityRenderer); }
-    private static void refreshTextures() { minecraft.renderEngine.refreshTextures(); }
+    private static void refreshTextures() { minecraft.func_110436_a(); }
     private static Field fAchivement = getField(GuiAchievement.class, "ga_theAchievement");
     private static void killAchievement() { setValue(fAchivement, minecraft.guiAchievement, null); }
     private static EntityClientPlayerMP getPlayer() { return minecraft.thePlayer; }
@@ -5253,23 +5257,29 @@ public final class ZMod {
         ent.setPosition(x, y, z);
     }
 
-    //-ZMod-Wrapper-EntityLiving----------------------------------------------
-    private static EntityLiving getView() { return minecraft.renderViewEntity; }
-    private static void setView(EntityLiving ent) { minecraft.renderViewEntity = ent; }
-    private static void setHealth(EntityLiving ent, int val) {
+    //-ZMod-Wrapper-EntityLivingBase------------------------------------------
+    private static EntityLivingBase getView() { return minecraft.renderViewEntity; }
+    private static void setView(EntityLivingBase ent) { minecraft.renderViewEntity = ent; }
+    private static void setHealth(EntityLivingBase ent, float val) {
         ent.setEntityHealth(val);
     }
-    private static int getHealth(EntityLiving ent) {
-        return ent.getHealth();
+    private static float getHealth(EntityLivingBase ent) {
+        return ent.func_110143_aJ();
     }
-    private static int getMaxHealth(EntityLiving ent) {
-        return ent.getMaxHealth();
+    private static float getMaxHealth(EntityLivingBase ent) {
+        return ent.func_110138_aP();
     }
-    private static void setEntitySize(EntityLiving ent, float height, int health) {
+    private static void setEntitySize(EntityLivingBase ent, float height, float health) {
         ent.width *= height / ent.height;
         ent.height = height;
         setHealth(ent, health);
         ent.setPosition(ent.posX, ent.posY, ent.posZ);
+    }
+    public float getEntityMoveSpeed(EntityLivingBase ent) {
+        return ent.getAIMoveSpeed();
+    }
+    public void setEntityMoveSpeed(EntityLivingBase ent, float val) {
+        ent.setAIMoveSpeed(val);
     }
 
     //-ZMod-Wrapper-EntityPlayer----------------------------------------------
@@ -5526,7 +5536,7 @@ public final class ZMod {
     // ---------------------------------------------------------------------------------------------------------------- RenderItem
     private static void renderItemGUI(int x, int y, ItemStack items) {
         if (itemRenderer == null) itemRenderer = new RenderItem();
-        itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, items, x, y);
+        itemRenderer.func_110795_a(minecraft.fontRenderer, minecraft.func_110434_K(), items, x, y);
     }
     // ----------------------------------------------------------------------------------------------------------------
     private static void setXItemLighting() { RenderHelper.enableStandardItemLighting(); }

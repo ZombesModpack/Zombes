@@ -1,8 +1,6 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
-
-public class EntityPlayerSP extends EntityPlayer
+public class EntityPlayerSP extends AbstractClientPlayer
 {
     public MovementInput movementInput;
     protected Minecraft mc;
@@ -12,14 +10,16 @@ public class EntityPlayerSP extends EntityPlayer
      * sprint, aka enough food on the ground etc) it sets this to 7. If it's pressed and it's greater than 0 enable
      * sprinting.
      */
-    protected int sprintToggleTimer = 0;
+    protected int sprintToggleTimer;
 
     /** Ticks left before sprinting is disabled. */
-    public int sprintingTicksLeft = 0;
+    public int sprintingTicksLeft;
     public float renderArmYaw;
     public float renderArmPitch;
     public float prevRenderArmYaw;
     public float prevRenderArmPitch;
+    private int field_110320_a;
+    private float field_110321_bQ;
     private MouseFilter field_71162_ch = new MouseFilter();
     private MouseFilter field_71160_ci = new MouseFilter();
     private MouseFilter field_71161_cj = new MouseFilter();
@@ -45,24 +45,9 @@ public class EntityPlayerSP extends EntityPlayer
 
     public EntityPlayerSP(Minecraft par1Minecraft, World par2World, Session par3Session, int par4)
     {
-        super(par2World);
+        super(par2World, par3Session.func_111285_a());
         this.mc = par1Minecraft;
         this.dimension = par4;
-
-        if (par3Session != null && par3Session.username != null && par3Session.username.length() > 0)
-        {
-            this.skinUrl = "http://skins.minecraft.net/MinecraftSkins/" + StringUtils.stripControlCodes(par3Session.username) + ".png";
-        }
-
-        this.username = par3Session.username;
-    }
-
-    /**
-     * Tries to moves the entity by the passed in displacement. Args: x, y, z
-     */
-    public void moveEntity(double par1, double par3, double par5)
-    {
-        super.moveEntity(par1, par3, par5);
     }
 
     public void updateEntityActionState()
@@ -75,14 +60,6 @@ public class EntityPlayerSP extends EntityPlayer
         this.prevRenderArmPitch = this.renderArmPitch;
         this.renderArmPitch = (float)((double)this.renderArmPitch + (double)(this.rotationPitch - this.renderArmPitch) * 0.5D);
         this.renderArmYaw = (float)((double)this.renderArmYaw + (double)(this.rotationYaw - this.renderArmYaw) * 0.5D);
-    }
-
-    /**
-     * Returns whether the entity is in a local (client) world
-     */
-    protected boolean isClientWorld()
-    {
-        return true;
     }
 
     /**
@@ -177,7 +154,7 @@ public class EntityPlayerSP extends EntityPlayer
             boolean var3 = this.movementInput.moveForward >= var2;
             this.movementInput.updatePlayerMoveState();
 
-            if (this.isUsingItem())
+            if (this.isUsingItem() && !this.isRiding())
             {
                 this.movementInput.moveStrafe *= 0.2F;
                 this.movementInput.moveForward *= 0.2F;
@@ -254,6 +231,47 @@ public class EntityPlayerSP extends EntityPlayer
                 }
             }
 
+            if (this.func_110317_t())
+            {
+                if (this.field_110320_a < 0)
+                {
+                    ++this.field_110320_a;
+
+                    if (this.field_110320_a == 0)
+                    {
+                        this.field_110321_bQ = 0.0F;
+                    }
+                }
+
+                if (var1 && !this.movementInput.jump)
+                {
+                    this.field_110320_a = -10;
+                    this.func_110318_g();
+                }
+                else if (!var1 && this.movementInput.jump)
+                {
+                    this.field_110320_a = 0;
+                    this.field_110321_bQ = 0.0F;
+                }
+                else if (var1)
+                {
+                    ++this.field_110320_a;
+
+                    if (this.field_110320_a < 10)
+                    {
+                        this.field_110321_bQ = (float)this.field_110320_a * 0.1F;
+                    }
+                    else
+                    {
+                        this.field_110321_bQ = 0.8F + 2.0F / (float)(this.field_110320_a - 9) * 0.1F;
+                    }
+                }
+            }
+            else
+            {
+                this.field_110321_bQ = 0.0F;
+            }
+
             super.onLivingUpdate();
 
             //-Zmod-Fly-------------------------------------------------------
@@ -281,31 +299,27 @@ public class EntityPlayerSP extends EntityPlayer
             var1 *= 1.1F;
         }
 
-        var1 *= (this.landMovementFactor * this.getSpeedModifier() / this.speedOnGround + 1.0F) / 2.0F;
+        AttributeInstance var2 = this.func_110148_a(SharedMonsterAttributes.field_111263_d);
+        var1 = (float)((double)var1 * ((var2.func_111126_e() / (double)this.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
 
         if (this.isUsingItem() && this.getItemInUse().itemID == Item.bow.itemID)
         {
-            int var2 = this.getItemInUseDuration();
-            float var3 = (float)var2 / 20.0F;
+            int var3 = this.getItemInUseDuration();
+            float var4 = (float)var3 / 20.0F;
 
-            if (var3 > 1.0F)
+            if (var4 > 1.0F)
             {
-                var3 = 1.0F;
+                var4 = 1.0F;
             }
             else
             {
-                var3 *= var3;
+                var4 *= var4;
             }
 
-            var1 *= 1.0F - var3 * 0.15F;
+            var1 *= 1.0F - var4 * 0.15F;
         }
 
         return var1;
-    }
-
-    public void updateCloak()
-    {
-        this.cloakUrl = "http://skins.minecraft.net/MinecraftCloaks/" + StringUtils.stripControlCodes(this.username) + ".png";
     }
 
     /**
@@ -365,6 +379,11 @@ public class EntityPlayerSP extends EntityPlayer
     public void displayGUIHopperMinecart(EntityMinecartHopper par1EntityMinecartHopper)
     {
         this.mc.displayGuiScreen(new GuiHopper(this.inventory, par1EntityMinecartHopper));
+    }
+
+    public void func_110298_a(EntityHorse par1EntityHorse, IInventory par2IInventory)
+    {
+        this.mc.displayGuiScreen(new GuiScreenHorseInventory(this.inventory, par2IInventory, par1EntityHorse));
     }
 
     /**
@@ -458,23 +477,23 @@ public class EntityPlayerSP extends EntityPlayer
     /**
      * Updates health locally.
      */
-    public void setHealth(int par1)
+    public void setHealth(float par1)
     {
-        int var2 = this.getHealth() - par1;
+        float var2 = this.func_110143_aJ() - par1;
 
-        if (var2 <= 0)
+        if (var2 <= 0.0F)
         {
             this.setEntityHealth(par1);
 
-            if (var2 < 0)
+            if (var2 < 0.0F)
             {
                 this.hurtResistantTime = this.maxHurtResistantTime / 2;
             }
         }
         else
         {
-            this.lastDamage = var2;
-            this.setEntityHealth(this.getHealth());
+            this.field_110153_bc = var2;
+            this.setEntityHealth(this.func_110143_aJ());
             this.hurtResistantTime = this.maxHurtResistantTime;
             this.damageEntity(DamageSource.generic, var2);
             this.hurtTime = this.maxHurtTime = 10;
@@ -615,9 +634,9 @@ public class EntityPlayerSP extends EntityPlayer
         this.experienceLevel = par3;
     }
 
-    public void sendChatToPlayer(String par1Str)
+    public void func_110122_a(ChatMessageComponent par1ChatMessageComponent)
     {
-        this.mc.ingameGUI.getChatGUI().printChatMessage(par1Str);
+        this.mc.ingameGUI.getChatGUI().printChatMessage(par1ChatMessageComponent.func_111068_a(true));
     }
 
     /**
@@ -648,4 +667,24 @@ public class EntityPlayerSP extends EntityPlayer
     {
         this.worldObj.playSound(this.posX, this.posY - (double)this.yOffset, this.posZ, par1Str, par2, par3, false);
     }
+
+    /**
+     * Returns whether the entity is in a local (client) world
+     */
+    public boolean isClientWorld()
+    {
+        return true;
+    }
+
+    public boolean func_110317_t()
+    {
+        return this.ridingEntity != null && this.ridingEntity instanceof EntityHorse;
+    }
+
+    public float func_110319_bJ()
+    {
+        return this.field_110321_bQ;
+    }
+
+    protected void func_110318_g() {}
 }

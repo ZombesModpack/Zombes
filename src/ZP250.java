@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
+
 import java.io.IOException;
 
 public class ZP250 extends Packet {
@@ -9,11 +10,11 @@ public class ZP250 extends Packet {
 	public NBTTagCompound nbtData;
 	public ZP250(){}
 
-	public void readPacketData(DataInputStream in) throws IOException {
+	public void readPacketData(DataInput in) throws IOException {
 		nbtData = (NBTTagCompound) NBTTagCompound.readNamedTag(in);
 	}
 
-	public void writePacketData(DataOutputStream out) throws IOException {
+	public void writePacketData(DataOutput out) throws IOException {
 		NBTTagCompound.writeNamedTag(nbtData, out);
 	}
 

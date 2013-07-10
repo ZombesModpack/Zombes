@@ -1,14 +1,11 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
-
 public final class ZER extends EntityRenderer {
 
     public ZER(Minecraft minecraft, EntityRenderer prev) {
         super(minecraft);
         fogColorBuffer = prev.fogColorBuffer;
         itemRenderer = prev.itemRenderer;
-        lightmapTexture = prev.lightmapTexture;
     }
 
     public void updateCameraAndRender(float par) {
@@ -31,7 +28,7 @@ public final class ZER extends EntityRenderer {
     
     public void updateRenderer() {
         Minecraft mc = ZMod.getMinecraft();
-        EntityLiving view = mc.renderViewEntity;
+        EntityLivingBase view = mc.renderViewEntity;
         if (!(mc.renderViewEntity instanceof EntityPlayerSP)) mc.renderViewEntity = mc.thePlayer;
         
         super.updateRenderer();
@@ -41,7 +38,7 @@ public final class ZER extends EntityRenderer {
 
     public void getMouseOver(float par1) {
         Minecraft mc = ZMod.getMinecraft();
-        EntityLiving view = mc.renderViewEntity;
+        EntityLivingBase view = mc.renderViewEntity;
         if (ZMod.isControllingPlayer()) mc.renderViewEntity = mc.thePlayer;
 
         super.getMouseOver(par1);

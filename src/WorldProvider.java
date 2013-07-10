@@ -6,6 +6,8 @@ public abstract class WorldProvider
 {
     protected static final boolean zmodmarker = true;
     
+    public static final float[] field_111203_a = new float[] {1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};
+
     /** world object being used */
     public World worldObj;
     public WorldType terrainType;
@@ -17,18 +19,18 @@ public abstract class WorldProvider
     /**
      * States whether the Hell world provider is used(true) or if the normal world provider is used(false)
      */
-    public boolean isHellWorld = false;
+    public boolean isHellWorld;
 
     /**
      * A boolean that tells if a world does not have a sky. Used in calculating weather and skylight
      */
-    public boolean hasNoSky = false;
+    public boolean hasNoSky;
 
     /** Light to brightness conversion table */
     public float[] lightBrightnessTable = new float[16];
 
     /** The id for the dimension (ex. -1: Nether, 0: Overworld, 1: The End) */
-    public int dimensionId = 0;
+    public int dimensionId;
 
     /** Array for sunrise/sunset colors (RGBA) */
     private float[] colorsSunriseSunset = new float[4];

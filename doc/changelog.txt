@@ -1,5 +1,8 @@
 Zombe's modpack changelog starting from MC 1.4.4
 
+v8.1.1 for MC 1.6.1
+- compatibility: updated for Minecraft 1.6.1
+
 v6.8.4 for MC 1.4.6
 - added support for mouse buttons for keybindings
 - added an option to the Fly mod allowing to fly toward the cursor

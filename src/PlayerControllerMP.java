@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
-
 public class PlayerControllerMP
 {
     //-ZMod-------------------------------------------------------------------
@@ -20,23 +18,23 @@ public class PlayerControllerMP
 
     /** PosZ of the current block being destroyed */
     private int currentblockZ = -1;
-    private ItemStack field_85183_f = null;
+    private ItemStack field_85183_f;
 
     /** Current block damage (MP) */
-    private float curBlockDamageMP = 0.0F;
+    private float curBlockDamageMP;
 
     /**
      * Tick counter, when it hits 4 it resets back to 0 and plays the step sound
      */
-    private float stepSoundTickCounter = 0.0F;
+    private float stepSoundTickCounter;
 
     /**
      * Delays the first damage on the block after the first click on the block
      */
-    private int blockHitDelay = 0;
+    private int blockHitDelay;
 
     /** Tells if the player is hitting a block */
-    private boolean isHittingBlock = false;
+    private boolean isHittingBlock;
 
     /** Current game type for the player */
     private EnumGameType currentGameType;
@@ -47,7 +45,6 @@ public class PlayerControllerMP
     public PlayerControllerMP(Minecraft par1Minecraft, NetClientHandler par2NetClientHandler)
     {
         this.currentGameType = EnumGameType.SURVIVAL;
-        this.currentPlayerItem = 0;
         this.mc = par1Minecraft;
         this.netClientHandler = par2NetClientHandler;
     }
@@ -110,6 +107,10 @@ public class PlayerControllerMP
     public boolean onPlayerDestroyBlock(int par1, int par2, int par3, int par4)
     {
         if (this.currentGameType.isAdventure() && !this.mc.thePlayer.canCurrentToolHarvestBlock(par1, par2, par3))
+        {
+            return false;
+        }
+        else if (this.currentGameType.isCreative() && this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)
         {
             return false;
         }
@@ -476,7 +477,7 @@ public class PlayerControllerMP
 
     public EntityClientPlayerMP func_78754_a(World par1World)
     {
-        return new EntityClientPlayerMP(this.mc, par1World, this.mc.session, this.netClientHandler);
+        return new EntityClientPlayerMP(this.mc, par1World, this.mc.func_110432_I(), this.netClientHandler);
     }
 
     /**
@@ -541,7 +542,7 @@ public class PlayerControllerMP
 
     public boolean func_78763_f()
     {
-        return true;
+        return this.currentGameType.isSurvivalOrAdventure();
     }
 
     /**
@@ -566,5 +567,10 @@ public class PlayerControllerMP
     public boolean extendedReach()
     {
         return this.currentGameType.isCreative();
+    }
+
+    public boolean func_110738_j()
+    {
+        return this.mc.thePlayer.isRiding() && this.mc.thePlayer.ridingEntity instanceof EntityHorse;
     }
 }

@@ -14,13 +14,13 @@
 
      1) Create a subfolder named mods/zombe
 
-     2) Locate bin/minecraft.jar
-         a) Make a backup copy of bin/minecraft.jar, just in case
-         b) Open bin/minecraft.jar as a Zip file with a tool like 7-zip
-         c) In this minecraft.jar, delete the subfolder 'META-INF'
+     2) Locate versions/1.6.1/1.6.1.jar, we will now call it "the jar"
+         a) Make a backup copy of the jar, just in case
+         b) Open the jar as a Zip file with a tool like 7-zip
+         c) In the jar, delete the subfolder 'META-INF'
 
      3) Go in the 'Classes' subfolder of this modpack's archive
-          - Copy every .class file from it into bin/minecraft.jar
+          - Copy every .class file from it into the jar
             Not all class files are required for the modpack to work.
             The list of mods and features associated with each class file can 
             be found in 'zombe class files <version>.txt' in the mod's archive
