@@ -11,7 +11,7 @@ import java.nio.*;
 import java.util.concurrent.locks.*;
 
 public final class ZMod {
-    public static final String version = "8.2.1 for MC 1.6.2";
+    public static final String version = "8.2.2 for MC 1.6.2";
     
     private static final String MCPnames[] = {
         // GuiAchievement
